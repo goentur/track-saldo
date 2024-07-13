@@ -8,12 +8,15 @@ import { faCog, faDashboard, faRightFromBracket } from '@fortawesome/free-solid-
 import { faCreditCard, faFolder, faStar, faUser } from '@fortawesome/free-regular-svg-icons';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { useRoute } from '../../../vendor/tightenco/ziggy';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 
 
 function Layout({children}) {
   const route = useRoute();
-
-  const { user } = usePage().props.auth
+  const { user } = usePage().props.auth;
+  const { flash } = usePage().props;
   const { delete:destroy } = useForm()
   function logout(e) {
     e.preventDefault()
@@ -24,6 +27,14 @@ function Layout({children}) {
         }
     })
   }
+  useEffect(() => {
+      if (flash.success) {
+          toast.success(flash.success);
+      }
+      if (flash.error) {
+          toast.error(flash.error);
+      }
+  }, [flash]);
   return (
   <>
     <Navbar collapseOnSelect expand="lg" bg="primary" data-bs-theme="dark" fixed="top">
@@ -34,11 +45,11 @@ function Layout({children}) {
           <Nav className="me-auto">
             <Link className="nav-link" href={route('dashboard')}><FontAwesomeIcon icon={faDashboard}/> DASHBOARD</Link>
             <NavDropdown title={<span><FontAwesomeIcon icon={faFolder} /> MASTER</span>} id="collapsible-nav-dropdown">
-              <Link className="dropdown-item" href={route('master.merek')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-              <Link className="dropdown-item" href={route('master.merek')}><FontAwesomeIcon icon={faCreditCard}/> TABUNGAN</Link>
-              <Link className="dropdown-item" href={route('master.merek')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-              <Link className="dropdown-item" href={route('master.merek')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-              <Link className="dropdown-item" href={route('master.merek')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
+              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
+              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faCreditCard}/> TABUNGAN</Link>
+              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
+              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
+              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
             </NavDropdown>
           </Nav>
           <Nav>
@@ -53,8 +64,9 @@ function Layout({children}) {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable={false} pauseOnHover theme="colored"/>
     <Container fluid="lg" style={{paddingTop: "4.5rem"}}>
-        {children}
+      {children}
     </Container>
   </>
   );

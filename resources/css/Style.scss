@@ -10,7 +10,7 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: #3b7ddd
+    background-color: #0d6efd
 }
 
 body .modal::-webkit-scrollbar {
@@ -19,6 +19,18 @@ body .modal::-webkit-scrollbar {
 
 body .modal::-webkit-scrollbar-thumb {
     background-color: #fff
+}
+
+.table-sm td {
+    vertical-align: middle;
+}
+
+.table-sm td.top {
+    vertical-align: top;
+}
+
+.table-sm th.mid {
+    vertical-align: middle;
 }
 
 .w-1 {

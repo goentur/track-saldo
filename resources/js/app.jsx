@@ -1,7 +1,6 @@
 import { createInertiaApp, useForm } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
-import Layout from './Layouts/Layout';
-import '../css/Style.scss';
+import '../css/style.scss';
 
 function auth() {
   const {auth} = useForm().props

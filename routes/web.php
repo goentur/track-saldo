@@ -7,6 +7,9 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        redirect('login');
+    })->name('/');
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'store'])->name('login.submit');
 });
@@ -16,7 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:pemilik')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::prefix('master')->group(function () {
-            Route::get('merek', [MerekController::class, 'index'])->name('master.merek');
+            Route::resource('merek', MerekController::class);
         });
     });
 });

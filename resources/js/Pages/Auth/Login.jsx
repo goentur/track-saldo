@@ -29,7 +29,7 @@ export default function Login(){
                                 </div>
                                 <Form onSubmit={submit}>
                                     
-                                    <Form.Group className="mb-3" controlId="validationFormikEmail">
+                                    <Form.Group className="mb-3" controlId="validationFormEmail">
                                         <Form.Label>Email</Form.Label>
                                         <InputGroup hasValidation>
                                         <InputGroup.Text id="inputGroupPrepend"><FontAwesomeIcon icon={faUserAlt}/></InputGroup.Text>
@@ -50,7 +50,7 @@ export default function Login(){
                                         </Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>
-                                    <Form.Group className="mb-3" controlId="validationFormikPassword">
+                                    <Form.Group className="mb-3" controlId="validationFormPassword">
                                         <Form.Label>Password</Form.Label>
                                         <InputGroup hasValidation>
                                         <InputGroup.Text id="inputGroupPrepend"><FontAwesomeIcon icon={faKey}/></InputGroup.Text>
