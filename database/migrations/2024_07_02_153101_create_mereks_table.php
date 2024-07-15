@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('mereks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('toko_id')->nullable()->comment('id toko');
             $table->string('nama')->nullable();
             $table->softDeletes();
             $table->timestamps();

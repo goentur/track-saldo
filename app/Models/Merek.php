@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Scout\Searchable;
 
 class Merek extends Model
 {
-    use HasFactory, Searchable, SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
-    public function toSearchableArray(): array
+    public function toko()
     {
-        return [
-            'nama' => $this->nama,
-        ];
+        return $this->belongsTo(Toko::class);
     }
 }

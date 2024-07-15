@@ -5,11 +5,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
 import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-function Ubah({ merek }) {
+import { Typeahead } from "react-bootstrap-typeahead";
+import { useEffect, useState } from "react";
+function Ubah({ tokos, merek }) {
     const route = useRoute();
+    const formTokoLabel = (tokos) => `${tokos.nama} | ${tokos.alamat}`;
     const { data, setData, put, errors, processing } = useForm({
+        toko: merek.toko_id,
         nama: merek.nama,
     })
+    
+    const [selectedToko, setSelectedToko] = useState(null);
+
+    useEffect(() => {
+        const selected = tokos.find(toko => toko.id === merek.toko_id);
+        setSelectedToko(selected || null);
+    }, [tokos, merek.toko_id]);
+
+    const handleTokoChange = (selected) => {
+        setSelectedToko(selected[0] || null);
+        setData('toko', selected.length > 0 ? selected[0].id : null);
+    };
     function submit(e) {
         e.preventDefault()
         put(route("merek.update",merek))
@@ -24,15 +40,24 @@ function Ubah({ merek }) {
                     <Link href={route('merek.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
                 </CardHeader>
                 <CardBody>
-                    <Form onSubmit={submit}>
-                        <Form.Group className="mb-3" controlId="validationFormNama">
+                    <Form onSubmit={submit} className="row">
+                        <Form.Group className="mb-3 col-lg-6" controlId="validationFormToko">
+                            <Form.Label>Toko</Form.Label>
+                            <Typeahead id="toko" labelKey={formTokoLabel} name="toko" options={tokos} placeholder="Pilih toko" onChange={handleTokoChange} size="lg" isInvalid={!!errors.toko} selected={selectedToko ? [selectedToko] : []} required/>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.toko}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-3 col-lg-6" controlId="validationFormNama">
                             <Form.Label>Nama</Form.Label>
-                            <Form.Control size="lg" type="text" placeholder="Masukan nama merek" aria-describedby="inputGroupPrepend" name="nama" value={data.nama} onChange={(e) => setData("nama", e.target.value)} isInvalid={!!errors.nama} autoFocus/>
+                            <Form.Control size="lg" type="text" placeholder="Masukan nama" aria-describedby="inputGroupPrepend" name="nama" value={data.nama} onChange={(e) => setData("nama", e.target.value)} isInvalid={!!errors.nama} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.nama}
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>{processing?<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>:<FontAwesomeIcon icon={faSave}/> } SIMPAN</Button>
+                        <div className="col-lg-12">
+                            <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>{processing?<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>:<FontAwesomeIcon icon={faSave}/> } SIMPAN</Button>
+                        </div>
                     </Form>
                 </CardBody>
             </Card>

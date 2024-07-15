@@ -4,18 +4,22 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import ThemeMode from './ThemeMode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faDashboard, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { faCreditCard, faFolder, faStar, faUser } from '@fortawesome/free-regular-svg-icons';
+import { faCog, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { useRoute } from '../../../vendor/tightenco/ziggy';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 import { useEffect } from 'react';
+import Menu from './Menus';
 
 
 function Layout({children}) {
   const route = useRoute();
   const { user } = usePage().props.auth;
+  const { role } = usePage().props.auth;
   const { flash } = usePage().props;
   const { delete:destroy } = useForm()
   function logout(e) {
@@ -43,14 +47,7 @@ function Layout({children}) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Link className="nav-link" href={route('dashboard')}><FontAwesomeIcon icon={faDashboard}/> DASHBOARD</Link>
-            <NavDropdown title={<span><FontAwesomeIcon icon={faFolder} /> MASTER</span>} id="collapsible-nav-dropdown">
-              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faCreditCard}/> TABUNGAN</Link>
-              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-              <Link className="dropdown-item" href={route('merek.index')}><FontAwesomeIcon icon={faStar}/> MEREK</Link>
-            </NavDropdown>
+            <Menu role={role}/>
           </Nav>
           <Nav>
             <Nav.Link><ThemeMode/></Nav.Link>

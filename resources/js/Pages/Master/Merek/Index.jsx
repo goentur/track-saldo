@@ -3,7 +3,7 @@ import Layout from "../../../Layouts/Layout";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Head, Link, router, useForm } from "@inertiajs/react";
 import { faEdit, faStar } from "@fortawesome/free-regular-svg-icons";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Modal, Spinner, Table } from "react-bootstrap";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Spinner, Table } from "react-bootstrap";
 import { useRef, useState } from "react";
 import { useRoute } from "../../../../../vendor/tightenco/ziggy";
 import Swal from "sweetalert2";
@@ -84,6 +84,7 @@ function Index({ mereks }){
                         <thead>
                             <tr>
                                 <th className="w-1 text-center">NO</th>
+                                <th>TOKO</th>
                                 <th>NAMA</th>
                                 <th className="w-1 text-center">AKSI</th>
                             </tr>
@@ -91,18 +92,19 @@ function Index({ mereks }){
                         <tbody>
                             {isLoading?(
                                 <tr>
-                                    <td colSpan={3} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
+                                    <td colSpan={4} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
                                 </tr>
                             ): 
                             mereks.data.map((merek,index) => (
                             <tr key={merek.id}>
                                 <td className="text-center">{ mereks.from + index}.</td>
+                                <td>{ merek.toko.nama }</td>
                                 <td>{ merek.nama }</td>
                                 <td>
-                                <ButtonGroup aria-label="button action">
-                                <Link href={route('merek.edit',merek)} className="btn btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></Link>
-                                <Button size="sm" variant="danger" onClick={() => hapus(merek.id)}><FontAwesomeIcon icon={faTrash}/></Button>
-                                </ButtonGroup>
+                                    <ButtonGroup aria-label="button action">
+                                        <Link href={route('merek.edit',merek)} className="btn btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></Link>
+                                        <Button size="sm" variant="danger" onClick={() => hapus(merek.id)}><FontAwesomeIcon icon={faTrash}/></Button>
+                                    </ButtonGroup>
                                 </td>
                             </tr>
                             ))}

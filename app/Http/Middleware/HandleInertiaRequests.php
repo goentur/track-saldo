@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'auth' => [
                 'user' => fn () => $request->user() ? $request->user() : false,
+                'role' => fn () => $request->user() ? $request->user()->getRoleNames() : null,
             ],
         ]);
     }

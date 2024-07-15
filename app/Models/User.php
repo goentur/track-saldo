@@ -19,6 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'zona_waktu_id',
         'name',
         'email',
         'password',
@@ -45,5 +46,13 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function toko()
+    {
+        return $this->belongsToMany(Toko::class, UserToko::class)->with('merek');
+    }
+    public function zonaWaktu()
+    {
+        return $this->belongsTo(ZonaWaktu::class);
     }
 }

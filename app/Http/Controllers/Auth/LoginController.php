@@ -33,12 +33,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
-            $user = auth()->user();
-            return redirect()->intended('home');
-            // if ($user->hasRole('pemilik')) {
-            // } else {
-            //     return redirect()->intended('dashboard');
-            // };
+            return redirect('home');
         }
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -54,6 +49,6 @@ class LoginController extends Controller
     {
         auth()->logout();
 
-        return redirect('/login');
+        return redirect('login');
     }
 }
