@@ -6,11 +6,7 @@ use App\Models\User;
 
 class PegawaiRepository implements PegawaiRepositoryInterface
 {
-    public function all()
-    {
-        return User::latest()->all();
-    }
-    public function paginate($search, $number)
+    public function gatAllData($search, $number)
     {
         return User::with('zonaWaktu', 'toko')
             ->where(function ($query) use ($search) {

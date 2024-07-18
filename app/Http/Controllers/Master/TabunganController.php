@@ -21,23 +21,17 @@ class TabunganController extends Controller
     public function index(Request $request)
     {
         return inertia('Master/Tabungan/Index', [
-            'tabungans' => $this->tabungan->paginate($request->search, $request->perpage),
+            'tabungans' => $this->tabungan->gatAllData($request->search, $request->perpage),
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         return inertia('Master/Tabungan/Tambah', [
             'mereks' => $this->merek->getMereksByToko(['id', 'toko_id', 'nama']),
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(StoreTabunganRequest $request)
     {
         $this->tabungan->create([
@@ -48,18 +42,12 @@ class TabunganController extends Controller
         ]);
         return to_route('tabungan.index')->with('success', 'Data berhasil ditambahkan');
     }
-
-    /**
-     * Display the specified resource.
-     */
+    
     public function show($id)
     {
         return back();
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit($id)
     {
         return inertia('Master/Tabungan/Ubah', [
@@ -67,10 +55,7 @@ class TabunganController extends Controller
             'tabungan' => $this->tabungan->find($id),
         ]);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(UpdateTabunganRequest $request, $id)
     {
         $this->tabungan->update([
@@ -81,13 +66,18 @@ class TabunganController extends Controller
         ], $id);
         return to_route('tabungan.index')->with('success', 'Data berhasil diubah');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy($id)
     {
         $this->tabungan->delete($id);
         return to_route('tabungan.index')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function dataByToko(Request $request)
+    {
+        $request->validate([
+            'toko' => ['required', 'numeric'],
+        ]);
+        return response()->json($this->tabungan->getWhere(['id', 'merek_id', 'no'], ['toko_id' => $request->toko]), 200);
     }
 }

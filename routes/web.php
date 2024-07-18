@@ -10,6 +10,7 @@ use App\Http\Controllers\Master\PemilikController;
 use App\Http\Controllers\Master\TabunganController;
 use App\Http\Controllers\Master\TokoController;
 use App\Http\Controllers\Master\ZonaWaktuController;
+use App\Http\Controllers\Transaksi\Transfer\TambahSaldoController;
 use App\Http\Controllers\Transaksi\Transfer\TransferController;
 use App\Http\Controllers\Transaksi\Transfer\TransferViaATMNasabahController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:pemilik')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::prefix('master')->group(function () {
+            Route::post('anggota/data-by-toko', [AnggotaController::class, 'dataByToko'])->name('master.anggota.data-by-toko');
+            Route::post('tabungan/data-by-toko', [TabunganController::class, 'dataByToko'])->name('master.tabungan.data-by-toko');
             Route::resource('merek', MerekController::class);
             Route::resource('anggota', AnggotaController::class);
             Route::resource('tabungan', TabunganController::class);
@@ -43,6 +46,11 @@ Route::middleware('auth')->group(function () {
             Route::get('menu', [TransferController::class, 'index'])->name('transfer.menu');
             Route::prefix('via-atm-nasabah')->name('via-atm-nasabah.')->group(function () {
                 Route::get('/', [TransferViaATMNasabahController::class, 'index'])->name('index');
+                Route::post('simpan', [TransferViaATMNasabahController::class, 'simpan'])->name('simpan');
+            });
+            Route::prefix('tambah-saldo')->name('tambah-saldo.')->group(function () {
+                Route::get('/', [TambahSaldoController::class, 'index'])->name('index');
+                Route::post('simpan', [TambahSaldoController::class, 'simpan'])->name('simpan');
             });
         });
     });

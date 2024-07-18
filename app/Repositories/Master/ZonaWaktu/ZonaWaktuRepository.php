@@ -6,11 +6,12 @@ use App\Models\ZonaWaktu;
 
 class ZonaWaktuRepository implements ZonaWaktuRepositoryInterface
 {
-    public function get(array $where)
+    public function get(array $select)
     {
-        return ZonaWaktu::select($where)->get();
+        return ZonaWaktu::select($select)->get();
     }
-    public function paginate($search, $number)
+
+    public function gatAllData($search, $number)
     {
         return ZonaWaktu::search($search)->latest()->paginate($number ?? 25)->appends('query', null)->withQueryString();
     }

@@ -6,11 +6,7 @@ use App\Models\Anggota;
 
 class AnggotaRepository implements AnggotaRepositoryInterface
 {
-    public function all()
-    {
-        return Anggota::latest()->all();
-    }
-    public function paginate($search, $number)
+    public function gatAllData($search, $number)
     {
         $tokoId = [];
         foreach (auth()->user()->toko as $toko) {
@@ -31,15 +27,6 @@ class AnggotaRepository implements AnggotaRepositoryInterface
         return Anggota::create($data);
     }
 
-    public function getAnggotasByUser(array $select)
-    {
-        $tokoId = [];
-        foreach (auth()->user()->toko as $toko) {
-            $tokoId[] = $toko->id;
-        }
-        return Anggota::with('toko')->select($select)->whereIn('toko_id', $tokoId)->get();
-    }
-
     public function find($id)
     {
         return Anggota::findOrFail($id);
@@ -56,5 +43,28 @@ class AnggotaRepository implements AnggotaRepositoryInterface
     {
         $anggota = Anggota::findOrFail($id);
         $anggota->delete();
+    }
+
+    public function getWhere(array $select, array $data)
+    {
+        return Anggota::select($select)->where($data)->get();
+    }
+
+    public function getAnggotasByUser(array $select)
+    {
+        $tokoId = [];
+        foreach (auth()->user()->toko as $toko) {
+            $tokoId[] = $toko->id;
+        }
+        return Anggota::with('toko')->select($select)->whereIn('toko_id', $tokoId)->get();
+    }
+    public function updatePoin(array $data)
+    {
+        $anggota = Anggota::findOrFail($data['anggota']);
+        $point = (($data['nominal'] * 10) / 100) / 1000;
+        $anggota->update([
+            'poin' => $anggota->poin + $point,
+        ]);
+        return $anggota;
     }
 }

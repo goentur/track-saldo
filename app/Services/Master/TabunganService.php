@@ -6,27 +6,20 @@ use App\Repositories\Master\Tabungan\TabunganRepositoryInterface;
 
 class TabunganService
 {
-    public function __construct(protected TabunganRepositoryInterface $tabungan)
+    public function __construct(
+        protected TabunganRepositoryInterface $tabungan,
+    )
     {
     }
 
-    public function all()
+    public function gatAllData($search, $number)
     {
-        return $this->tabungan->all();
-    }
-
-    public function paginate($search, $number)
-    {
-        return $this->tabungan->paginate($search, $number);
+        return $this->tabungan->gatAllData($search, $number);
     }
 
     public function create(array $data)
     {
         return $this->tabungan->create($data);
-    }
-    public function where(array $data)
-    {
-        return $this->tabungan->where($data);
     }
 
     public function find($id)
@@ -42,5 +35,20 @@ class TabunganService
     public function delete($id)
     {
         return $this->tabungan->delete($id);
+    }
+
+    public function getWhere(array $select, array $data)
+    {
+        return $this->tabungan->getWhere($select, $data);
+    }
+
+    public function getTabungansByToko(array $select)
+    {
+        return $this->tabungan->getTabungansByToko($select);
+    }
+
+    public function updateNominal(array $data)
+    {
+        return $this->tabungan->updateNominal($data);
     }
 }

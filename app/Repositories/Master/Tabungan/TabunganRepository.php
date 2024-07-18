@@ -6,11 +6,7 @@ use App\Models\Tabungan;
 
 class TabunganRepository implements TabunganRepositoryInterface
 {
-    public function all()
-    {
-        return Tabungan::latest()->all();
-    }
-    public function paginate($search, $number)
+    public function gatAllData($search, $number)
     {
         $tokoId = [];
         foreach (auth()->user()->toko as $toko) {
@@ -35,11 +31,6 @@ class TabunganRepository implements TabunganRepositoryInterface
         return Tabungan::create($data);
     }
 
-    public function where(array $data)
-    {
-        return Tabungan::where($data)->get();
-    }
-
     public function find($id)
     {
         return Tabungan::findOrFail($id);
@@ -56,5 +47,33 @@ class TabunganRepository implements TabunganRepositoryInterface
     {
         $tabungan = Tabungan::findOrFail($id);
         $tabungan->delete();
+    }
+
+    public function getWhere(array $select, array $data)
+    {
+        return Tabungan::with('merek')->select($select)->where($data)->get();
+    }
+
+    public function getTabungansByToko(array $select)
+    {
+        $tokoId = [];
+        foreach (auth()->user()->toko as $toko) {
+            $tokoId[] = $toko->id;
+        }
+        return Tabungan::with('toko', 'merek')->select($select)->whereIn('toko_id', $tokoId)->orderBy('toko_id')->get();
+    }
+
+    public function updateNominal(array $data)
+    {
+        $tabungan = Tabungan::findOrFail($data['tabungan']);
+        if ($data['tipe'] == 'menambahkan') {
+            $nominal = $tabungan->nominal + $data['nominal'];
+        } else if ($data['tipe'] == 'mengurangi') {
+            $nominal = $tabungan->nominal - $data['nominal'];
+        }
+        $tabungan->update([
+            'nominal' => $nominal,
+        ]);
+        return $tabungan;
     }
 }

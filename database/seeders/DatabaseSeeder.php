@@ -19,8 +19,9 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'developer']);
 
         $userDeveloper = User::factory()->create([
-            'name' => 'Developer',
+            'zona_waktu_id' => 1,
             'email' => 'dev@mail.com',
+            'name' => 'Developer',
             'password' => bcrypt('a')
         ]);
         $userDeveloper->assignRole('developer');

@@ -28,21 +28,21 @@ function Ubah({ zonaWaktu }) {
                 <CardBody>
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNama">
-                            <Form.Label>Nama</Form.Label>
+                            <Form.Label>NAMA <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="text" placeholder="Masukan nama" aria-describedby="inputGroupPrepend" name="nama" value={data.nama} onChange={(e) => setData("nama", e.target.value)} isInvalid={!!errors.nama} autoFocus required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.nama}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-3" controlId="validationFormSingkatan">
-                            <Form.Label>Singkatan</Form.Label>
+                            <Form.Label>SINGKATAN <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="text" placeholder="Masukan singkatan" aria-describedby="inputGroupPrepend" name="singkatan" value={data.singkatan} onChange={(e) => setData("singkatan", e.target.value)} isInvalid={!!errors.singkatan} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.singkatan}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-3" controlId="validationFormGMTOffset">
-                            <Form.Label>GMT Offset</Form.Label>
+                            <Form.Label>GMT OFFSET <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="number" placeholder="Masukan gmt offset" aria-describedby="inputGroupPrepend" name="gmt_offset" value={data.gmt_offset} onChange={(e) => setData("gmt_offset", e.target.value)} isInvalid={!!errors.gmt_offset} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.gmt_offset}

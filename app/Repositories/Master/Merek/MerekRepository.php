@@ -6,11 +6,7 @@ use App\Models\Merek;
 
 class MerekRepository implements MerekRepositoryInterface
 {
-    public function all()
-    {
-        return Merek::latest()->all();
-    }
-    public function paginate($search, $number)
+    public function gatAllData($search, $number)
     {
         $tokoId = [];
         foreach (auth()->user()->toko as $toko) {
@@ -31,17 +27,6 @@ class MerekRepository implements MerekRepositoryInterface
         return Merek::create($data);
     }
 
-    public function getMereksByToko(array $select)
-    {
-        $merekId = [];
-        foreach (auth()->user()->toko as $toko) {
-            foreach ($toko->merek as $merek) {
-                $merekId[] = $merek->id;
-            }
-        }
-        return Merek::with('toko')->select($select)->whereIn('id', $merekId)->get();
-    }
-
     public function find($id)
     {
         return Merek::findOrFail($id);
@@ -58,5 +43,21 @@ class MerekRepository implements MerekRepositoryInterface
     {
         $merek = Merek::findOrFail($id);
         $merek->delete();
+    }
+
+    public function getWhere(array $select, array $where)
+    {
+        return Merek::select($select)->where($where)->get();
+    }
+
+    public function getMereksByToko(array $select)
+    {
+        $merekId = [];
+        foreach (auth()->user()->toko as $toko) {
+            foreach ($toko->merek as $merek) {
+                $merekId[] = $merek->id;
+            }
+        }
+        return Merek::with('toko')->select($select)->whereIn('id', $merekId)->get();
     }
 }

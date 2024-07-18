@@ -94,7 +94,7 @@ function Index({ pegawais }){
                         <tbody>
                             {isLoading?(
                                 <tr>
-                                    <td colSpan={5} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
+                                    <td colSpan={6} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
                                 </tr>
                             ): 
                             pegawais.data.map((pegawai,index) => (

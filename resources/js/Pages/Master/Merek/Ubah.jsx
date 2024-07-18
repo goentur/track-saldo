@@ -9,7 +9,7 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import { useEffect, useState } from "react";
 function Ubah({ tokos, merek }) {
     const route = useRoute();
-    const formTokoLabel = (tokos) => `${tokos.nama} | ${tokos.alamat}`;
+    const formTokoLabel = (tokos) => `${tokos.nama}`;
     const { data, setData, put, errors, processing } = useForm({
         toko: merek.toko_id,
         nama: merek.nama,
@@ -42,14 +42,14 @@ function Ubah({ tokos, merek }) {
                 <CardBody>
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormToko">
-                            <Form.Label>Toko</Form.Label>
+                            <Form.Label>TOKO <span className="text-danger">*</span></Form.Label>
                             <Typeahead id="toko" labelKey={formTokoLabel} name="toko" options={tokos} placeholder="Pilih toko" onChange={handleTokoChange} size="lg" isInvalid={!!errors.toko} selected={selectedToko ? [selectedToko] : []} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.toko}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNama">
-                            <Form.Label>Nama</Form.Label>
+                            <Form.Label>NAMA <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="text" placeholder="Masukan nama" aria-describedby="inputGroupPrepend" name="nama" value={data.nama} onChange={(e) => setData("nama", e.target.value)} isInvalid={!!errors.nama} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.nama}

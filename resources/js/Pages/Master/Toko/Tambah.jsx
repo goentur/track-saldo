@@ -27,14 +27,14 @@ function Tambah() {
                 <CardBody>
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNama">
-                            <Form.Label>Nama</Form.Label>
+                            <Form.Label>NAMA <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="text" placeholder="Masukan nama" aria-describedby="inputGroupPrepend" name="nama" value={data.nama} onChange={(e) => setData("nama", e.target.value)} isInvalid={!!errors.nama} autoFocus required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.nama}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormAlamat">
-                            <Form.Label>Alamat</Form.Label>
+                            <Form.Label>ALAMAT <span className="text-danger">*</span></Form.Label>
                             <Form.Control as="textarea" size="lg" type="text" placeholder="Masukan alamat" aria-describedby="inputGroupPrepend" name="alamat" value={data.alamat} onChange={(e) => setData("alamat", e.target.value)} isInvalid={!!errors.alamat} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.alamat}

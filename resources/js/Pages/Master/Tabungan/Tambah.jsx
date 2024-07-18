@@ -9,7 +9,6 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
 function Tambah({mereks}) {
     const route = useRoute();
-    const formMerekLabel = (mereks) => `${mereks.toko.nama} | ${mereks.nama}`;
     const { data, setData, post, errors, processing } = useForm({
         toko: "",
         merek: "",
@@ -42,19 +41,19 @@ function Tambah({mereks}) {
                 <CardBody>
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormMerek">
-                            <Form.Label>Merek</Form.Label>
-                            <Typeahead id="merek" labelKey={formMerekLabel} name="merek" options={mereks} placeholder="Pilih merek" onChange={handleMerekChange} size="lg" isInvalid={!!errors.merek} autoFocus required/>
+                            <Form.Label>MEREK <span className="text-danger">*</span></Form.Label>
+                            <Typeahead id="merek" labelKey={(mereks) => `${mereks.toko.nama} | ${mereks.nama}`} name="merek" options={mereks} placeholder="Pilih merek" onChange={handleMerekChange} size="lg" isInvalid={!!errors.merek} autoFocus required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.merek}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNo">
-                            <Form.Label>No</Form.Label>
+                            <Form.Label>NO <span className="text-danger">*</span></Form.Label>
                             <CurrencyInput id="no" name="no" placeholder="Masukan no" className={`form-control form-control-lg ${errors.no && 'is-invalid'}`} disableGroupSeparators={true} onValueChange={(values) => setData("no", values)} required />
                             {errors.no && <div className="invalid-feedback">{errors.no}</div>}
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNominal">
-                            <Form.Label>Nominal</Form.Label>
+                            <Form.Label>NOMINAL <span className="text-danger">*</span></Form.Label>
                             <CurrencyInput id="nominal" name="nominal" placeholder="Masukan nominal" className={`form-control form-control-lg text-end ${errors.nominal && 'is-invalid'}`} prefix="Rp " onValueChange={(values) => setData("nominal", values)} required />
                             {errors.nominal && <div className="invalid-feedback">{errors.nominal}</div>}
                         </Form.Group>

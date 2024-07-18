@@ -4,9 +4,9 @@ namespace App\Repositories\Master\ZonaWaktu;
 
 interface ZonaWaktuRepositoryInterface
 {
-    public function get(array $where);
+    public function get(array $select);
 
-    public function paginate($search, $number);
+    public function gatAllData($search, $number);
 
     public function create(array $data);
 

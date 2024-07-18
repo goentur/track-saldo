@@ -11,7 +11,7 @@ function Menu(){
     <Layout>
         <Head title="TRANSFER"/>
         <h1 className="text-center mb-0"><FontAwesomeIcon icon={faGripHorizontal}/></h1>
-        <h3 className="text-center mb-5">PILIH MENU</h3>
+        <h3 className="text-center mb-5">PILIH MENU TRANSFER</h3>
         <div className="row mb-5">
             <div className="col-md-3">
                 <div className="card bg-primary shadow text-center text-white">

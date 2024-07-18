@@ -6,13 +6,9 @@ use App\Models\User;
 
 class PemilikRepository implements PemilikRepositoryInterface
 {
-    public function all()
+    public function gatAllData($search, $number)
     {
-        return User::latest()->all();
-    }
-    public function paginate($search, $number)
-    {
-        return User::with('toko')
+        return User::with('zonaWaktu', 'toko')
             ->where(function ($query) use ($search) {
                 $query->where('email', 'like', '%' . $search . '%')
                     ->orWhere('name', 'like', '%' . $search . '%')
@@ -30,7 +26,7 @@ class PemilikRepository implements PemilikRepositoryInterface
 
     public function create(array $data)
     {
-        $user = User::create([
+        $user = User::create(['zona_waktu_id' => $data['zonaWaktu'],
             'email' => $data['email'],
             'name' => $data['nama'],
             'password' => $data['password'],

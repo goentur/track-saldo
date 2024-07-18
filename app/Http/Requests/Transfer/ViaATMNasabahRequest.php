@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Master;
+namespace App\Http\Requests\Transfer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePemilikRequest extends FormRequest
+class ViaATMNasabahRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,10 @@ class StorePemilikRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'zonaWaktu' => ['required', 'numeric'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'nama' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:12', 'confirmed'],
             'toko' => ['required', 'numeric'],
+            'anggota' => ['required', 'numeric'],
+            'tabunganBiayaAdmin' => ['required', 'numeric'],
+            'nominalBiayaAdmin' => ['required', 'numeric'],
         ];
     }
 }

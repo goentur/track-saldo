@@ -6,18 +6,20 @@ use App\Repositories\Master\ZonaWaktu\ZonaWaktuRepositoryInterface;
 
 class ZonaWaktuService
 {
-    public function __construct(protected ZonaWaktuRepositoryInterface $zonaWaktu)
+    public function __construct(
+        protected ZonaWaktuRepositoryInterface $zonaWaktu,
+    )
     {
     }
 
-    public function get(array $where)
+    public function get(array $select)
     {
-        return $this->zonaWaktu->get($where);
+        return $this->zonaWaktu->get($select);
     }
 
-    public function paginate($search, $number)
+    public function gatAllData($search, $number)
     {
-        return $this->zonaWaktu->paginate($search, $number);
+        return $this->zonaWaktu->gatAllData($search, $number);
     }
 
     public function create(array $data)

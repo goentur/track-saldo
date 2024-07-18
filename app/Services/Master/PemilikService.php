@@ -6,18 +6,15 @@ use App\Repositories\Master\Pemilik\PemilikRepositoryInterface;
 
 class PemilikService
 {
-    public function __construct(protected PemilikRepositoryInterface $pemilik)
+    public function __construct(
+        protected PemilikRepositoryInterface $pemilik,
+    )
     {
     }
 
-    public function all()
+    public function gatAllData($search, $number)
     {
-        return $this->pemilik->all();
-    }
-
-    public function paginate($search, $number)
-    {
-        return $this->pemilik->paginate($search, $number);
+        return $this->pemilik->gatAllData($search, $number);
     }
 
     public function create(array $data)

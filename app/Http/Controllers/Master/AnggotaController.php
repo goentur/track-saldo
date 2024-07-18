@@ -19,23 +19,17 @@ class AnggotaController extends Controller
     public function index(Request $request)
     {
         return inertia('Master/Anggota/Index', [
-            'anggotas' => $this->anggota->paginate($request->search, $request->perpage),
+            'anggotas' => $this->anggota->gatAllData($request->search, $request->perpage),
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         return inertia('Master/Anggota/Tambah', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama', 'alamat']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(StoreAnggotaRequest $request)
     {
         $this->anggota->create([
@@ -46,29 +40,20 @@ class AnggotaController extends Controller
         ]);
         return to_route('anggota.index')->with('success', 'Data berhasil ditambahkan');
     }
-
-    /**
-     * Display the specified resource.
-     */
+    
     public function show($id)
     {
         return back();
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit($id)
     {
         return inertia('Master/Anggota/Ubah', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama', 'alamat']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
             'anggota' => $this->anggota->find($id),
         ]);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(UpdateAnggotaRequest $request, $id)
     {
         $this->anggota->update([
@@ -80,12 +65,17 @@ class AnggotaController extends Controller
         return to_route('anggota.index')->with('success', 'Data berhasil diubah');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $this->anggota->delete($id);
         return to_route('anggota.index')->with('success', 'Data berhasil dihapus');
+    }
+
+    public function dataByToko(Request $request)
+    {
+        $request->validate([
+            'toko' => ['required', 'numeric'],
+        ]);
+        return response()->json($this->anggota->getWhere(['id', 'nama', 'alamat'], ['toko_id' => $request->toko]), 200);
     }
 }

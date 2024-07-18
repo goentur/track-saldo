@@ -5,8 +5,8 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import { faUniversity } from "@fortawesome/free-solid-svg-icons/faUniversity";
 import { Button, CardBody, CardFooter, CardHeader, Form, InputGroup, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { faMoneyBillAlt, faSave } from "@fortawesome/free-regular-svg-icons";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faSave } from "@fortawesome/free-regular-svg-icons";
+import { faArrowLeft, faWallet } from "@fortawesome/free-solid-svg-icons";
 import CurrencyInput from "react-currency-input-field";
 import axios from 'axios';
 import { useState } from "react";
@@ -45,14 +45,14 @@ function Index({ tokos }) {
 
     function submit(e) {
         e.preventDefault();
-        post(route("via-atm-nasabah.simpan"));
+        post(route("tambah-saldo.simpan"));
     }
     return (
         <Layout>
-            <Head title="TRANSFER VIA ATM NASABAH" />
+            <Head title="TAMBAH SALDO" />
             <Form onSubmit={submit} className="card">
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                    <h1><FontAwesomeIcon icon={faUniversity} /> TRANSFER VIA ATM NASABAH</h1>
+                    <h1><FontAwesomeIcon icon={faWallet} /> TAMBAH SALDO</h1>
                     <Link href={route('merek.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft} /> KEMBALI KE MENU</Link>
                 </CardHeader>
                 <CardBody className="row">

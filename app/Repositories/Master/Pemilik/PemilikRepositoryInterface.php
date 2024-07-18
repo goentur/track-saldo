@@ -4,9 +4,7 @@ namespace App\Repositories\Master\Pemilik;
 
 interface PemilikRepositoryInterface
 {
-    public function all();
-
-    public function paginate($search, $number);
+    public function gatAllData($search, $number);
 
     public function create(array $data);
 

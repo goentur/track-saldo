@@ -21,6 +21,10 @@ body .modal::-webkit-scrollbar-thumb {
     background-color: #fff
 }
 
+input[disabled] {
+    cursor: not-allowed;
+}
+
 .table-sm td {
     vertical-align: middle;
 }

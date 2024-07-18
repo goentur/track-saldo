@@ -6,33 +6,25 @@ use App\Repositories\Master\Toko\TokoRepositoryInterface;
 
 class TokoService
 {
-    public function __construct(protected TokoRepositoryInterface $toko)
+    public function __construct(
+        protected TokoRepositoryInterface $toko,
+    )
     {
     }
 
-    public function get(array $selected)
+    public function get(array $select)
     {
-        return $this->toko->get($selected);
+        return $this->toko->get($select);
     }
 
-    public function paginate($search, $number)
+    public function gatAllData($search, $number)
     {
-        return $this->toko->paginate($search, $number);
+        return $this->toko->gatAllData($search, $number);
     }
 
     public function create(array $data)
     {
         return $this->toko->create($data);
-    }
-
-    public function where(array $data)
-    {
-        return $this->toko->where($data);
-    }
-
-    public function getTokosByUser(array $seelct)
-    {
-        return $this->toko->getTokosByUser($seelct);
     }
 
     public function find($id)
@@ -48,5 +40,10 @@ class TokoService
     public function delete($id)
     {
         return $this->toko->delete($id);
+    }
+
+    public function getTokosByUser(array $select)
+    {
+        return $this->toko->getTokosByUser($select);
     }
 }

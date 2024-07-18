@@ -51,28 +51,28 @@ function Ubah({ pegawai, zonaWaktus, tokos }) {
                 <CardBody>
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormZonaWaktu">
-                            <Form.Label>Zona Waktu</Form.Label>
+                            <Form.Label>ZONA WAKTU <span className="text-danger">*</span></Form.Label>
                             <Typeahead id="zonaWaktu" labelKey={formZonaWaktuLabel} name="zonaWaktu" options={zonaWaktus} placeholder="Pilih zona waktu" onChange={handleZonaWaktuChange} size="lg" isInvalid={!!errors.zonaWaktu} selected={selectedZonaWaktu ? [selectedZonaWaktu] : []} autoFocus required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.zonaWaktu}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormEmail">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Label>EMAIL <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="email" placeholder="Masukan email" aria-describedby="inputGroupPrepend" name="email" value={data.email} onChange={(e) => setData("email", e.target.value)} isInvalid={!!errors.email} readOnly required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.email}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNama">
-                            <Form.Label>Nama</Form.Label>
+                            <Form.Label>NAMA <span className="text-danger">*</span></Form.Label>
                             <Form.Control size="lg" type="text" placeholder="Masukan nama" aria-describedby="inputGroupPrepend" name="nama" value={data.nama} onChange={(e) => setData("nama", e.target.value)} isInvalid={!!errors.nama} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.nama}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormToko">
-                            <Form.Label>Toko</Form.Label>
+                            <Form.Label>TOKO <span className="text-danger">*</span></Form.Label>
                             <Typeahead id="toko" labelKey={formTokoLabel} name="toko" options={tokos} placeholder="Pilih toko" onChange={handleTokoChange} size="lg" isInvalid={!!errors.toko} selected={selectedToko ? [selectedToko] : []} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.toko}

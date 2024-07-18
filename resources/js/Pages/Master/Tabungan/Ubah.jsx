@@ -52,19 +52,19 @@ function Ubah({ mereks, tabungan }) {
                 <CardBody>
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormMerek">
-                            <Form.Label>Merek</Form.Label>
+                            <Form.Label>MEREK <span className="text-danger">*</span></Form.Label>
                             <Typeahead id="merek" labelKey={formMerekLabel} name="merek" options={mereks} placeholder="Pilih merek" onChange={handleMerekChange} size="lg" isInvalid={!!errors.merek} selected={selectedMerek ? [selectedMerek] : []} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.merek}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNo">
-                            <Form.Label>No</Form.Label>
+                            <Form.Label>NO <span className="text-danger">*</span></Form.Label>
                             <CurrencyInput id="no" name="no" placeholder="Masukan no" className={`form-control form-control-lg ${errors.no && 'is-invalid'}`} disableGroupSeparators={true} value={data.no} onValueChange={(values) => setData("no", values)} required />
                             {errors.no && <div className="invalid-feedback">{errors.no}</div>}
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNominal">
-                            <Form.Label>Nominal</Form.Label>
+                            <Form.Label>NOMINAL <span className="text-danger">*</span></Form.Label>
                             <CurrencyInput id="nominal" name="nominal" placeholder="Masukan nominal" className={`form-control form-control-lg text-end ${errors.nominal && 'is-invalid'}`} prefix="Rp " value={data.nominal} onValueChange={(values) => setData("nominal", values)} required />
                             {errors.nominal && <div className="invalid-feedback">{errors.nominal}</div>}
                         </Form.Group>

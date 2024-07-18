@@ -10,14 +10,9 @@ class PegawaiService
     {
     }
 
-    public function all()
+    public function gatAllData($search, $number)
     {
-        return $this->pegawai->all();
-    }
-
-    public function paginate($search, $number)
-    {
-        return $this->pegawai->paginate($search, $number);
+        return $this->pegawai->gatAllData($search, $number);
     }
 
     public function create(array $data)

@@ -84,7 +84,8 @@ function Index({ pemiliks }){
                         <thead>
                             <tr>
                                 <th className="w-1 text-center">NO</th>
-                                <th>EMAIL</th>
+                                <th className="w-5">ZONA WAKTU</th>
+                                <th className="w-1">EMAIL</th>
                                 <th>NAMA</th>
                                 <th>TOKO</th>
                                 <th className="w-1 text-center">AKSI</th>
@@ -93,12 +94,13 @@ function Index({ pemiliks }){
                         <tbody>
                             {isLoading?(
                                 <tr>
-                                    <td colSpan={5} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
+                                    <td colSpan={6} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
                                 </tr>
                             ): 
                             pemiliks.data.map((pemilik,index) => (
                             <tr key={pemilik.id}>
                                 <td className="text-center">{ pemiliks.from + index}.</td>
+                                <td>{ pemilik.zona_waktu.nama }</td>
                                 <td>{ pemilik.email }</td>
                                 <td>{ pemilik.name }</td>
                                 <td>

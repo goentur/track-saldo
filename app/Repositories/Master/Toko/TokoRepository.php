@@ -6,11 +6,12 @@ use App\Models\Toko;
 
 class TokoRepository implements TokoRepositoryInterface
 {
-    public function get(array $selected)
+    public function get(array $select)
     {
-        return Toko::select($selected)->get();
+        return Toko::select($select)->get();
     }
-    public function paginate($search, $number)
+
+    public function gatAllData($search, $number)
     {
         return Toko::search($search)->latest()->paginate($number ?? 25)->appends('query', null)->withQueryString();
     }
@@ -19,20 +20,7 @@ class TokoRepository implements TokoRepositoryInterface
     {
         return Toko::create($data);
     }
-
-    public function where(array $data)
-    {
-        return Toko::where($data)->get();
-    }
-    public function getTokosByUser(array $select)
-    {
-        $tokoId = [];
-        foreach (auth()->user()->toko as $toko) {
-            $tokoId[] = $toko->id;
-        }
-        return Toko::select($select)->whereIn('id', $tokoId)->get();
-    }
-
+    
     public function find($id)
     {
         return Toko::findOrFail($id);
@@ -49,5 +37,14 @@ class TokoRepository implements TokoRepositoryInterface
     {
         $toko = Toko::findOrFail($id);
         $toko->delete();
+    }
+
+    public function getTokosByUser(array $select)
+    {
+        $tokoId = [];
+        foreach (auth()->user()->toko as $toko) {
+            $tokoId[] = $toko->id;
+        }
+        return Toko::select($select)->whereIn('id', $tokoId)->get();
     }
 }
