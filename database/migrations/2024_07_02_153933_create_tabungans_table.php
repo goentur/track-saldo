@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tabungans', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('toko_id')->nullable()->comment('id toko');
-            $table->unsignedBigInteger('merek_id')->nullable()->comment('id merek');
+            $table->uuid('id')->primary();
+            $table->string('toko_id')->nullable()->comment('id toko');
+            $table->string('merek_id')->nullable()->comment('id merek');
             $table->bigInteger('no')->nullable();
             $table->bigInteger('nominal')->nullable();
             $table->softDeletes();

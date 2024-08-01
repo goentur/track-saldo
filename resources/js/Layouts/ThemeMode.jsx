@@ -6,6 +6,11 @@ function ThemeMode() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
+    if (theme === 'light') {
+      document.body.style.backgroundColor = '#a1a1a1';
+    } else {
+      document.body.style.backgroundColor = '';
+    }
     document.documentElement.setAttribute('data-bs-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -16,7 +21,7 @@ function ThemeMode() {
   };
 
   const containerStyles = {
-    background: theme === 'light' ? '#333' : '#FFF',
+    background: theme === 'light' ? '#333' : '#fff',
     width: '50px',
     height: '25px',
     borderRadius: '12.5px',
@@ -32,7 +37,7 @@ function ThemeMode() {
     width: '21px',
     height: '21px',
     borderRadius: '50%',
-    backgroundColor: theme === 'light' ? '#FFF' : '#333',
+    backgroundColor: theme === 'light' ? '#fff' : '#333',
     transition: 'transform 0.25s ease-out',
     transform: theme === 'light' ? 'translateX(0)' : 'translateX(24px)',
     display: 'flex',

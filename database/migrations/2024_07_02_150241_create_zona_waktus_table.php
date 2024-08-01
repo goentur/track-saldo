@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('zona_waktus', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('nama')->nullable();
             $table->string('singkatan')->nullable();
             $table->bigInteger('gmt_offset')->nullable();

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mereks', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('toko_id')->nullable()->comment('id toko');
+            $table->uuid('id')->primary();
+            $table->string('toko_id')->nullable()->comment('id toko');
             $table->string('nama')->nullable();
             $table->softDeletes();
             $table->timestamps();

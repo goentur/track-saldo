@@ -4,7 +4,8 @@ import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstr
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
 import Layout from "../../../Layouts/Layout";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faShare } from "@fortawesome/free-solid-svg-icons";
+import CurrencyInput from "react-currency-input-field";
 function Ubah({ zonaWaktu }) {
     const route = useRoute();
     const { data, setData, put, errors, processing } = useForm({
@@ -43,10 +44,9 @@ function Ubah({ zonaWaktu }) {
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-3" controlId="validationFormGMTOffset">
                             <Form.Label>GMT OFFSET <span className="text-danger">*</span></Form.Label>
-                            <Form.Control size="lg" type="number" placeholder="Masukan gmt offset" aria-describedby="inputGroupPrepend" name="gmt_offset" value={data.gmt_offset} onChange={(e) => setData("gmt_offset", e.target.value)} isInvalid={!!errors.gmt_offset} required/>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.gmt_offset}
-                            </Form.Control.Feedback>
+                            <CurrencyInput id="gmt_offset" name="gmt_offset" placeholder="Masukan gmt offset" className={`form-control form-control-lg ${errors.gmt_offset && 'is-invalid'}`} value={data.gmt_offset} disableGroupSeparators={true} onValueChange={(values) => setData("gmt_offset", values)} required />
+                            {errors.gmt_offset && <div className="invalid-feedback">{errors.gmt_offset}</div>}
+                            <a href="https://www.epochconverter.com/timezones" target="_blank" className="text-secondary"><FontAwesomeIcon icon={faShare}/> Referensi GMT Offset</a>
                         </Form.Group>
                         <div className="col-lg-12">
                             <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>{processing?<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>:<FontAwesomeIcon icon={faSave}/> } SIMPAN</Button>

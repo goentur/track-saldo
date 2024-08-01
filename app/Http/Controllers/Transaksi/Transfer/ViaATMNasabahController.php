@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\Transaksi\Transfer;
 
+use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
+use App\Enums\TipePengaturan;
 use App\Enums\TipeTransfer;
 use App\Enums\TipeTransferDetail;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transfer\ViaATMNasabahRequest;
+use App\Http\Requests\Transaksi\ViaATMNasabahRequest;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
+use App\Services\PengaturanService;
 use App\Services\TransferService;
 
-class TransferViaATMNasabahController extends Controller
+class ViaATMNasabahController extends Controller
 {
     public function __construct(
+        protected PengaturanService $pengaturan,
         protected TokoService $toko,
         protected TransferService $transfer,
         protected TabunganService $tabungan,
@@ -29,33 +33,39 @@ class TransferViaATMNasabahController extends Controller
     }
     public function simpan(ViaATMNasabahRequest $request)
     {
-        // tranfer
+        if ($request->tabunganBiayaAdmin) {
+            $tabungan = $request->tabunganBiayaAdmin;
+        } else {
+            $pengaturanTunai = $this->pengaturan->getWhereOne(['id', 'tabungan_id'], ['toko_id' => $request->toko, 'tipe' => TipePengaturan::TUNAI]);
+            $tabungan = $pengaturanTunai->tabungan_id;
+        }
         $transfer = [
             'anggota' => $request->anggota,
             'total' => $request->nominalBiayaAdmin,
             'tipe' => TipeTransfer::TRANSFER_VIA_ATM_NASABAH,
             'status' => StatusTransfer::MENUNGGU,
         ];
-        // tranfer detail
         $transferDetail[] = [
-            'tabungan' => $request->tabunganBiayaAdmin,
+            'tabungan' => $tabungan,
             'nominal' => $request->nominalBiayaAdmin,
-            'tipe' => TipeTransferDetail::BIAYA_ADMIN,
+            'tipe' => TipeTransferDetail::MENAMBAH,
+            'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([
                 'tipe' => 'menambahkan',
-                'tabungan' => $request->tabunganBiayaAdmin,
+                'tabungan' => $tabungan,
                 'nominal' => $request->nominalBiayaAdmin,
             ]);
-            $this->anggota->updatePoin([
-                'anggota' => $request->anggota,
-                'nominal' => $request->nominalBiayaAdmin,
-            ]);
-            return to_route('transfer.menu')->with('success', 'Transfer berhasil disimpan');
+            if ($request->anggota) {
+                $this->anggota->updatePoin([
+                    'anggota' => $request->anggota,
+                    'nominal' => $request->nominalBiayaAdmin,
+                ]);
+            }
+            return to_route('transaksi.menu')->with('success', 'Transfer berhasil disimpan');
         } else {
-            return to_route('via-atm-nasabah.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return to_route('transaksi.transfer.via-atm-nasabah.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
-        
     }
 }

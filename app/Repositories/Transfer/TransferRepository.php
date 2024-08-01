@@ -26,6 +26,7 @@ class TransferRepository implements TransferRepositoryInterface
                     'tabungan_id' => $transferDetail['tabungan'],
                     'nominal' => $transferDetail['nominal'],
                     'tipe' => $transferDetail['tipe'],
+                    'keterangan' => $transferDetail['keterangan'],
                 ]);
             }
             DB::commit();

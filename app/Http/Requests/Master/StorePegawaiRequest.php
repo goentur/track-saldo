@@ -22,11 +22,11 @@ class StorePegawaiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'zonaWaktu' => ['required', 'numeric'],
+            'zonaWaktu' => ['required', 'uuid'],
             'email' => ['required', 'email', 'unique:users,email'],
             'nama' => ['required', 'string'],
             'password' => ['required', 'string', 'min:12', 'confirmed'],
-            'toko' => ['required', 'numeric'],
+            'toko' => ['required', 'uuid'],
         ];
     }
 }

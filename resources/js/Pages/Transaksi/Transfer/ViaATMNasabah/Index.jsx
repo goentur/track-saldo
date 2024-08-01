@@ -3,9 +3,9 @@ import { useRoute } from "../../../../../../vendor/tightenco/ziggy";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { faUniversity } from "@fortawesome/free-solid-svg-icons/faUniversity";
-import { Button, CardBody, CardFooter, CardHeader, Form, InputGroup, Spinner } from "react-bootstrap";
+import { Button, CardBody, CardFooter, CardHeader, Form, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { faMoneyBillAlt, faSave } from "@fortawesome/free-regular-svg-icons";
+import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import CurrencyInput from "react-currency-input-field";
 import axios from 'axios';
@@ -45,7 +45,7 @@ function Index({ tokos }) {
 
     function submit(e) {
         e.preventDefault();
-        post(route("via-atm-nasabah.simpan"));
+        post(route("transaksi.transfer.via-atm-nasabah.simpan"));
     }
     return (
         <Layout>
@@ -53,75 +53,92 @@ function Index({ tokos }) {
             <Form onSubmit={submit} className="card">
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faUniversity} /> TRANSFER VIA ATM NASABAH</h1>
-                    <Link href={route('merek.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft} /> KEMBALI KE MENU</Link>
+                    <Link href={route('transaksi.menu')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft} /> KEMBALI KE MENU</Link>
                 </CardHeader>
-                <CardBody className="row">
-                    <Form.Group className="mb-3 col-lg-6" controlId="validationFormToko">
-                        <Form.Label>TOKO <span className="text-danger">*</span></Form.Label>
-                        <Typeahead
-                            id="toko"
-                            name="toko"
-                            placeholder="Pilih toko"
-                            size="lg"
-                            autoFocus
-                            required
-                            labelKey={(tokos) => `${tokos.nama}`}
-                            options={tokos}
-                            onChange={handleTokoChange}
-                            isInvalid={!!errors.toko}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {errors.toko}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group className="mb-3 col-lg-6" controlId="validationFormAnggota">
-                        <Form.Label>ANGGOTA <span className="text-danger">*</span></Form.Label>
-                        <Typeahead
-                            id="anggota"
-                            name="anggota"
-                            placeholder="Pilih anggota"
-                            size="lg"
-                            required
-                            labelKey={(anggotas) => `${anggotas.nama} | ${anggotas.alamat}`}
-                            options={anggotas}
-                            onChange={(selected) => setData('anggota', selected.length > 0 ? selected[0].id : '')}
-                            isInvalid={!!errors.anggota}
-                            disabled={anggotas.length === 0}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            {errors.anggota}
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group className="mb-3 col-lg-12" controlId="validationFormBiayaAdmin">
-                        <Form.Label>BIAYA ADMIN<span className="text-danger">*</span></Form.Label>
-                        <InputGroup>
+                <CardBody>
+                    <div className="alert alert-info p-0 pt-3">
+                        <ul>
+                            <li>Form <b>ANGGOTA</b> bisa dikosongi apabila pelanggan tidak kenal/mengenali.</li>
+                        </ul>
+                    </div>
+                    <div className="row">
+                        <Form.Group className="mb-3 col-lg-4" controlId="validationFormToko">
+                            <Form.Label>TOKO <span className="text-danger">*</span></Form.Label>
                             <Typeahead
-                                id="tabungan"
+                                id="toko"
+                                name="toko"
+                                placeholder="Pilih toko"
                                 size="lg"
-                                name="tabungan"
-                                placeholder="Pilih tabungan biaya admin"
+                                autoFocus
                                 required
-                                labelKey={(tabungans) => `${tabungans.merek.nama} | ${tabungans.no}`}
+                                labelKey={(tokos) => `${tokos.nama}`}
+                                options={tokos}
+                                onChange={handleTokoChange}
+                                isInvalid={!!errors.toko}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.toko}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-3 col-lg-8" controlId="validationFormAnggota">
+                            <Form.Label>ANGGOTA</Form.Label>
+                            <Typeahead
+                                id="anggota"
+                                name="anggota"
+                                placeholder="Pilih anggota"
+                                size="lg"
+                                required
+                                labelKey={(anggotas) => `${anggotas.nama} | ${anggotas.alamat}`}
+                                options={anggotas}
+                                onChange={(selected) => setData('anggota', selected.length > 0 ? selected[0].id : '')}
+                                isInvalid={!!errors.anggota}
+                                disabled={anggotas.length === 0}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.anggota}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </div>
+                    <div className="alert alert-info p-0 pt-3">
+                        <ul>
+                            <b>INFORMASI BIAYA ADMIN</b>
+                            <li>Form <b>TABUNGAN BIAYA ADMIN</b> <b>bisa</b> dikosongi apabila pelanggan membayar biaya admin menggunakan uang tunai.</li>
+                            <li>Form <b>TABUNGAN BIAYA ADMIN</b> dipilih apabila pelanggan membayar biaya admin <b>bukan</b> menggunakan uang tunai.</li>
+                        </ul>
+                    </div>
+                    <div className="row">
+                        <Form.Group className="mb-3 col-lg-4" controlId="validationFormTabunganBiayaAdmin">
+                            <Form.Label>TABUNGAN BIAYA ADMIN</Form.Label>
+                            <Typeahead
+                                id="tabunganBiayaAdmin"
+                                name="tabunganBiayaAdmin"
+                                placeholder="Pilih tabungan biaya admin"
+                                size="lg"
+                                required
+                                labelKey={(tabungans) => `${tabungans.merek.nama} ( ${tabungans.no} )`}
                                 options={tabungans}
                                 onChange={(selected) => setData('tabunganBiayaAdmin', selected.length > 0 ? selected[0].id : '')}
                                 isInvalid={!!errors.tabunganBiayaAdmin}
                                 disabled={tabungans.length === 0}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.tabunganBiayaAdmin}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className="mb-3 col-lg-8" controlId="validationFormBiayaAdmin">
+                            <Form.Label>BIAYA ADMIN <span className="text-danger">*</span></Form.Label>
                             <CurrencyInput
                                 id="nominalBiayaAdmin"
                                 name="nominalBiayaAdmin"
                                 placeholder="Masukan nominal biaya admin"
                                 prefix="Rp "
                                 required
-                                className={`form-control form-control-lg text-end ${errors.nominalBiayaAdmin && 'is-invalid'}`}
+                                className={`form-control form-control-lg text-end ${errors.nominal && 'is-invalid'}`}
                                 onValueChange={(values) => setData("nominalBiayaAdmin", values)}
                             />
-                            <Form.Control.Feedback type="invalid">
-                                {errors.tabunganBiayaAdmin}
-                            </Form.Control.Feedback>
                             {errors.nominalBiayaAdmin && <div className="text-end invalid-feedback">{errors.nominalBiayaAdmin}</div>}
-                        </InputGroup>
-                    </Form.Group>
+                        </Form.Group>
+                    </div>
                 </CardBody>
                 <CardFooter>
                     <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>

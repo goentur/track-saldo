@@ -4,5 +4,5 @@ namespace App\Enums;
 
 enum StatusTransfer: string
 {
-    case MENUNGGU = 'menunggu';
+    case MENUNGGU = 'MENUNGGU';
 }

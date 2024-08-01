@@ -35,7 +35,7 @@ class AnggotaController extends Controller
         $this->anggota->create([
             'toko_id' => $request->toko,
             'nama' => $request->nama,
-            'telp' => $request->telp,
+            'telp' => '0' . $request->telp,
             'alamat' => $request->alamat,
         ]);
         return to_route('anggota.index')->with('success', 'Data berhasil ditambahkan');
@@ -59,7 +59,7 @@ class AnggotaController extends Controller
         $this->anggota->update([
             'toko_id' => $request->toko,
             'nama' => $request->nama,
-            'telp' => $request->telp,
+            'telp' => '0' . $request->telp,
             'alamat' => $request->alamat,
         ], $id);
         return to_route('anggota.index')->with('success', 'Data berhasil diubah');
@@ -74,7 +74,7 @@ class AnggotaController extends Controller
     public function dataByToko(Request $request)
     {
         $request->validate([
-            'toko' => ['required', 'numeric'],
+            'toko' => ['required', 'uuid'],
         ]);
         return response()->json($this->anggota->getWhere(['id', 'nama', 'alamat'], ['toko_id' => $request->toko]), 200);
     }

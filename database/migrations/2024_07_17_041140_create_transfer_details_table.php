@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transfer_details', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('transaksi_id')->nullable()->comment('id transaksi');
-            $table->unsignedBigInteger('tabungan_id')->nullable()->comment('id tabungan');
+            $table->uuid('id')->primary();
+            $table->string('transaksi_id')->nullable()->comment('id transaksi');
+            $table->string('tabungan_id')->nullable()->comment('id tabungan');
             $table->bigInteger('nominal')->nullable();
             $table->string('tipe')->nullable();
+            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }

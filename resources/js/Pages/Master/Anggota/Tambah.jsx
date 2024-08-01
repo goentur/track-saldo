@@ -6,6 +6,7 @@ import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
 import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Typeahead } from "react-bootstrap-typeahead";
+import CurrencyInput from "react-currency-input-field";
 function Tambah({tokos}) {
     const route = useRoute();
     const formTokoLabel = (tokos) => `${tokos.nama}`;
@@ -51,10 +52,8 @@ function Tambah({tokos}) {
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormTelp">
                             <Form.Label>TELP <span className="text-danger">*</span></Form.Label>
-                            <Form.Control size="lg" type="text" placeholder="Masukan telp" aria-describedby="inputGroupPrepend" name="telp" value={data.telp} onChange={(e) => setData("telp", e.target.value)} isInvalid={!!errors.telp} required/>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.telp}
-                            </Form.Control.Feedback>
+                            <CurrencyInput id="telp" name="telp" placeholder="Masukan telp" className={`form-control form-control-lg ${errors.telp && 'is-invalid'}`} disableGroupSeparators={true} onValueChange={(values) => setData("telp", values)} required />
+                            {errors.telp && <div className="invalid-feedback">{errors.telp}</div>}
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormAlamat">
                             <Form.Label>ALAMAT <span className="text-danger">*</span></Form.Label>

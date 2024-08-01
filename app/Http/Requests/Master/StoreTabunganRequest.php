@@ -22,8 +22,8 @@ class StoreTabunganRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'toko' => ['required', 'numeric'],
-            'merek' => ['required', 'numeric'],
+            'toko' => ['required', 'uuid'],
+            'merek' => ['required', 'uuid'],
             'no' => ['required', 'numeric'],
             'nominal' => ['required', 'numeric'],
         ];

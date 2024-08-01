@@ -22,7 +22,7 @@ class StoreMerekRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'toko' => ['required', 'numeric'],
+            'toko' => ['required', 'uuid'],
             'nama' => ['required', 'string'],
         ];
     }

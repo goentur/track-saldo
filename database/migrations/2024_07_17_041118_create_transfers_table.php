@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transfers', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id')->nullable()->comment('id user');
-            $table->unsignedBigInteger('anggota_id')->nullable()->comment('id anggota');
+            $table->uuid('id')->primary();
+            $table->string('user_id')->nullable()->comment('id user');
+            $table->string('anggota_id')->nullable()->comment('id anggota');
             $table->bigInteger('tanggal')->nullable();
             $table->bigInteger('total')->nullable();
             $table->string('tipe')->nullable();

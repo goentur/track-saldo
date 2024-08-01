@@ -4,5 +4,6 @@ namespace App\Enums;
 
 enum TipeTransferDetail: string
 {
-    case BIAYA_ADMIN = 'BIAYA ADMIN';
+    case MENAMBAH = 'MENAMBAH';
+    case MENGURANGI = 'MENGURANGI';
 }

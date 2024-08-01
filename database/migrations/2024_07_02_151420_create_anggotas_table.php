@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('anggotas', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('toko_id')->nullable()->comment('id toko');
+            $table->uuid('id')->primary();
+            $table->string('toko_id')->nullable()->comment('id toko');
             $table->string('nama')->nullable();
             $table->string('telp')->nullable();
             $table->text('alamat')->nullable();
-            $table->bigInteger('poin')->nullable();
+            $table->decimal('poin')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

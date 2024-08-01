@@ -6,6 +6,8 @@ use App\Repositories\Master\Anggota\AnggotaRepository;
 use App\Repositories\Master\Anggota\AnggotaRepositoryInterface;
 use App\Repositories\Master\Merek\MerekRepository;
 use App\Repositories\Master\Merek\MerekRepositoryInterface;
+use App\Repositories\Master\Paket\PaketRepository;
+use App\Repositories\Master\Paket\PaketRepositoryInterface;
 use App\Repositories\Master\Pegawai\PegawaiRepository;
 use App\Repositories\Master\Pegawai\PegawaiRepositoryInterface;
 use App\Repositories\Master\Pemilik\PemilikRepository;
@@ -16,15 +18,22 @@ use App\Repositories\Master\Toko\TokoRepository;
 use App\Repositories\Master\Toko\TokoRepositoryInterface;
 use App\Repositories\Master\ZonaWaktu\ZonaWaktuRepository;
 use App\Repositories\Master\ZonaWaktu\ZonaWaktuRepositoryInterface;
+use App\Repositories\Pengaturan\PengaturanNominalRepository;
+use App\Repositories\Pengaturan\PengaturanNominalRepositoryInterface;
+use App\Repositories\Pengaturan\PengaturanRepository;
+use App\Repositories\Pengaturan\PengaturanRepositoryInterface;
 use App\Repositories\Transfer\TransferRepository;
 use App\Repositories\Transfer\TransferRepositoryInterface;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\MerekService;
+use App\Services\Master\PaketService;
 use App\Services\Master\PegawaiService;
 use App\Services\Master\PemilikService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
 use App\Services\Master\ZonaWaktuService;
+use App\Services\PengaturanNominalService;
+use App\Services\PengaturanService;
 use App\Services\TransferService;
 use Illuminate\Support\ServiceProvider;
 
@@ -65,6 +74,12 @@ class AppServiceProvider extends ServiceProvider
             return new AnggotaService($app->make(AnggotaRepositoryInterface::class));
         });
 
+        //paket
+        $this->app->bind(PaketRepositoryInterface::class, PaketRepository::class);
+        $this->app->bind(PaketService::class, function ($app) {
+            return new PaketService($app->make(PaketRepositoryInterface::class));
+        });
+
         //tabungan
         $this->app->bind(TabunganRepositoryInterface::class, TabunganRepository::class);
         $this->app->bind(TabunganService::class, function ($app) {
@@ -81,6 +96,18 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransferRepositoryInterface::class, TransferRepository::class);
         $this->app->bind(TransferService::class, function ($app) {
             return new TransferService($app->make(TransferRepositoryInterface::class));
+        });
+
+        //pengaturan
+        $this->app->bind(PengaturanRepositoryInterface::class, PengaturanRepository::class);
+        $this->app->bind(PengaturanService::class, function ($app) {
+            return new PengaturanService($app->make(PengaturanRepositoryInterface::class));
+        });
+
+        //pengaturan nominal
+        $this->app->bind(PengaturanNominalRepositoryInterface::class, PengaturanNominalRepository::class);
+        $this->app->bind(PengaturanNominalService::class, function ($app) {
+            return new PengaturanNominalService($app->make(PengaturanNominalRepositoryInterface::class));
         });
     }
 

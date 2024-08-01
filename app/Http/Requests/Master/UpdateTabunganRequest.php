@@ -11,7 +11,7 @@ class UpdateTabunganRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateTabunganRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'toko' => ['required', 'uuid'],
+            'merek' => ['required', 'uuid'],
+            'no' => ['required', 'numeric'],
+            'nominal' => ['required', 'numeric'],
         ];
     }
 }

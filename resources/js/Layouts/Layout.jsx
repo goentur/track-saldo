@@ -53,7 +53,6 @@ function Layout({children}) {
             <Nav.Link><ThemeMode/></Nav.Link>
             <NavDropdown title={<span><FontAwesomeIcon icon={faUser} /> {user.name}</span>}  align="end">
               <NavDropdown.Item href="#action/3.4"><FontAwesomeIcon icon={faUser}/> Profil</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.4"><FontAwesomeIcon icon={faCog}/> Pengaturan</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/logout" onClick={logout}><FontAwesomeIcon icon={faRightFromBracket}/> LogOut</NavDropdown.Item>
             </NavDropdown>

@@ -60,9 +60,9 @@ class TabunganController extends Controller
     {
         $this->tabungan->update([
             'toko_id' => $request->toko,
-            'nama' => $request->nama,
-            'telp' => $request->telp,
-            'alamat' => $request->alamat,
+            'merek_id' => $request->merek,
+            'no' => $request->no,
+            'nominal' => $request->nominal,
         ], $id);
         return to_route('tabungan.index')->with('success', 'Data berhasil diubah');
     }
@@ -76,7 +76,7 @@ class TabunganController extends Controller
     public function dataByToko(Request $request)
     {
         $request->validate([
-            'toko' => ['required', 'numeric'],
+            'toko' => ['required', 'uuid'],
         ]);
         return response()->json($this->tabungan->getWhere(['id', 'merek_id', 'no'], ['toko_id' => $request->toko]), 200);
     }

@@ -9,8 +9,6 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import { useEffect, useState } from "react";
 function Ubah({ pegawai, zonaWaktus, tokos }) {
     const route = useRoute();
-    const formZonaWaktuLabel = (zonaWaktus) => `${zonaWaktus.nama} | ${zonaWaktus.singkatan}`;
-    const formTokoLabel = (tokos) => `${tokos.nama} | ${tokos.alamat}`;
     const { data, setData, put, errors, processing } = useForm({
         zonaWaktu: pegawai.zona_waktu_id,
         email: pegawai.email,
@@ -52,7 +50,7 @@ function Ubah({ pegawai, zonaWaktus, tokos }) {
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormZonaWaktu">
                             <Form.Label>ZONA WAKTU <span className="text-danger">*</span></Form.Label>
-                            <Typeahead id="zonaWaktu" labelKey={formZonaWaktuLabel} name="zonaWaktu" options={zonaWaktus} placeholder="Pilih zona waktu" onChange={handleZonaWaktuChange} size="lg" isInvalid={!!errors.zonaWaktu} selected={selectedZonaWaktu ? [selectedZonaWaktu] : []} autoFocus required/>
+                            <Typeahead id="zonaWaktu" labelKey={(zonaWaktus) => `${zonaWaktus.nama}`} name="zonaWaktu" options={zonaWaktus} placeholder="Pilih zona waktu" onChange={handleZonaWaktuChange} size="lg" isInvalid={!!errors.zonaWaktu} selected={selectedZonaWaktu ? [selectedZonaWaktu] : []} autoFocus required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.zonaWaktu}
                             </Form.Control.Feedback>
@@ -73,7 +71,7 @@ function Ubah({ pegawai, zonaWaktus, tokos }) {
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormToko">
                             <Form.Label>TOKO <span className="text-danger">*</span></Form.Label>
-                            <Typeahead id="toko" labelKey={formTokoLabel} name="toko" options={tokos} placeholder="Pilih toko" onChange={handleTokoChange} size="lg" isInvalid={!!errors.toko} selected={selectedToko ? [selectedToko] : []} required/>
+                            <Typeahead id="toko" labelKey={(tokos) => `${tokos.nama}`} name="toko" options={tokos} placeholder="Pilih toko" onChange={handleTokoChange} size="lg" isInvalid={!!errors.toko} selected={selectedToko ? [selectedToko] : []} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.toko}
                             </Form.Control.Feedback>

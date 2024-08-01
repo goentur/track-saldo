@@ -22,9 +22,9 @@ class UpdatePegawaiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'zonaWaktu' => ['required', 'numeric'],
+            'zonaWaktu' => ['required', 'uuid'],
             'nama' => ['required', 'string'],
-            'toko' => ['required', 'numeric'],
+            'toko' => ['required', 'uuid'],
         ];
     }
 }

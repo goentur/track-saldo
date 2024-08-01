@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         $userDeveloper = User::factory()->create([
             'zona_waktu_id' => 1,
-            'email' => 'dev@mail.com',
+            'email' => 'dev@abata.web.id',
             'name' => 'Developer',
             'password' => bcrypt('a')
         ]);

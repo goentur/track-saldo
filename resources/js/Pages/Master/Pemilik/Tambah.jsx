@@ -35,14 +35,14 @@ function Tambah({zonaWaktus, tokos}) {
                     <Form onSubmit={submit} className="row">
                         <Form.Group className="mb-3 col-lg-12" controlId="validationFormZonaWaktu">
                             <Form.Label>ZONA WAKTU <span className="text-danger">*</span></Form.Label>
-                            <Typeahead id="zonaWaktu" labelKey={formZonaWaktuLabel} name="zonaWaktu" options={zonaWaktus} placeholder="Pilih zona waktu" onChange={(selected) => setData('zonaWaktu', selected.length > 0 ? selected[0].id:null)} size="lg" isInvalid={!!errors.zonaWaktu} required/>
+                            <Typeahead id="zonaWaktu" labelKey={formZonaWaktuLabel} name="zonaWaktu" options={zonaWaktus} placeholder="Pilih zona waktu" onChange={(selected) => setData('zonaWaktu', selected.length > 0 ? selected[0].id:null)} size="lg" isInvalid={!!errors.zonaWaktu} autoFocus required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.zonaWaktu}
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormEmail">
                             <Form.Label>EMAIL <span className="text-danger">*</span></Form.Label>
-                            <Form.Control size="lg" type="email" placeholder="Masukan email" aria-describedby="inputGroupPrepend" name="email" value={data.email} onChange={(e) => setData("email", e.target.value)} isInvalid={!!errors.email} autoFocus required/>
+                            <Form.Control size="lg" type="email" placeholder="Masukan email" aria-describedby="inputGroupPrepend" name="email" value={data.email} onChange={(e) => setData("email", e.target.value)} isInvalid={!!errors.email} required/>
                             <Form.Control.Feedback type="invalid">
                                 {errors.email}
                             </Form.Control.Feedback>

@@ -21,7 +21,11 @@ body .modal::-webkit-scrollbar-thumb {
     background-color: #fff
 }
 
-input[disabled] {
+input:disabled {
+    cursor: not-allowed;
+}
+
+input:read-only {
     cursor: not-allowed;
 }
 
