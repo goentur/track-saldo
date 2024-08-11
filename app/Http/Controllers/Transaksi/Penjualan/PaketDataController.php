@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Transaksi\Penjualan;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\PaketDataRequest;
 use App\Services\Master\TabunganService;
@@ -28,7 +28,7 @@ class PaketDataController extends Controller
     public function index()
     {
         return inertia('Transaksi/Penjualan/PaketData/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(PaketDataRequest $request)
@@ -41,7 +41,7 @@ class PaketDataController extends Controller
         $transferDetail[] = [
             'tabungan' => $request->tabungan,
             'nominal' => $request->hargaBeli,
-            'tipe' => TipeTransferDetail::MENGURANGI,
+            'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         // tabungan yang ditambahkan uang tunai
@@ -49,20 +49,21 @@ class PaketDataController extends Controller
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
             'nominal' => $request->hargaBeli,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
             'nominal' => $request->hargaJual - $request->hargaBeli,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
         // transfer
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => null,
             'total' => $request->hargaJual,
-            'tipe' => TipeTransfer::PENJUALAN_PAKET_DATA,
+            'tipe' => TipeTransaksi::PENJUALAN_PAKET_DATA,
             'status' => StatusTransfer::MENUNGGU,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

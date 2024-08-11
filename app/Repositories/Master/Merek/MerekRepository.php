@@ -8,15 +8,16 @@ class MerekRepository implements MerekRepositoryInterface
 {
     public function gatAllData($search, $number)
     {
-        $tokoId = [];
-        foreach (auth()->user()->toko as $toko) {
-            $tokoId[] = $toko->id;
-        }
-        return Merek::with('toko')->where('nama', 'like', '%' . $search . '%')
-            ->orWhereHas('toko', function ($query) use ($search) {
-                $query->where('nama', 'like', '%' . $search . '%');
+        $tokoId = auth()->user()->toko->pluck('id')->toArray();
+        return Merek::with('toko')
+        ->where(function ($query) use ($tokoId, $search) {
+            $query->whereIn('toko_id', $tokoId)
+                ->where('nama', 'like', '%' . $search . '%');
             })
-            ->whereIn('toko_id', $tokoId)
+            ->orWhereHas('toko', function ($query) use ($tokoId, $search) {
+                $query->whereIn('id', $tokoId)
+                    ->where('nama', 'like', '%' . $search . '%');
+            })
             ->paginate($number ?? 25)
             ->appends('query', null)
             ->withQueryString();

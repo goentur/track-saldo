@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Transaksi\Transfer;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturanNominal;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\MutasiSaldoRequest;
 use App\Services\Master\TabunganService;
@@ -28,7 +28,7 @@ class MutasiSaldoController extends Controller
     public function index()
     {
         return inertia('Transaksi/Transfer/MutasiSaldo/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(MutasiSaldoRequest $request)
@@ -40,7 +40,7 @@ class MutasiSaldoController extends Controller
             $transferDetail[] = [
                 'tabungan' => $request->tabunganDari,
                 'nominal' => $pengaturanBiayaTransfer->nominal,
-                'tipe' => TipeTransferDetail::MENGURANGI,
+                'tipe' => TipeTransaksiDetail::MENGURANGI,
                 'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
             ];
             $nominal = $request->nominal + $pengaturanBiayaTransfer->nominal;
@@ -49,21 +49,22 @@ class MutasiSaldoController extends Controller
         $transferDetail[] = [
             'tabungan' => $request->tabunganDari,
             'nominal' => $nominal,
-            'tipe' => TipeTransferDetail::MENGURANGI,
+            'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         // tabungan yang ditambahkan
         $transferDetail[] = [
             'tabungan' => $request->tabunganKe,
             'nominal' => $nominal,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         // transfer
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => null,
             'total' => $nominal,
-            'tipe' => TipeTransfer::MUTASI_SALDO,
+            'tipe' => TipeTransaksi::MUTASI_SALDO,
             'status' => StatusTransfer::MENUNGGU,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

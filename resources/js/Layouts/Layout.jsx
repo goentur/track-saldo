@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import ThemeMode from './ThemeMode';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { useRoute } from '../../../vendor/tightenco/ziggy';

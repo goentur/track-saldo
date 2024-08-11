@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Transaksi\Transfer;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\ViaATMNasabahRequest;
 use App\Services\Master\AnggotaService;
@@ -28,7 +28,7 @@ class ViaATMNasabahController extends Controller
     public function index()
     {
         return inertia('Transaksi/Transfer/ViaATMNasabah/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(ViaATMNasabahRequest $request)
@@ -40,15 +40,16 @@ class ViaATMNasabahController extends Controller
             $tabungan = $pengaturanTunai->tabungan_id;
         }
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => $request->anggota,
             'total' => $request->nominalBiayaAdmin,
-            'tipe' => TipeTransfer::TRANSFER_VIA_ATM_NASABAH,
+            'tipe' => TipeTransaksi::TRANSFER_VIA_ATM_NASABAH,
             'status' => StatusTransfer::MENUNGGU,
         ];
         $transferDetail[] = [
             'tabungan' => $tabungan,
             'nominal' => $request->nominalBiayaAdmin,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

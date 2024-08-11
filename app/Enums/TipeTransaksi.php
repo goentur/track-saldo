@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TipeTransfer: string
+enum TipeTransaksi: string
 {
     case TRANSFER_VIA_ATM_NASABAH = 'TRANSFER VIA ATM NASABAH';
     case TRANSFER_TUNIA = 'TRANSFER TUNAI';
@@ -11,4 +11,5 @@ enum TipeTransfer: string
     case PENJUALAN_PULSA = 'PENJUALAN PULSA';
     case PENJUALAN_PAKET_DATA = 'PENJUALAN PAKET DATA';
     case PRODUKTIF = 'PRODUKTIF';
+    case KONSUMTIF = 'KONSUMTIF';
 }

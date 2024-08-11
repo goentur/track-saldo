@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transfer_details', function (Blueprint $table) {
+        Schema::create('transaksis', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('transaksi_id')->nullable()->comment('id transaksi');
-            $table->string('tabungan_id')->nullable()->comment('id tabungan');
-            $table->bigInteger('nominal')->nullable();
+            $table->string('user_id')->nullable()->comment('id user');
+            $table->string('toko_id')->nullable()->comment('id toko');
+            $table->string('anggota_id')->nullable()->comment('id anggota');
+            $table->bigInteger('tanggal')->nullable();
+            $table->bigInteger('total')->nullable();
             $table->string('tipe')->nullable();
-            $table->string('keterangan')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transfer_details');
+        Schema::dropIfExists('transaksis');
     }
 };

@@ -19,7 +19,6 @@ function Tambah({tokos,tipe_pakets}) {
         e.preventDefault()
         post(route("paket.store"))
     }
-    console.log(data);
     return (
         <>
         <Layout>

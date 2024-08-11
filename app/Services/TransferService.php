@@ -15,4 +15,12 @@ class TransferService
     {
         return $this->transfer->saveTransfer($transfer, $transferDetail);
     }
+    public function getWhere(array $select, $where)
+    {
+        return $this->transfer->getWhere($select, $where);
+    }
+    public function getWhereDetail(array $select, $where)
+    {
+        return $this->transfer->getWhereDetail($select, $where);
+    }
 }

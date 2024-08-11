@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Laporan\LaporanRepository;
+use App\Repositories\Laporan\LaporanRepositoryInterface;
 use App\Repositories\Master\Anggota\AnggotaRepository;
 use App\Repositories\Master\Anggota\AnggotaRepositoryInterface;
 use App\Repositories\Master\Merek\MerekRepository;
@@ -24,6 +26,7 @@ use App\Repositories\Pengaturan\PengaturanRepository;
 use App\Repositories\Pengaturan\PengaturanRepositoryInterface;
 use App\Repositories\Transfer\TransferRepository;
 use App\Repositories\Transfer\TransferRepositoryInterface;
+use App\Services\LaporanService;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\MerekService;
 use App\Services\Master\PaketService;
@@ -96,6 +99,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransferRepositoryInterface::class, TransferRepository::class);
         $this->app->bind(TransferService::class, function ($app) {
             return new TransferService($app->make(TransferRepositoryInterface::class));
+        });
+
+        //laporan
+        $this->app->bind(LaporanRepositoryInterface::class, LaporanRepository::class);
+        $this->app->bind(LaporanService::class, function ($app) {
+            return new LaporanService($app->make(LaporanRepositoryInterface::class));
         });
 
         //pengaturan

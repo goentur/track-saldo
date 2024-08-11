@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TipeTransferDetail: string
+enum TipeTransaksiDetail: string
 {
     case MENAMBAH = 'MENAMBAH';
     case MENGURANGI = 'MENGURANGI';

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Transaksi\Pengeluaran;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturanNominal;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\ProduktifRequest;
 use App\Services\Master\TabunganService;
@@ -28,7 +28,7 @@ class ProduktifController extends Controller
     public function index()
     {
         return inertia('Transaksi/Pengeluaran/Produktif/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(ProduktifRequest $request)
@@ -39,7 +39,7 @@ class ProduktifController extends Controller
             $transferDetail[] = [
                 'tabungan' => $request->tabungan,
                 'nominal' => $pengaturanBiayaTransfer->nominal,
-                'tipe' => TipeTransferDetail::MENGURANGI,
+                'tipe' => TipeTransaksiDetail::MENGURANGI,
                 'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
             ];
             $nominal = $request->nominal + $pengaturanBiayaTransfer->nominal;
@@ -47,14 +47,15 @@ class ProduktifController extends Controller
         $transferDetail[] = [
             'tabungan' => $request->tabungan,
             'nominal' => $nominal,
-            'tipe' => TipeTransferDetail::MENGURANGI,
-            'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
+            'tipe' => TipeTransaksiDetail::MENGURANGI,
+            'keterangan' => KeteranganTransferDetail::NOMINAL_PENGELUARAN,
         ];
         // transfer
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => null,
             'total' => $nominal,
-            'tipe' => TipeTransfer::PRODUKTIF,
+            'tipe' => TipeTransaksi::PRODUKTIF,
             'status' => StatusTransfer::MENUNGGU,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

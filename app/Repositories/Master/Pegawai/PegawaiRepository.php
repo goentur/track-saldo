@@ -8,7 +8,11 @@ class PegawaiRepository implements PegawaiRepositoryInterface
 {
     public function gatAllData($search, $number)
     {
+        $tokoId = auth()->user()->toko->pluck('id')->toArray();
         return User::with('zonaWaktu', 'toko')
+            ->whereHas('toko', function ($query) use ($tokoId) {
+                $query->whereIn('id', $tokoId);
+            })
             ->where(function ($query) use ($search) {
                 $query->where('email', 'like', '%' . $search . '%')
                     ->orWhere('name', 'like', '%' . $search . '%')

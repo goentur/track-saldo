@@ -55,7 +55,6 @@ function Index({ tokos }) {
         e.preventDefault();
         post(route("transaksi.transfer.tunai.simpan"));
     }
-    console.log(data)
     return (
         <Layout>
             <Head title="TRANSFER TUNAI" />

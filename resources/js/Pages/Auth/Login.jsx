@@ -43,6 +43,7 @@ export default function Login(){
                                             onChange={(e) => setData("email", e.target.value)}
                                             isInvalid={!!errors.email}
                                             autoFocus
+                                            autoComplete={false}
                                             required
                                         />
                                         <Form.Control.Feedback type="invalid">

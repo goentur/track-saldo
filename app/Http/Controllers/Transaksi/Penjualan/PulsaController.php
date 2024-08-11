@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Transaksi\Penjualan;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\PulsaRequest;
 use App\Models\Pengaturan;
@@ -32,7 +32,7 @@ class PulsaController extends Controller
     public function index()
     {
         return inertia('Transaksi/Penjualan/Pulsa/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(PulsaRequest $request)
@@ -46,7 +46,7 @@ class PulsaController extends Controller
         $transferDetail[] = [
             'tabungan' => $request->tabungan,
             'nominal' => $request->hargaBeli,
-            'tipe' => TipeTransferDetail::MENGURANGI,
+            'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         // tabungan yang ditambahkan uang tunai
@@ -54,20 +54,21 @@ class PulsaController extends Controller
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
             'nominal' => $request->hargaBeli,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
             'nominal' => $paketPulsa->harga - $request->hargaBeli,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
         // transfer
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => null,
             'total' => $paketPulsa->harga,
-            'tipe' => TipeTransfer::PENJUALAN_PULSA,
+            'tipe' => TipeTransaksi::PENJUALAN_PULSA,
             'status' => StatusTransfer::MENUNGGU,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

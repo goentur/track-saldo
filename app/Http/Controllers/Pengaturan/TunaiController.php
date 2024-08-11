@@ -36,9 +36,9 @@ class TunaiController extends Controller
                 'tipe' => TipePengaturan::TUNAI,
                 'tanggal' => time(),
             ]);
-            return to_route('profil.pengaturan.index')->with('success', 'Data berhasil ditambahkan.');
+            return to_route('pengaturan.index')->with('success', 'Data berhasil ditambahkan.');
         } else {
-            return to_route('profil.pengaturan.tunai.tambah')->with('error', 'Data Pengaturan Tunai pada toko yang dipilih sudah ada, silahkan diubah saja.');
+            return to_route('pengaturan.tunai.tambah')->with('error', 'Data Pengaturan Tunai pada toko yang dipilih sudah ada, silahkan diubah saja.');
         }
     }
     public function edit($id)
@@ -60,6 +60,6 @@ class TunaiController extends Controller
             'tabungan_id' => $request->tabungan,
             'tanggal' => time(),
         ], $id);
-        return to_route('profil.pengaturan.index')->with('success', 'Data berhasil diubah.');
+        return to_route('pengaturan.index')->with('success', 'Data berhasil diubah.');
     }
 }

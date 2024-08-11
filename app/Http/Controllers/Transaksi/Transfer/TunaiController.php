@@ -6,8 +6,8 @@ use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
 use App\Enums\TipePengaturanNominal;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\TunaiRequest;
 use App\Services\Master\AnggotaService;
@@ -30,8 +30,8 @@ class TunaiController extends Controller
     }
     public function index()
     {
-        return inertia('Transaksi/Transfer/TransferTunai/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+        return inertia('Transaksi/Transfer/Tunai/Index', [
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(TunaiRequest $request)
@@ -41,7 +41,7 @@ class TunaiController extends Controller
         $transferDetail[] = [
             'tabungan' => $request->tabunganYangDigunakan,
             'nominal' => $request->nominalBiayaYangDigunakan,
-            'tipe' => TipeTransferDetail::MENGURANGI,
+            'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         $nominalBiayaYangDigunakan = $request->nominalBiayaYangDigunakan;
@@ -50,7 +50,7 @@ class TunaiController extends Controller
             $transferDetail[] = [
                 'tabungan' => $request->tabunganYangDigunakan,
                 'nominal' => $pengaturanBiayaTransfer->nominal,
-                'tipe' => TipeTransferDetail::MENGURANGI,
+                'tipe' => TipeTransaksiDetail::MENGURANGI,
                 'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
             ];
             $nominalBiayaYangDigunakan = $request->nominalBiayaYangDigunakan + $pengaturanBiayaTransfer->nominal;
@@ -61,7 +61,7 @@ class TunaiController extends Controller
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
             'nominal' => $request->nominalBiayaYangDigunakan,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         // tabunagn yang diambil jika taunganbiayaadmin null maka otomatis menggunakan pengaturan tunai
@@ -72,13 +72,14 @@ class TunaiController extends Controller
         $transferDetail[] = [
             'tabungan' => $tabungan,
             'nominal' => $request->nominalBiayaAdmin,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => $request->anggota,
             'total' => $nominalBiayaYangDigunakan + $request->nominalBiayaAdmin,
-            'tipe' => TipeTransfer::TRANSFER_TUNIA,
+            'tipe' => TipeTransaksi::TRANSFER_TUNIA,
             'status' => StatusTransfer::MENUNGGU,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Transaksi\Transfer;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
-use App\Enums\TipeTransfer;
-use App\Enums\TipeTransferDetail;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\TarikTunaiRequest;
 use App\Services\Master\AnggotaService;
@@ -28,22 +28,23 @@ class TarikTunaiController extends Controller
     public function index()
     {
         return inertia('Transaksi/Transfer/TarikTunai/Index', [
-            'tokos' => $this->toko->get(['id', 'nama']),
+            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
         ]);
     }
     public function simpan(TarikTunaiRequest $request)
     {
         $transfer = [
+            'toko' => $request->toko,
             'anggota' => $request->anggota,
             'total' => $request->nominalBiayaYangDigunakan + $request->nominalBiayaAdmin,
-            'tipe' => TipeTransfer::TARIK_TUNAI,
+            'tipe' => TipeTransaksi::TARIK_TUNAI,
             'status' => StatusTransfer::MENUNGGU,
         ];
         // tabungan yang ditambah
         $transferDetail[] = [
             'tabungan' => $request->tabunganYangDigunakan,
             'nominal' => $request->nominalBiayaYangDigunakan,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         $pengaturanTunai = $this->pengaturan->getWhereOne(['id', 'tabungan_id'], ['toko_id' => $request->toko, 'tipe' => TipePengaturan::TUNAI]);
@@ -51,7 +52,7 @@ class TarikTunaiController extends Controller
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
             'nominal' => $request->nominalBiayaYangDigunakan,
-            'tipe' => TipeTransferDetail::MENGURANGI,
+            'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         $tabungan = $pengaturanTunai->tabungan_id;
@@ -61,7 +62,7 @@ class TarikTunaiController extends Controller
         $transferDetail[] = [
             'tabungan' => $tabungan,
             'nominal' => $request->nominalBiayaAdmin,
-            'tipe' => TipeTransferDetail::MENAMBAH,
+            'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {

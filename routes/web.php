@@ -18,6 +18,5 @@ Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::middleware('role:pemilik')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('laporan', [LaporanController::class, 'index'])->name('laporan');
     });
 });

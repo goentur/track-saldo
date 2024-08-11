@@ -8,19 +8,16 @@ class TabunganRepository implements TabunganRepositoryInterface
 {
     public function gatAllData($search, $number)
     {
-        $tokoId = [];
-        foreach (auth()->user()->toko as $toko) {
-            $tokoId[] = $toko->id;
-        }
-        return Tabungan::with('toko', 'merek')
-            ->where('no', 'like', '%' . $search . '%')
-            ->orWhereHas('toko', function ($query) use ($search) {
-                $query->where('nama', 'like', '%' . $search . '%');
-            })
-            ->orWhereHas('merek', function ($query) use ($search) {
-                $query->where('nama', 'like', '%' . $search . '%');
-            })
-            ->whereIn('toko_id', $tokoId)
+        $tokoId = auth()->user()->toko->pluck('id')->toArray();
+        return Tabungan::with('toko', 'merek')->where(function ($query) use ($tokoId, $search) {
+            $query->whereIn('toko_id', $tokoId);
+        })->orWhereHas('toko', function ($query) use ($tokoId, $search) {
+            $query->whereIn('id', $tokoId)
+                ->where('nama', 'like', '%' . $search . '%');
+        })->orWhereHas('merek', function ($query) use ($tokoId, $search) {
+            $query->whereIn('toko_id', $tokoId)
+                ->where('nama', 'like', '%' . $search . '%');
+        })->orderBy('updated_at', 'desc')
             ->paginate($number ?? 25)
             ->appends('query', null)
             ->withQueryString();
@@ -56,10 +53,7 @@ class TabunganRepository implements TabunganRepositoryInterface
 
     public function getTabungansByToko(array $select)
     {
-        $tokoId = [];
-        foreach (auth()->user()->toko as $toko) {
-            $tokoId[] = $toko->id;
-        }
+        $tokoId = auth()->user()->toko->pluck('id')->toArray();
         return Tabungan::with('toko', 'merek')->select($select)->whereIn('toko_id', $tokoId)->orderBy('toko_id')->get();
     }
 

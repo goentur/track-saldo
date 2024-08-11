@@ -36,9 +36,9 @@ class BiayaTransferController extends Controller
                 'tipe' => TipePengaturanNominal::BIAYA_TRANSFER,
                 'tanggal' => time(),
             ]);
-            return to_route('profil.pengaturan.index')->with('success', 'Data berhasil ditambahkan.');
+            return to_route('pengaturan.index')->with('success', 'Data berhasil ditambahkan.');
         } else {
-            return to_route('profil.pengaturan.biaya-transfer.tambah')->with('error', 'Data Pengaturan Biaya Transfer pada toko yang dipilih sudah ada, silahkan diubah saja.');
+            return to_route('pengaturan.biaya-transfer.tambah')->with('error', 'Data Pengaturan Biaya Transfer pada toko yang dipilih sudah ada, silahkan diubah saja.');
         }
     }
     public function edit($id)
@@ -60,7 +60,7 @@ class BiayaTransferController extends Controller
             'nominal' => $request->nominal,
             'tanggal' => time(),
         ], $id);
-        return to_route('profil.pengaturan.index')->with('success', 'Data berhasil diubah.');
+        return to_route('pengaturan.index')->with('success', 'Data berhasil diubah.');
     }
     public function dataByToko(Request $request)
     {
