@@ -1,12 +1,12 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
-import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 function Tambah({tokos,tipe_pakets}) {
     const route = useRoute();
     const { data, setData, post, errors, processing } = useForm({
@@ -17,7 +17,7 @@ function Tambah({tokos,tipe_pakets}) {
     })
     function submit(e) {
         e.preventDefault()
-        post(route("paket.store"))
+        post(route("master.paket.store"))
     }
     return (
         <>
@@ -26,7 +26,7 @@ function Tambah({tokos,tipe_pakets}) {
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faClipboard}/> FORM PAKET</h1>
-                    <Link href={route('paket.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
+                    <Link href={route('master.paket.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">

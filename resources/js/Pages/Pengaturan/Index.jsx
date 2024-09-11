@@ -1,9 +1,9 @@
+import { faEdit } from "@fortawesome/free-regular-svg-icons"
+import { faCogs, faExchangeAlt, faMoneyBillWave, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Head, Link } from "@inertiajs/react"
 import { Card, CardBody, CardHeader, Table } from "react-bootstrap"
 import Layout from "../../Layouts/Layout"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCogs, faExchangeAlt, faMoneyBillWave, faPlus } from "@fortawesome/free-solid-svg-icons"
-import { Head, Link } from "@inertiajs/react"
-import { faEdit } from "@fortawesome/free-regular-svg-icons"
 
 function Index({ pengaturanTunais,pengaturanBiayaTransfers }) {
     return (

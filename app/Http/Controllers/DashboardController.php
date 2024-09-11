@@ -38,7 +38,7 @@ class DashboardController extends Controller
     }
     public function toko()
     {
-        return cache()->remember(auth()->user()->id . '-toko', now()->addMinutes(480), function () use (&$transfer) {
+        return cache()->remember(auth()->user()->id . '-toko', now()->addHours(8), function () {
             $tokoId = [];
             foreach (auth()->user()->toko as $toko) {
                 $tokoId[] = $toko->id;

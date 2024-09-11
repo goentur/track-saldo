@@ -1,11 +1,11 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
-import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 function Tambah({zonaWaktus, tokos}) {
     const route = useRoute();
     const formZonaWaktuLabel = (zonaWaktus) => `${zonaWaktus.nama}`;
@@ -20,7 +20,7 @@ function Tambah({zonaWaktus, tokos}) {
     })
     function submit(e) {
         e.preventDefault()
-        post(route("pemilik.store"))
+        post(route("master.pemilik.store"))
     }
     return (
         <>
@@ -29,7 +29,7 @@ function Tambah({zonaWaktus, tokos}) {
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faClipboard}/> FORM PEMILIK</h1>
-                    <Link href={route('pemilik.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
+                    <Link href={route('master.pemilik.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">

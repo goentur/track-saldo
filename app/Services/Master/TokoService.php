@@ -44,6 +44,8 @@ class TokoService
 
     public function getTokosByUser(array $select)
     {
-        return $this->toko->getTokosByUser($select);
+        return cache()->remember(auth()->user()->id . '-toko-master', now()->addHours(8), function () use ($select) {
+            return $this->toko->getTokosByUser($select);
+        });
     }
 }

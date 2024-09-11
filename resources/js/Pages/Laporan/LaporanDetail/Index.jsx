@@ -1,8 +1,8 @@
-import Layout from "../../../Layouts/Layout";
+import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head } from "@inertiajs/react";
-import { Card, CardBody, CardHeader, Form } from "react-bootstrap";
-import { faFileAlt } from "@fortawesome/free-regular-svg-icons";
+import { Card, CardBody, CardHeader } from "react-bootstrap";
+import Layout from "../../../Layouts/Layout";
 import DataLaporan from "./DataLaporan";
 function Index({tokos}) {
     return (

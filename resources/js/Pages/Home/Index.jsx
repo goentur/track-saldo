@@ -1,7 +1,7 @@
+import { faBell, faFileAlt } from "@fortawesome/free-regular-svg-icons";
+import { faBullseye, faChartLine, faWallet } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Layout from "../../Layouts/Layout";
-import { faBullseye, faChartLine, faWallet } from "@fortawesome/free-solid-svg-icons";
-import { faBell, faFileAlt } from "@fortawesome/free-regular-svg-icons";
 
 function Index(){
     return (

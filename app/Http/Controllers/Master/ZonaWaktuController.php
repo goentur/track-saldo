@@ -34,7 +34,7 @@ class ZonaWaktuController extends Controller
             'singkatan' => $request->singkatan,
             'gmt_offset' => $request->gmt_offset,
         ]);
-        return to_route('zona-waktu.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.zona-waktu.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function show($id)
@@ -54,12 +54,12 @@ class ZonaWaktuController extends Controller
             'singkatan' => $request->singkatan,
             'gmt_offset' => $request->gmt_offset,
         ], $id);
-        return to_route('zona-waktu.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.zona-waktu.index')->with('success', 'Data berhasil diubah');
     }
 
     public function destroy($id)
     {
         $this->zonaWaktu->delete($id);
-        return to_route('zona-waktu.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.zona-waktu.index')->with('success', 'Data berhasil dihapus');
     }
 }

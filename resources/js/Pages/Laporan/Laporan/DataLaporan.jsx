@@ -1,15 +1,15 @@
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import { faHistory, faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from 'axios';
+import { format } from "date-fns";
+import { useRef, useState } from "react";
 import { Button, Form, Spinner, Table } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { faHistory, faPrint } from "@fortawesome/free-solid-svg-icons";
-import axios from 'axios';
-import { useRef, useState } from "react";
-import { toast } from "react-toastify";
-import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { format } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 import { useReactToPrint } from "react-to-print";
+import { toast } from "react-toastify";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
 
 function DataLaporan({tokos}) {
     const route = useRoute();

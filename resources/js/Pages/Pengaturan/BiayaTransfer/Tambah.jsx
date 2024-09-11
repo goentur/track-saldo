@@ -1,12 +1,12 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
-import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 function Tambah({tokos}) {
     const route = useRoute();
     const { data, setData, post, errors, processing } = useForm({
@@ -17,7 +17,6 @@ function Tambah({tokos}) {
         e.preventDefault()
         post(route("pengaturan.biaya-transfer.simpan"))
     }
-    console.log(data)
     return (
         <>
         <Layout>

@@ -1,8 +1,8 @@
-import { faKey, faRightToBracket, faUserAlt } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useRoute } from "../../../../vendor/tightenco/ziggy";
+import { faKey, faRightToBracket, faUserAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, useForm } from "@inertiajs/react";
 import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
-import { Head, router, useForm  } from "@inertiajs/react";
+import { useRoute } from "../../../../vendor/tightenco/ziggy";
 
 export default function Login(){
     const route = useRoute();

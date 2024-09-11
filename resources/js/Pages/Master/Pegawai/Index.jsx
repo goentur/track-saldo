@@ -1,16 +1,16 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Layout from "../../../Layouts/Layout";
-import { faPlus, faTrash, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { Head, Link, router, useForm } from "@inertiajs/react";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Spinner, Table } from "react-bootstrap";
+import { faPlus, faTrash, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, router, useForm } from "@inertiajs/react";
+import { pickBy } from "lodash";
 import { useRef, useState } from "react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Spinner, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 import Pagination from "../../Components/Pagination";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
-import { pickBy } from "lodash";
 function Index({ pegawais }){
     const route = useRoute();
     const { delete:destroy } = useForm()
@@ -27,7 +27,7 @@ function Index({ pegawais }){
     }
     const getData = () => {
         setIsLoading(true);
-        router.get(route('pegawai.index',pickBy({
+        router.get(route('master.pegawai.index',pickBy({
             perpage : perPage.current,
             search,
         })),{},{
@@ -49,7 +49,7 @@ function Index({ pegawais }){
             cancelButtonText: "Tidak",
         }).then((result) => {
             if (result.isConfirmed) {
-                destroy(route('pegawai.destroy',id))
+                destroy(route('master.pegawai.destroy',id))
             }
         })
     }
@@ -59,7 +59,7 @@ function Index({ pegawais }){
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faUsers}/> PEGAWAI</h1>
-                    <Link href={route('pegawai.create')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faPlus}/> TAMBAH DATA</Link>
+                    <Link href={route('master.pegawai.create')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faPlus}/> TAMBAH DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <div className="row mb-2">

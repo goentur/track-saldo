@@ -1,60 +1,68 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Layout from "../../Layouts/Layout";
-import { faDashboard } from "@fortawesome/free-solid-svg-icons";
 import { Head } from "@inertiajs/react";
-import { Card, CardBody, CardHeader, CardText } from "react-bootstrap";
+import { Card, CardBody } from "react-bootstrap";
+import Layout from "../../Layouts/Layout";
 
 function Index({tanggal, data}){
     return (
     <Layout>
         <Head title="DASHBOARD"/>
-            <h3><FontAwesomeIcon icon={faDashboard}/> DASHBOARD</h3>
-        <hr />
-        <div className="row gap-3 d-flex justify-content-center align-items-center text-center">
-            <h3 className="m-0">PERIODE TRANSAKSI</h3>
-            <h4 className="m-0">{tanggal.awal} S.D {tanggal.akhir}</h4>
-            <Card bg="primary" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL PERPUTARAN UANG</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.perputaran}</CardText>
-            </Card>
-            <Card bg="success" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL PENAMBAHAN UANG</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.penambahan}</CardText>
-            </Card>
-            <Card bg="danger" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL PENGURANGAN UANG</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.pengurangan}</CardText>
-            </Card>
-            <Card bg="success" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL BIAYA ADMIN</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.biayaAdmin}</CardText>
-            </Card>
-            <Card bg="danger" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL BIAYA TRANSFER</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.biayaTransfer}</CardText>
-            </Card>
-            <Card bg="success" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL PENDAPATAN</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.pendapatan}</CardText>
-            </Card>
-            <Card bg="danger" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL PENGELUARAN PRODUKTIF</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.produktif}</CardText>
-            </Card>
-            <Card bg="danger" className="p-3 col-lg-3 text-center text-white">
-                <h5>TOTAL PENGELUARAN KONSUMTIF</h5>
-                <hr className="m-0" />
-                <CardText>Rp {data.konsumtif}</CardText>
-            </Card>
-        </div>
+        <Card>
+            <CardBody>
 
+            <h3 className="text-center m-0">PERIODE TRANSAKSI</h3>
+            <h4 className="text-center m-0">{tanggal.awal} S.D {tanggal.akhir}</h4>
+            <div className="row gap-3 mt-3 d-flex justify-content-center align-items-center">
+                <div className="card col-lg-3 widget-card border-primary shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL PERPUTARAN UANG</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.perputaran}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-success shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL PENAMBAHAN UANG</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.penambahan}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-danger shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL PENGURANGAN UANG</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.pengurangan}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-success shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL BIAYA ADMIN</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.biayaAdmin}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-danger shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL BIAYA TRANSFER</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.biayaTransfer}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-success shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL PENDAPATAN</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.pendapatan}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-danger shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL PENGELUARAN PRODUKTIF</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.produktif}</h4>
+                    </div>
+                </div>
+                <div className="card col-lg-3 widget-card border-danger shadow-sm">
+                    <div className="card-body py-4">
+                        <span className="card-title widget-card-title mb-3">TOTAL PENGELUARAN KONSUMTIF</span>
+                        <h4 className="card-subtitle text-body-secondary m-0">Rp {data.konsumtif}</h4>
+                    </div>
+                </div>
+            </div>
+            </CardBody>
+        </Card>
     </Layout>
     )
 }

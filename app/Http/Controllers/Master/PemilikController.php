@@ -43,7 +43,7 @@ class PemilikController extends Controller
             'password' => Hash::make($request->password),
             'toko' => $request->toko,
         ]);
-        return to_route('pemilik.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.pemilik.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function show($id)
@@ -66,12 +66,12 @@ class PemilikController extends Controller
             'nama' => $request->nama,
             'alamat' => $request->alamat,
         ], $id);
-        return to_route('pemilik.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.pemilik.index')->with('success', 'Data berhasil diubah');
     }
 
     public function destroy($id)
     {
         $this->pemilik->delete($id);
-        return to_route('pemilik.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.pemilik.index')->with('success', 'Data berhasil dihapus');
     }
 }

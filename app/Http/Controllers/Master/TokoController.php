@@ -33,7 +33,7 @@ class TokoController extends Controller
             'nama' => $request->nama,
             'alamat' => $request->alamat,
         ]);
-        return to_route('toko.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.toko.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function show($id)
@@ -52,12 +52,12 @@ class TokoController extends Controller
             'nama' => $request->nama,
             'alamat' => $request->alamat,
         ], $id);
-        return to_route('toko.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.toko.index')->with('success', 'Data berhasil diubah');
     }
 
     public function destroy($id)
     {
         $this->toko->delete($id);
-        return to_route('toko.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.toko.index')->with('success', 'Data berhasil dihapus');
     }
 }

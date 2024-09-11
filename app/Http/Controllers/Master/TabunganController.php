@@ -40,7 +40,7 @@ class TabunganController extends Controller
             'no' => $request->no,
             'nominal' => $request->nominal,
         ]);
-        return to_route('tabungan.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.tabungan.index')->with('success', 'Data berhasil ditambahkan');
     }
     
     public function show($id)
@@ -64,13 +64,13 @@ class TabunganController extends Controller
             'no' => $request->no,
             'nominal' => $request->nominal,
         ], $id);
-        return to_route('tabungan.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.tabungan.index')->with('success', 'Data berhasil diubah');
     }
     
     public function destroy($id)
     {
         $this->tabungan->delete($id);
-        return to_route('tabungan.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.tabungan.index')->with('success', 'Data berhasil dihapus');
     }
 
     public function dataByToko(Request $request)

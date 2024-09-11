@@ -1,12 +1,12 @@
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { router } from "@inertiajs/react";
-import { Button, Form, InputGroup, Spinner, Table } from "react-bootstrap";
-import { useRef, useState } from "react";
-import { useRoute } from "../../../../vendor/tightenco/ziggy";
-import Pagination from "../Components/Pagination";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import { pickBy } from "lodash";
+import { useRef, useState } from "react";
+import { Button, Form, InputGroup, Spinner, Table } from "react-bootstrap";
+import { useRoute } from "../../../../vendor/tightenco/ziggy";
 import { Rupiah } from "../../Helpers/Rupiah";
+import Pagination from "../Components/Pagination";
 function Tabungan({ tabungans }){
     const route = useRoute();
     const [isLoading, setIsLoading] = useState(false);

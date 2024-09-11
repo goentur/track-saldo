@@ -1,13 +1,13 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
-import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { Typeahead } from "react-bootstrap-typeahead";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
+import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 function Ubah({ tokos, paket }) {
     const route = useRoute();
     const { data, setData, put, errors, processing } = useForm({
@@ -29,7 +29,7 @@ function Ubah({ tokos, paket }) {
     };
     function submit(e) {
         e.preventDefault()
-        put(route("paket.update",paket))
+        put(route("master.paket.update",paket))
     }
     return (
         <>
@@ -38,7 +38,7 @@ function Ubah({ tokos, paket }) {
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faClipboard}/> FORM PAKET</h1>
-                    <Link href={route('paket.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
+                    <Link href={route('master.paket.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">

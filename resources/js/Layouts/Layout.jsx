@@ -1,70 +1,88 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import ThemeMode from './ThemeMode';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faFolderOpen, faGear, faHomeAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { Link, router, useForm, usePage } from '@inertiajs/react';
-import { useRoute } from '../../../vendor/tightenco/ziggy';
+import { Link, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
+import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import Container from 'react-bootstrap/Container';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-bootstrap-typeahead/css/Typeahead.css';
-import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
-import { useEffect } from 'react';
-import Menu from './Menus';
+import { useRoute } from '../../../vendor/tightenco/ziggy';
 
 
 function Layout({children}) {
-  const route = useRoute();
-  const { user } = usePage().props.auth;
-  const { role } = usePage().props.auth;
-  const { flash } = usePage().props;
-  const { delete:destroy } = useForm()
-  function logout(e) {
-    e.preventDefault()
-    destroy(route('logout'),{
-        onSuccess: () => {
-          localStorage.removeItem('auth');
-          router.reload(route('login'));
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+    const route = useRoute();
+    const { url } = usePage();
+    const { role } = usePage().props.auth;
+    const { flash } = usePage().props;
+    useEffect(() => {
+        if (theme === 'light') {
+            document.body.style.backgroundColor = '#a1a1a1';
+        } else {
+            document.body.style.backgroundColor = '';
         }
-    })
-  }
-  useEffect(() => {
-      if (flash.success) {
-          toast.success(flash.success);
-      }
-      if (flash.error) {
-          toast.error(flash.error);
-      }
-  }, [flash]);
-  return (
-  <>
-    <Navbar collapseOnSelect expand="lg" bg="primary" data-bs-theme="dark" fixed="top">
-      <Container>
-        <Link className="navbar-brand" href={route('home')}><b>T</b>rack<b>S</b>aldo</Link>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <Menu role={role}/>
-          </Nav>
-          <Nav>
-            <Nav.Link><ThemeMode/></Nav.Link>
-            <NavDropdown title={<span><FontAwesomeIcon icon={faUser} /> {user.name}</span>}  align="end">
-              <NavDropdown.Item href="#action/3.4"><FontAwesomeIcon icon={faUser}/> Profil</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="/logout" onClick={logout}><FontAwesomeIcon icon={faRightFromBracket}/> LogOut</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-    <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable={false} pauseOnHover theme="colored"/>
-    <Container fluid="lg" style={{paddingTop: "4.5rem"}}>
-      {children}
-    </Container>
-  </>
+        document.documentElement.setAttribute('data-bs-theme', theme);
+
+        if (flash.success) {
+            toast.success(flash.success);
+        }
+        if (flash.error) {
+            toast.error(flash.error);
+        }
+    }, [flash,theme]);
+    const isActive = (segment) => url.startsWith(segment);
+    return (
+    <>
+        <Container fluid="lg" className='mt-5' style={{marginBottom:'100px'}}>
+            {children}
+            {/* <ThemeMode/> */}
+        </Container>
+        <ToastContainer position="top-left" autoClose={5000} hideProgressBar newestOnTop={false} closeOnClick={false} rtl={false} pauseOnFocusLoss draggable={false} pauseOnHover theme="colored"/>
+        <nav className="navbar navbar-expand navbar-dark bg-primary text-white fixed-bottom rounded-bottom-0 rounded-5">
+            <ul className="navbar-nav nav-justified w-100">
+                {role == 'pemilik' ? 
+                    <li className='nav-item'>
+                    <Link href={route('dashboard')} className={`${isActive('/dashboard') ? 'active ':''}${isActive('/home') ? 'active ':''}nav-link text-center`}>
+                        <span className="icon-menu"><FontAwesomeIcon icon={faHomeAlt}/></span><br />
+                        <span className='text-menu'>DASHBOARD</span>
+                    </Link>
+                    </li>
+                : ''}
+                {role == 'pemilik' || role == 'developer' ? 
+                    <li className='nav-item'>
+                    <Link href={route('master.menu')} className={`${isActive('/master') ? 'active ':''}nav-link text-center`}>
+                        <span className="icon-menu"><FontAwesomeIcon icon={faFolderOpen}/></span><br />
+                        <span className='text-menu'>MASTER</span>
+                    </Link>
+                    </li>
+                : ''}
+                {role == 'pemilik' || role == 'pegawai' ? 
+                    <li className='nav-item'>
+                    <Link href={route('transaksi.menu')} className={`${isActive('/transaksi') ? 'active ':''}nav-link text-center`}>
+                        <span className="icon-menu"><FontAwesomeIcon icon={faPlusCircle}/></span><br />
+                        <span className='text-menu'>TRANSAKSI</span>
+                    </Link  >
+                    </li>
+                : ''}
+                {role == 'pemilik' ? 
+                    <li className='nav-item'>
+                    <Link href={route('pengaturan.index')} className={`${isActive('/pengaturan') ? 'active ':''}nav-link text-center`}>
+                        <span className="icon-menu"><FontAwesomeIcon icon={faGear}/></span><br />
+                        <span className='text-menu'>PENGATURAN</span>
+                    </Link>
+                    </li>
+                : ''}
+                <li className='nav-item'>
+                <Link href={route('profil.index')} className={`${isActive('/profil') ? 'active ':''}nav-link text-center`}>
+                    <span className="icon-menu"><FontAwesomeIcon icon={faUserCircle}/></span><br />
+                    <span className='text-menu'>PROFIL</span>
+                </Link>
+                </li>
+            </ul>
+        </nav>
+    </>
   );
 }
 

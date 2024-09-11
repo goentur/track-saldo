@@ -38,7 +38,7 @@ class AnggotaController extends Controller
             'telp' => '0' . $request->telp,
             'alamat' => $request->alamat,
         ]);
-        return to_route('anggota.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.anggota.index')->with('success', 'Data berhasil ditambahkan');
     }
     
     public function show($id)
@@ -62,13 +62,13 @@ class AnggotaController extends Controller
             'telp' => '0' . $request->telp,
             'alamat' => $request->alamat,
         ], $id);
-        return to_route('anggota.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.anggota.index')->with('success', 'Data berhasil diubah');
     }
 
     public function destroy($id)
     {
         $this->anggota->delete($id);
-        return to_route('anggota.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.anggota.index')->with('success', 'Data berhasil dihapus');
     }
 
     public function dataByToko(Request $request)

@@ -1,15 +1,15 @@
-import Layout from "../../../../Layouts/Layout";
-import { useRoute } from "../../../../../../vendor/tightenco/ziggy";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Head, Link, useForm } from "@inertiajs/react";
-import { Button, CardBody, CardFooter, CardHeader, Form, Spinner } from "react-bootstrap";
-import { Typeahead } from "react-bootstrap-typeahead";
 import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { faArrowLeft, faMoneyBill1Wave } from "@fortawesome/free-solid-svg-icons";
-import CurrencyInput from "react-currency-input-field";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
 import axios from 'axios';
 import { useState } from "react";
+import { Button, CardBody, CardFooter, CardHeader, Form, Spinner } from "react-bootstrap";
+import { Typeahead } from "react-bootstrap-typeahead";
+import CurrencyInput from "react-currency-input-field";
 import { toast } from "react-toastify";
+import { useRoute } from "../../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../../Layouts/Layout";
 
 function Index({ tokos }) {
     const route = useRoute();

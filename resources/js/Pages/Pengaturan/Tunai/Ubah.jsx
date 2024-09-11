@@ -1,12 +1,12 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
-import Layout from "../../../Layouts/Layout";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { Typeahead } from "react-bootstrap-typeahead";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
+import { Typeahead } from "react-bootstrap-typeahead";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 function Ubah({ tabungans, pengaturan }) {
     const route = useRoute();
     const { data, setData, put, errors, processing } = useForm({

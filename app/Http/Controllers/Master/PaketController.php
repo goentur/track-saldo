@@ -39,7 +39,7 @@ class PaketController extends Controller
             'nama' => $request->nama,
             'harga' => $request->nominal,
         ]);
-        return to_route('paket.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.paket.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function show($id)
@@ -62,13 +62,13 @@ class PaketController extends Controller
             'nama' => $request->nama,
             'harga' => $request->nominal,
         ], $id);
-        return to_route('paket.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.paket.index')->with('success', 'Data berhasil diubah');
     }
 
     public function destroy($id)
     {
         $this->paket->delete($id);
-        return to_route('paket.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.paket.index')->with('success', 'Data berhasil dihapus');
     }
 
     public function pulsaByToko(Request $request)

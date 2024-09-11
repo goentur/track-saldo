@@ -1,11 +1,11 @@
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
-import Layout from "../../../Layouts/Layout";
 import { faArrowLeft, faShare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
 import CurrencyInput from "react-currency-input-field";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 function Tambah() {
     const route = useRoute();
     const { data, setData, post, errors, processing } = useForm({
@@ -15,7 +15,7 @@ function Tambah() {
     })
     function submit(e) {
         e.preventDefault()
-        post(route("zona-waktu.store"))
+        post(route("master.zona-waktu.store"))
     }
     return (
         <>
@@ -24,7 +24,7 @@ function Tambah() {
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faClipboard}/> FORM ZONA WAKTU</h1>
-                    <Link href={route('zona-waktu.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
+                    <Link href={route('master.zona-waktu.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">

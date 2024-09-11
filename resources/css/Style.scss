@@ -73,6 +73,10 @@ input:read-only {
     width: 12.5%;
 }
 
+.bg-main {
+    background-color: #20639b;
+}
+
 .w-9 {
     width: 11.1111111%;
 }
@@ -86,9 +90,26 @@ input:read-only {
     margin: 0 auto;
 }
 
+.nav-link span.icon-menu {
+    font-size: 25px;
+}
+
+.nav-link span.text-menu {
+    font-size: 14px;
+}
+
 @media (max-width: 768px) {
     .modal-90w {
         width: 100%;
         max-width: none;
     }
+
+    .nav-link span.icon-menu {
+        font-size: 30px;
+    }
+
+    .nav-link span.text-menu {
+        display: none;
+    }
+
 }

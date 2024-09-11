@@ -36,7 +36,7 @@ class MerekController extends Controller
             'toko_id' => $request->toko,
             'nama' => $request->nama,
         ]);
-        return to_route('merek.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.merek.index')->with('success', 'Data berhasil ditambahkan');
     }
     
     public function show($id)
@@ -58,13 +58,13 @@ class MerekController extends Controller
             'toko_id' => $request->toko,
             'nama' => $request->nama,
         ], $id);
-        return to_route('merek.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.merek.index')->with('success', 'Data berhasil diubah');
     }
     
     public function destroy($id)
     {
         $this->merek->delete($id);
-        return to_route('merek.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.merek.index')->with('success', 'Data berhasil dihapus');
     }
     public function dataByToko(Request $request)
     {

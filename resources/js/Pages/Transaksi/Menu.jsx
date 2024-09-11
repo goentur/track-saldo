@@ -1,21 +1,21 @@
-import Layout from "../../Layouts/Layout";
-import { Head, Link, usePage } from "@inertiajs/react";
-import { useRoute } from '../../../../vendor/tightenco/ziggy';
-import { Card, CardBody, Modal } from "react-bootstrap";
-import IconTransferViaAtmNasabah  from "../../../images/menus/transfer-via-atm-nasabah.svg";
-import IconTransferTunai  from "../../../images/menus/transfer-tunai.svg";
-import IconTarikTunai  from "../../../images/menus/tarik-tunai.svg";
-import IconMutasiSaldo  from "../../../images/menus/mutasi-saldo.svg";
-import IconPaketPulsa  from "../../../images/menus/paket-pulsa.svg";
-import IconPaketInternet  from "../../../images/menus/paket-internet.svg";
-import IconLaporan  from "../../../images/menus/laporan.svg";
-import IconLaporanDetail  from "../../../images/menus/laporan-detail.svg";
-import IconTabungan  from "../../../images/menus/tabungan.svg";
-import IconProduktif  from "../../../images/menus/produktif.svg";
-import IconKonsumtif  from "../../../images/menus/konsumtif.svg";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCreditCard, faFileExcel, faFileWord } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, usePage } from "@inertiajs/react";
+import { useState } from "react";
+import { Card, CardBody, Modal } from "react-bootstrap";
+import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import IconKonsumtif from "../../../images/menus/konsumtif.svg";
+import IconLaporanDetail from "../../../images/menus/laporan-detail.svg";
+import IconLaporan from "../../../images/menus/laporan.svg";
+import IconMutasiSaldo from "../../../images/menus/mutasi-saldo.svg";
+import IconPaketInternet from "../../../images/menus/paket-internet.svg";
+import IconPaketPulsa from "../../../images/menus/paket-pulsa.svg";
+import IconProduktif from "../../../images/menus/produktif.svg";
+import IconTabungan from "../../../images/menus/tabungan.svg";
+import IconTarikTunai from "../../../images/menus/tarik-tunai.svg";
+import IconTransferTunai from "../../../images/menus/transfer-tunai.svg";
+import IconTransferViaAtmNasabah from "../../../images/menus/transfer-via-atm-nasabah.svg";
+import Layout from "../../Layouts/Layout";
 import DataLaporan from "../Laporan/Laporan/DataLaporan";
 import DataLaporanDetail from "../Laporan/LaporanDetail/DataLaporan";
 import Tabungan from "./Tabungan";
@@ -36,7 +36,7 @@ function Menu({tokos,tabungans}){
             <CardBody>
                 <h3 className="text-center mb-3">TRANSFER</h3>
                 <div className="row d-flex justify-content-center align-items-center">
-                    <div className="col-md-2 mb-3">
+                    <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconTransferViaAtmNasabah} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -45,7 +45,7 @@ function Menu({tokos,tabungans}){
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-2 mb-3">
+                    <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconTransferTunai} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -54,7 +54,7 @@ function Menu({tokos,tabungans}){
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-2 mb-3">
+                    <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconTarikTunai} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -64,7 +64,7 @@ function Menu({tokos,tabungans}){
                         </div>
                     </div>
                     {role == 'pemilik' ? (
-                        <div className="col-md-2 mb-3">
+                        <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconMutasiSaldo} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -80,7 +80,7 @@ function Menu({tokos,tabungans}){
                     <div className="col-lg-6">
                         <h3 className="text-center mb-3">PENJUALAN</h3>
                         <div className="row d-flex justify-content-center align-items-center">
-                            <div className="col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconPaketPulsa} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -89,7 +89,7 @@ function Menu({tokos,tabungans}){
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconPaketInternet} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -103,7 +103,7 @@ function Menu({tokos,tabungans}){
                     <div className="col-lg-6">
                         <h3 className="text-center mb-3">LAPORAN</h3>
                         <div className="row d-flex justify-content-center align-items-center">
-                            <div className="col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconLaporan} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -113,7 +113,7 @@ function Menu({tokos,tabungans}){
                                 </div>
                             </div>
                             {role == 'pemilik' ? (
-                            <div className="col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconLaporanDetail} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -123,7 +123,7 @@ function Menu({tokos,tabungans}){
                                 </div>
                             </div>
                             ):(  
-                            <div className="col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconTabungan} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -140,7 +140,7 @@ function Menu({tokos,tabungans}){
                 <hr />
                 <h3 className="text-center mb-3">PENGELUARAN</h3>
                 <div className="row d-flex justify-content-center align-items-center">
-                    <div className="col-md-2 mb-3">
+                    <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconProduktif} alt="Menu Icon" className="col-6 img-fluid mb-3" />
@@ -149,7 +149,7 @@ function Menu({tokos,tabungans}){
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-2 mb-3">
+                    <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconKonsumtif} alt="Menu Icon" className="col-6 img-fluid mb-3" />

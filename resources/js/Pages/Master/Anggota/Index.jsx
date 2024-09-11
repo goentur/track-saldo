@@ -1,16 +1,16 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Layout from "../../../Layouts/Layout";
-import { faPlus, faTrash, faUsers } from "@fortawesome/free-solid-svg-icons";
-import { Head, Link, router, useForm } from "@inertiajs/react";
 import { faEdit } from "@fortawesome/free-regular-svg-icons";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Spinner, Table } from "react-bootstrap";
+import { faPlus, faTrash, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Head, Link, router, useForm } from "@inertiajs/react";
+import { pickBy } from "lodash";
 import { useRef, useState } from "react";
-import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Spinner, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import Layout from "../../../Layouts/Layout";
 import Pagination from "../../Components/Pagination";
-import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
-import { pickBy } from "lodash";
 function Index({ anggotas }){
     const route = useRoute();
     const { delete:destroy } = useForm()
@@ -27,7 +27,7 @@ function Index({ anggotas }){
     }
     const getData = () => {
         setIsLoading(true);
-        router.get(route('anggota.index',pickBy({
+        router.get(route('master.anggota.index',pickBy({
             perpage : perPage.current,
             search,
         })),{},{
@@ -49,7 +49,7 @@ function Index({ anggotas }){
             cancelButtonText: "Tidak",
         }).then((result) => {
             if (result.isConfirmed) {
-                destroy(route('anggota.destroy',id))
+                destroy(route('master.anggota.destroy',id))
             }
         })
     }
@@ -59,7 +59,7 @@ function Index({ anggotas }){
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <h1><FontAwesomeIcon icon={faUsers}/> ANGGOTA</h1>
-                    <Link href={route('anggota.create')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faPlus}/> TAMBAH DATA</Link>
+                    <Link href={route('master.anggota.create')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faPlus}/> TAMBAH DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <div className="row mb-2">
@@ -108,7 +108,7 @@ function Index({ anggotas }){
                                 <td>{ anggota.poin }</td>
                                 <td>
                                     <ButtonGroup aria-label="button action">
-                                        <Link href={route('anggota.edit',anggota)} className="btn btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></Link>
+                                        <Link href={route('master.anggota.edit',anggota)} className="btn btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></Link>
                                         <Button size="sm" variant="danger" onClick={() => hapus(anggota.id)}><FontAwesomeIcon icon={faTrash}/></Button>
                                     </ButtonGroup>
                                 </td>

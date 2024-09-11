@@ -44,7 +44,7 @@ class PegawaiController extends Controller
             'password' => Hash::make($request->password),
             'toko' => $request->toko,
         ]);
-        return to_route('pegawai.index')->with('success', 'Data berhasil ditambahkan');
+        return to_route('master.pegawai.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function show($id)
@@ -70,12 +70,12 @@ class PegawaiController extends Controller
             'password' => Hash::make($request->password),
             'toko' => $request->toko,
         ], $id);
-        return to_route('pegawai.index')->with('success', 'Data berhasil diubah');
+        return to_route('master.pegawai.index')->with('success', 'Data berhasil diubah');
     }
 
     public function destroy($id)
     {
         $this->pegawai->delete($id);
-        return to_route('pegawai.index')->with('success', 'Data berhasil dihapus');
+        return to_route('master.pegawai.index')->with('success', 'Data berhasil dihapus');
     }
 }

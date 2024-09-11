@@ -1,5 +1,5 @@
-import Layout from "../Layouts/Layout"
 import { Head } from "@inertiajs/react"
+import Layout from "../Layouts/Layout"
 
 function Error({ message }) {
     return (
