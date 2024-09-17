@@ -26,7 +26,7 @@ function Tambah({tokos,tipe_pakets}) {
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
                     <CardTitle><FontAwesomeIcon icon={faClipboard}/> PAKET</CardTitle>
-                    <Link href={route('master.paket.index')} className="btn btn-primary"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
+                    <Link href={route('master.paket.index')} className="btn btn-primary"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">
