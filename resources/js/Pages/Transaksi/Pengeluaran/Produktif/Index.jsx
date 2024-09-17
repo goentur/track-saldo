@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, useForm } from "@inertiajs/react";
 import axios from 'axios';
 import { useState } from "react";
-import { Button, CardBody, CardFooter, CardHeader, Form, Spinner } from "react-bootstrap";
+import { Button, CardBody, CardFooter, CardHeader, CardTitle, Form, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
 import { toast } from "react-toastify";
@@ -51,8 +51,8 @@ function Index({ tokos }) {
             <Head title="PRODUKTIF" />
             <Form onSubmit={submit} className="card">
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                    <h1><FontAwesomeIcon icon={faStoreAlt} /> PRODUKTIF</h1>
-                    <Link href={route('transaksi.menu')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft} /> KEMBALI KE MENU</Link>
+                    <CardTitle><FontAwesomeIcon icon={faStoreAlt} /> PRODUKTIF</CardTitle>
+                    <Link href={route('transaksi.menu')} className="btn btn-primary"><FontAwesomeIcon icon={faArrowLeft} /> KEMBALI</Link>
                 </CardHeader>
                 <CardBody>
                     <div className="row">

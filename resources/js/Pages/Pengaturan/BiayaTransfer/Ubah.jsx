@@ -3,7 +3,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
+import { Button, Card, CardBody, CardHeader, CardTitle, Form, Spinner } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
 import { useRoute } from "../../../../../vendor/tightenco/ziggy";
@@ -31,8 +31,8 @@ function Ubah({ tokos, pengaturanNominal }) {
             <Head title="UBAH - PENGATURAN BIAYA TRANFER"/>
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                    <h1><FontAwesomeIcon icon={faClipboard}/> FORM PENGATURAN BIAYA TRANFER</h1>
-                    <Link href={route('pengaturan.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE PENGATURAN</Link>
+                    <CardTitle><FontAwesomeIcon icon={faClipboard}/> BIAYA TRANFER</CardTitle>
+                    <Link href={route('pengaturan.index')} className="btn btn-primary"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">

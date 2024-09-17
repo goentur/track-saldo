@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, router, useForm } from "@inertiajs/react";
 import { pickBy } from "lodash";
 import { useRef, useState } from "react";
-import { Button, ButtonGroup, Card, CardBody, CardHeader, Form, InputGroup, Spinner, Table } from "react-bootstrap";
+import { Button, ButtonGroup, Card, CardBody, CardHeader, CardTitle, Form, InputGroup, Spinner, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useRoute } from "../../../../../vendor/tightenco/ziggy";
@@ -58,8 +58,8 @@ function Index({ anggotas }){
             <Head title="ANGGOTA"/>
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                    <h1><FontAwesomeIcon icon={faUsers}/> ANGGOTA</h1>
-                    <Link href={route('master.anggota.create')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faPlus}/> TAMBAH DATA</Link>
+                    <CardTitle><FontAwesomeIcon icon={faUsers}/> ANGGOTA</CardTitle>
+                    <Link href={route('master.anggota.create')} className="btn btn-primary"><FontAwesomeIcon icon={faPlus}/> TAMBAH DATA</Link>
                 </CardHeader>
                 <CardBody>
                     <div className="row mb-2">

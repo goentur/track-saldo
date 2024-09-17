@@ -2,7 +2,7 @@ import { faClipboard, faSave } from "@fortawesome/free-regular-svg-icons";
 import { faArrowLeft, faShare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { Button, Card, CardBody, CardHeader, Form, Spinner } from "react-bootstrap";
+import { Button, Card, CardBody, CardHeader, CardTitle, Form, Spinner } from "react-bootstrap";
 import CurrencyInput from "react-currency-input-field";
 import { useRoute } from "../../../../../vendor/tightenco/ziggy";
 import Layout from "../../../Layouts/Layout";
@@ -23,8 +23,8 @@ function Ubah({ zonaWaktu }) {
             <Head title="UBAH - ZONA WAKTU"/>
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                    <h1><FontAwesomeIcon icon={faClipboard}/> FORM ZONA WAKTU</h1>
-                    <Link href={route('master.zona-waktu.index')} className="btn btn-primary btn-lg"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI KE DATA</Link>
+                    <CardTitle><FontAwesomeIcon icon={faClipboard}/> ZONA WAKTU</CardTitle>
+                    <Link href={route('master.zona-waktu.index')} className="btn btn-primary"><FontAwesomeIcon icon={faArrowLeft}/> KEMBALI</Link>
                 </CardHeader>
                 <CardBody>
                     <Form onSubmit={submit} className="row">

@@ -11,7 +11,7 @@ function Index({tanggal, data}){
 
             <h3 className="text-center m-0">PERIODE TRANSAKSI</h3>
             <h4 className="text-center m-0">{tanggal.awal} S.D {tanggal.akhir}</h4>
-            <div className="row gap-3 mt-3 d-flex justify-content-center align-items-center">
+            <div className="row gap-3 mt-3 d-flex justify-content-center align-items-center p-4">
                 <div className="card col-lg-3 widget-card border-primary shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PERPUTARAN UANG</span>

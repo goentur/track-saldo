@@ -1,7 +1,7 @@
 import { faKey, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForm } from "@inertiajs/react";
-import { Button, Card, CardBody, Form, Spinner } from "react-bootstrap";
+import { Button, Card, CardBody, CardTitle, Form, Spinner } from "react-bootstrap";
 import { useRoute } from "../../../../vendor/tightenco/ziggy";
 
 function UbahPassword(){
@@ -19,7 +19,7 @@ function UbahPassword(){
         <>
             <Card>
                 <CardBody>
-                    <h4><FontAwesomeIcon icon={faKey}/> UBAH PASSWORD</h4>
+                    <CardTitle><FontAwesomeIcon icon={faKey}/> UBAH PASSWORD</CardTitle>
                     <p>Pastikan akun Anda menggunakan kata sandi yang panjang dan acak agar tetap aman.</p>
                     <form onSubmit={submit} className="mt-4">
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormPasswordLama">
@@ -45,7 +45,7 @@ function UbahPassword(){
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </div>
-                        <div className="col-lg-12">
+                        <div className="col-lg-12 mb-3">
                             <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>{processing?<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>:<FontAwesomeIcon icon={faSave}/> } SIMPAN</Button>
                         </div>
                     </form>

@@ -41,10 +41,8 @@ class TokoRepository implements TokoRepositoryInterface
 
     public function getTokosByUser(array $select)
     {
-        $tokoId = [];
-        foreach (auth()->user()->toko as $toko) {
-            $tokoId[] = $toko->id;
-        }
+        $user = auth()->user();
+        $tokoId = $user->toko->pluck('id')->toArray();
         return Toko::select($select)->whereIn('id', $tokoId)->get();
     }
 }

@@ -2,7 +2,7 @@ import { faCreditCard, faFileExcel, faFileWord } from "@fortawesome/free-regular
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
-import { Card, CardBody, Modal } from "react-bootstrap";
+import { Card, CardBody, CardTitle, Modal } from "react-bootstrap";
 import { useRoute } from '../../../../vendor/tightenco/ziggy';
 import IconKonsumtif from "../../../images/menus/konsumtif.svg";
 import IconLaporanDetail from "../../../images/menus/laporan-detail.svg";
@@ -34,13 +34,13 @@ function Menu({tokos,tabungans}){
         <Head title="TRANSAKSI"/>
         <Card>
             <CardBody>
-                <h3 className="text-center mb-3">TRANSFER</h3>
+                <CardTitle className="text-center mb-3">TRANSFER</CardTitle>
                 <div className="row d-flex justify-content-center align-items-center">
                     <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconTransferViaAtmNasabah} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                <h6 className="card-title">Via ATM Nasabah</h6>
+                                <p className="fw-bold">Via ATM Nasabah</p>
                                 <Link href={route('transaksi.transfer.via-atm-nasabah.index')} className="stretched-link"/>
                             </div>
                         </div>
@@ -49,7 +49,7 @@ function Menu({tokos,tabungans}){
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconTransferTunai} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                <h5 className="card-title">Tunai</h5>
+                                <p className="fw-bold">Tunai</p>
                                 <Link href={route('transaksi.transfer.tunai.index')} className="stretched-link"/>
                             </div>
                         </div>
@@ -58,7 +58,7 @@ function Menu({tokos,tabungans}){
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconTarikTunai} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                <h5 className="card-title">Tarik Tunai</h5>
+                                <p className="fw-bold">Tarik Tunai</p>
                                 <Link href={route('transaksi.transfer.tarik-tunai.index')} className="stretched-link"/>
                             </div>
                         </div>
@@ -68,7 +68,7 @@ function Menu({tokos,tabungans}){
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconMutasiSaldo} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                <h5 className="card-title">Mutasi Saldo</h5>
+                                <p className="fw-bold">Mutasi Saldo</p>
                                 <Link href={route('transaksi.transfer.mutasi-saldo.index')} className="stretched-link"/>
                             </div>
                         </div>
@@ -78,13 +78,13 @@ function Menu({tokos,tabungans}){
                 <hr />
                 <div className="row">
                     <div className="col-lg-6">
-                        <h3 className="text-center mb-3">PENJUALAN</h3>
+                        <CardTitle className="text-center mb-3">PENJUALAN</CardTitle>
                         <div className="row d-flex justify-content-center align-items-center">
                             <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconPaketPulsa} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                        <h5 className="card-title">Pulsa</h5>
+                                        <p className="fw-bold">Pulsa</p>
                                         <Link href={route('transaksi.penjualan.pulsa.index')} className="stretched-link"/>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@ function Menu({tokos,tabungans}){
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconPaketInternet} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                        <h5 className="card-title">Paket Data</h5>
+                                        <p className="fw-bold">Paket Data</p>
                                         <Link href={route('transaksi.penjualan.paket-data.index')} className="stretched-link"/>
                                     </div>
                                 </div>
@@ -101,13 +101,13 @@ function Menu({tokos,tabungans}){
                         </div>
                     </div>
                     <div className="col-lg-6">
-                        <h3 className="text-center mb-3">LAPORAN</h3>
+                        <CardTitle className="text-center mb-3">LAPORAN</CardTitle>
                         <div className="row d-flex justify-content-center align-items-center">
                             <div className="col-6 col-md-4 mb-3">
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconLaporan} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                        <h5 className="card-title">Laporan</h5>
+                                        <p className="fw-bold">Laporan</p>
                                         <a href="#" onClick={handleModalLaporan} className="stretched-link"></a>
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@ function Menu({tokos,tabungans}){
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconLaporanDetail} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                        <h5 className="card-title">Laporan Detail</h5>
+                                        <p className="fw-bold">Laporan Detail</p>
                                         <a href="#" onClick={handleModalLaporanDetail} className="stretched-link"></a>
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@ function Menu({tokos,tabungans}){
                                 <div className="card shadow text-center border-primary">
                                     <div className="card-body">
                                         <img src={IconTabungan} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                        <h5 className="card-title">Tabungan</h5>
+                                        <p className="fw-bold">Tabungan</p>
                                         <a href="#" onClick={handleModalTabungan} className="stretched-link"></a>
                                     </div>
                                 </div>
@@ -138,13 +138,13 @@ function Menu({tokos,tabungans}){
                 </div>
                 {role == 'pemilik' ? (<>
                 <hr />
-                <h3 className="text-center mb-3">PENGELUARAN</h3>
+                <CardTitle className="text-center mb-3">PENGELUARAN</CardTitle>
                 <div className="row d-flex justify-content-center align-items-center">
                     <div className="col-6 col-md-2 mb-3">
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconProduktif} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                <h5 className="card-title">Produktif</h5>
+                                <p className="fw-bold">Produktif</p>
                                 <Link href={route('transaksi.pengeluaran.produktif.index')} className="stretched-link"/>
                             </div>
                         </div>
@@ -153,7 +153,7 @@ function Menu({tokos,tabungans}){
                         <div className="card shadow text-center border-primary">
                             <div className="card-body">
                                 <img src={IconKonsumtif} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                <h5 className="card-title">Konsumtif</h5>
+                                <p className="fw-bold">Konsumtif</p>
                                 <Link href={route('transaksi.pengeluaran.konsumtif.index')} className="stretched-link"/>
                             </div>
                         </div>

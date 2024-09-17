@@ -2,7 +2,7 @@ import { faRightFromBracket, faUserAlt } from "@fortawesome/free-solid-svg-icons
 import { faCog } from "@fortawesome/free-solid-svg-icons/faCog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Head, useForm, usePage } from "@inertiajs/react";
-import { Card, CardBody } from "react-bootstrap";
+import { Card, CardBody, CardTitle } from "react-bootstrap";
 import Layout from "../../Layouts/Layout";
 import ThemeMode from "../../Layouts/ThemeMode";
 import UbahPassword from "./UbahPassword";
@@ -26,7 +26,7 @@ function Index(){
                 <Card className="col-lg-12 mb-5">
                     <CardBody className="row">
                         <div className="col-lg-6">
-                            <h4><FontAwesomeIcon icon={faUserAlt}/> INFORMASI PROFIL</h4>
+                            <CardTitle><FontAwesomeIcon icon={faUserAlt}/> INFORMASI PROFIL</CardTitle>
                             <p>Berikut informasi profil Anda.</p>
                             <table className="table-sm mt-4">
                                 <tbody>
@@ -42,10 +42,10 @@ function Index(){
                                     </tr>
                                 </tbody>
                             </table>
-                            <button className="btn btn-danger mt-4" onClick={logout} ><FontAwesomeIcon icon={faRightFromBracket}/> KELUAR </button>
+                            <button className="btn btn-danger mt-4 mb-3" onClick={logout} ><FontAwesomeIcon icon={faRightFromBracket}/> KELUAR </button>
                         </div>
                         <div className="col-lg-6">
-                            <h4><FontAwesomeIcon icon={faCog}/> PENGATURAN TAMPILAN</h4>
+                            <CardTitle><FontAwesomeIcon icon={faCog}/> PENGATURAN TAMPILAN</CardTitle>
                             <p className="mb-4">Ubah mode tampilan anda.</p>
                             <ThemeMode/>
                         </div>
