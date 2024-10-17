@@ -29,11 +29,21 @@ class TokoController extends Controller
 
     public function store(StoreTokoRequest $request)
     {
-        $this->toko->create([
-            'nama' => $request->nama,
-            'alamat' => $request->alamat,
-        ]);
-        return to_route('master.toko.index')->with('success', 'Data berhasil ditambahkan');
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+
+            // Generate a new name for the file (e.g., using current timestamp or UUID)
+            $newFileName = fileName() . '.' . $file->getClientOriginalExtension();
+
+            // Store the file in the 'public/uploads' directory with the new name
+            $path = $file->storeAs('logos', $newFileName, 'public');
+            $this->toko->create([
+                'nama' => $request->nama,
+                'alamat' => $request->alamat,
+                'logo' => $newFileName
+            ]);
+            return to_route('master.toko.index')->with('success', 'Data berhasil ditambahkan');
+        }
     }
 
     public function show($id)

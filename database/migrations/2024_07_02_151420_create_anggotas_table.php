@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama')->nullable();
             $table->string('telp')->nullable();
             $table->text('alamat')->nullable();
-            $table->decimal('poin')->nullable();
+            $table->bigInteger('poin')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

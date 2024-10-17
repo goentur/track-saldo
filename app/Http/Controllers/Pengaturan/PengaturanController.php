@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Pengaturan;
 
 use App\Enums\TipePengaturan;
-use App\Enums\TipePengaturanNominal;
 use App\Http\Controllers\Controller;
 use App\Services\Master\TabunganService;
-use App\Services\PengaturanNominalService;
+use App\Services\Master\TokoService;
 use App\Services\PengaturanService;
 
 class PengaturanController extends Controller
 {
     public function __construct(
+        protected TokoService $toko,
         protected PengaturanService $pengaturan,
-        protected PengaturanNominalService $pengaturanNominal,
         protected TabunganService $tabungan,
     ) {
     }
@@ -21,11 +20,11 @@ class PengaturanController extends Controller
     {
         $zwp = zonaWaktuPengguna();
         return inertia('Pengaturan/Index', [
+            'tokos' => $this->tokos(),
             'pengaturanTunais' => $this->dataPengaturanTunai($zwp),
-            'pengaturanBiayaTransfers' => $this->dataPengaturanBiayaTransfer($zwp),
         ]);
     }
-    public function dataPengaturanTunai($zwp)
+    protected function dataPengaturanTunai($zwp)
     {
         $data = $this->pengaturan->getPengaturanByToko(['id', 'user_id', 'toko_id', 'tabungan_id', 'tanggal'], TipePengaturan::TUNAI);
         $datas = [];
@@ -41,19 +40,17 @@ class PengaturanController extends Controller
         }
         return $datas;
     }
-    public function dataPengaturanBiayaTransfer($zwp)
+    protected function tokos()
     {
-        $data = $this->pengaturanNominal->getPengaturanNominalByToko(['id', 'user_id', 'toko_id', 'nominal', 'tanggal'], TipePengaturanNominal::BIAYA_TRANSFER);
-        $datas = [];
-        foreach ($data as $p) {
-            $datas[] = [
-                'id' => $p->id,
-                'pengguna' => $p->user->name,
-                'toko' => $p->toko->nama,
-                'nominal' => 'Rp ' . rupiah($p->nominal),
-                'tanggal' => formatTanggal($p->tanggal, $zwp),
+        $data = [];
+        foreach ($this->toko->getTokosByUser(['id', 'nama', 'alamat', 'logo']) as $value) {
+            $data[] = [
+                'id' => $value->id,
+                'nama' => $value->nama,
+                'alamat' => $value->alamat,
+                'logo' => asset('storage/logos/' . $value->logo),
             ];
         }
-        return $datas;
+        return $data;
     }
 }

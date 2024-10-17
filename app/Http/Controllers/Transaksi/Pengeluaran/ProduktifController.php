@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaksi\Pengeluaran;
 
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
+use App\Enums\TipePengaturan;
 use App\Enums\TipePengaturanNominal;
 use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
@@ -11,7 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\ProduktifRequest;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
-use App\Services\PengaturanNominalService;
 use App\Services\PengaturanService;
 use App\Services\TransferService;
 
@@ -22,31 +22,27 @@ class ProduktifController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
-        protected PengaturanNominalService $pengaturanNominal,
-    ) {
-    }
-    public function index()
-    {
-        return inertia('Transaksi/Pengeluaran/Produktif/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
+    ) {}
     public function simpan(ProduktifRequest $request)
     {
+        $tabungan = $request->tabungan;
+        if (is_null($request->tabungan)) {
+            $pengaturanTunai = $this->pengaturan->getWhereOne(['id', 'tabungan_id'], ['toko_id' => $request->toko, 'tipe' => TipePengaturan::TUNAI]);
+            $tabungan = $pengaturanTunai->tabungan_id;
+        }
         $nominal = $request->nominal;
         if ($request->biayaTransfer) {
-            $pengaturanBiayaTransfer = $this->pengaturanNominal->getWhereOne(['id', 'nominal'], ['toko_id' => $request->toko, 'tipe' => TipePengaturanNominal::BIAYA_TRANSFER]);
             $transferDetail[] = [
-                'tabungan' => $request->tabungan,
-                'nominal' => $pengaturanBiayaTransfer->nominal,
+                'tabungan' => $tabungan,
+                'nominal' => $request->biayaTransfer,
                 'tipe' => TipeTransaksiDetail::MENGURANGI,
                 'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
             ];
-            $nominal = $request->nominal + $pengaturanBiayaTransfer->nominal;
+            $nominal = $request->nominal + $request->biayaTransfer;
         }
         $transferDetail[] = [
-            'tabungan' => $request->tabungan,
-            'nominal' => $nominal,
+            'tabungan' => $tabungan,
+            'nominal' => $request->nominal,
             'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_PENGELUARAN,
         ];
@@ -61,12 +57,12 @@ class ProduktifController extends Controller
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([
                 'tipe' => 'mengurangi',
-                'tabungan' => $request->tabungan,
+                'tabungan' => $tabungan,
                 'nominal' => $nominal,
             ]);
-            return to_route('transaksi.menu')->with('success', 'Transfer berhasil disimpan');
+            return back()->with('success', 'Produktif berhasil disimpan');
         } else {
-            return to_route('transaksi.transfer.mutasi-saldo.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }

@@ -23,14 +23,7 @@ class ViaATMNasabahController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected AnggotaService $anggota,
-    ) {
-    }
-    public function index()
-    {
-        return inertia('Transaksi/Transfer/ViaATMNasabah/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
+    ) {}
     public function simpan(ViaATMNasabahRequest $request)
     {
         if ($request->tabunganBiayaAdmin) {
@@ -61,12 +54,13 @@ class ViaATMNasabahController extends Controller
             if ($request->anggota) {
                 $this->anggota->updatePoin([
                     'anggota' => $request->anggota,
+                    'aksi' => 'menambahkan',
                     'nominal' => $request->nominalBiayaAdmin,
                 ]);
             }
-            return to_route('transaksi.menu')->with('success', 'Transfer berhasil disimpan');
+            return back()->with('success', 'Transfer via ATM nasabah berhasil disimpan');
         } else {
-            return to_route('transaksi.transfer.via-atm-nasabah.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }

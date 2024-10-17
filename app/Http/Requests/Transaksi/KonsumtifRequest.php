@@ -23,9 +23,9 @@ class KonsumtifRequest extends FormRequest
     {
         return [
             "toko" => ['required', 'uuid'],
-            "tabungan" => ['nullable', 'uuid'],
             "nominal" => ['required', 'numeric'],
-            "biayaTransfer" => ['boolean'],
+            "tabungan" => ['nullable', 'uuid'],
+            "biayaTransfer" => ['nullable', 'numeric'],
         ];
     }
 }

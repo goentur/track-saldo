@@ -28,3 +28,32 @@ function pecahTanggalRiwayat($tanggal, $zonaWaktuPengguna)
           'akhir' => strtotime($textTanggalAkhir . ' 23:59:59') - $zonaWaktuPengguna->gmt_offset,
      ];
 }
+function hariIniDanLalu($jumlahHari, $zonaWaktuPengguna)
+{
+     $tanggalLalu = date('Y-m-d', strtotime($jumlahHari . ' days'));
+     $TanggalIni = date('Y-m-d');
+     return [
+          'textTanggalAwal' => ubahFormatTanggal($tanggalLalu),
+          'textTanggalAkhir' => ubahFormatTanggal($TanggalIni),
+          'awal' => strtotime($tanggalLalu . ' 00:00:00') - $zonaWaktuPengguna->gmt_offset,
+          'akhir' => strtotime($TanggalIni . ' 23:59:59') - $zonaWaktuPengguna->gmt_offset,
+     ];
+}
+function ubahFormatTanggal($t)
+{
+     $tanggal = explode("-", $t);
+     return $tanggal[2] . '-' . $tanggal[1] . '-' . $tanggal[0];
+}
+
+function fileName()
+{
+     $s = strtoupper(md5(uniqid(rand(), true)));
+     $kode =
+          substr($s, 0, 8) . '-' .
+          substr($s, 8, 4) . '-' .
+          substr($s, 12, 4) . '-' .
+          substr($s, 16, 4) . '-' .
+          substr($s, 20) . '-' .
+          time();
+     return $kode;
+}

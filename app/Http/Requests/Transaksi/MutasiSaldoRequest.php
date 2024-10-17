@@ -23,10 +23,10 @@ class MutasiSaldoRequest extends FormRequest
     {
         return [
             "toko" => ['required', 'uuid'],
+            "nominal" => ['required', 'numeric'],
             "tabunganDari" => ['required', 'uuid'],
             "tabunganKe" => ['required', 'uuid'],
-            "nominal" => ['required', 'numeric'],
-            "biayaTransfer" => ['boolean'],
+            "biayaTransfer" => ['nullable', 'numeric'],
         ];
     }
 }

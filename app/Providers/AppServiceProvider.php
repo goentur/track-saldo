@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Repositories\Laporan\LaporanRepository;
-use App\Repositories\Laporan\LaporanRepositoryInterface;
 use App\Repositories\Master\Anggota\AnggotaRepository;
 use App\Repositories\Master\Anggota\AnggotaRepositoryInterface;
 use App\Repositories\Master\Merek\MerekRepository;
@@ -20,13 +18,10 @@ use App\Repositories\Master\Toko\TokoRepository;
 use App\Repositories\Master\Toko\TokoRepositoryInterface;
 use App\Repositories\Master\ZonaWaktu\ZonaWaktuRepository;
 use App\Repositories\Master\ZonaWaktu\ZonaWaktuRepositoryInterface;
-use App\Repositories\Pengaturan\PengaturanNominalRepository;
-use App\Repositories\Pengaturan\PengaturanNominalRepositoryInterface;
 use App\Repositories\Pengaturan\PengaturanRepository;
 use App\Repositories\Pengaturan\PengaturanRepositoryInterface;
 use App\Repositories\Transfer\TransferRepository;
 use App\Repositories\Transfer\TransferRepositoryInterface;
-use App\Services\LaporanService;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\MerekService;
 use App\Services\Master\PaketService;
@@ -35,7 +30,6 @@ use App\Services\Master\PemilikService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
 use App\Services\Master\ZonaWaktuService;
-use App\Services\PengaturanNominalService;
 use App\Services\PengaturanService;
 use App\Services\TransferService;
 use Illuminate\Support\ServiceProvider;
@@ -101,23 +95,12 @@ class AppServiceProvider extends ServiceProvider
             return new TransferService($app->make(TransferRepositoryInterface::class));
         });
 
-        //laporan
-        $this->app->bind(LaporanRepositoryInterface::class, LaporanRepository::class);
-        $this->app->bind(LaporanService::class, function ($app) {
-            return new LaporanService($app->make(LaporanRepositoryInterface::class));
-        });
-
         //pengaturan
         $this->app->bind(PengaturanRepositoryInterface::class, PengaturanRepository::class);
         $this->app->bind(PengaturanService::class, function ($app) {
             return new PengaturanService($app->make(PengaturanRepositoryInterface::class));
         });
 
-        //pengaturan nominal
-        $this->app->bind(PengaturanNominalRepositoryInterface::class, PengaturanNominalRepository::class);
-        $this->app->bind(PengaturanNominalService::class, function ($app) {
-            return new PengaturanNominalService($app->make(PengaturanNominalRepositoryInterface::class));
-        });
     }
 
     /**

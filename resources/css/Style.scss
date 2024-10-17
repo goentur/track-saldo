@@ -73,16 +73,24 @@ input:read-only {
     width: 12.5%;
 }
 
-.bg-main {
-    background-color: #20639b;
-}
-
 .w-9 {
     width: 11.1111111%;
 }
 
 .w-10 {
     width: 10%;
+}
+
+.f-14 {
+    font-size: 14px;
+}
+
+.f-12 {
+    font-size: 12px;
+}
+
+.f-10 {
+    font-size: 10px;
 }
 
 .modal-90w {
@@ -94,10 +102,6 @@ input:read-only {
     font-size: 25px;
 }
 
-.nav-link span.text-menu {
-    font-size: 14px;
-}
-
 @media (max-width: 768px) {
     .modal-90w {
         width: 100%;
@@ -107,9 +111,14 @@ input:read-only {
     .nav-link span.icon-menu {
         font-size: 30px;
     }
+}
 
-    .nav-link span.text-menu {
-        display: none;
-    }
+.table-responsive {
+    max-height: 50vh;
+}
 
+.btn-sm-icon {
+    --bs-btn-padding-y: .20rem;
+    --bs-btn-padding-x: .25rem;
+    --bs-btn-font-size: .75rem;
 }

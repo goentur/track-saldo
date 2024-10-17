@@ -13,7 +13,7 @@ class TransaksiDetail extends Model
 
     public function transaksi()
     {
-        return $this->belongsTo(Transaksi::class);
+        return $this->belongsTo(Transaksi::class)->with('user');
     }
     public function tabungan()
     {

@@ -15,6 +15,10 @@ class TransferService
     {
         return $this->transfer->saveTransfer($transfer, $transferDetail);
     }
+    public function get(array $where)
+    {
+        return $this->transfer->get($where);
+    }
     public function getWhere(array $select, $where)
     {
         return $this->transfer->getWhere($select, $where);
@@ -22,5 +26,9 @@ class TransferService
     public function getWhereDetail(array $select, $where)
     {
         return $this->transfer->getWhereDetail($select, $where);
+    }
+    public function getOnlyOne($id)
+    {
+        return $this->transfer->getOnlyOne($id);
     }
 }

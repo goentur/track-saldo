@@ -23,14 +23,7 @@ class TarikTunaiController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected AnggotaService $anggota,
-    ) {
-    }
-    public function index()
-    {
-        return inertia('Transaksi/Transfer/TarikTunai/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
+    ) {}
     public function simpan(TarikTunaiRequest $request)
     {
         $transfer = [
@@ -84,12 +77,13 @@ class TarikTunaiController extends Controller
             if ($request->anggota) {
                 $this->anggota->updatePoin([
                     'anggota' => $request->anggota,
+                    'aksi' => 'menambahkan',
                     'nominal' => $request->nominalBiayaAdmin,
                 ]);
             }
-            return to_route('transaksi.menu')->with('success', 'Transfer berhasil disimpan');
+            return back()->with('success', 'Tarik Tunai berhasil disimpan');
         } else {
-            return to_route('transaksi.transfer.tarik-tunai.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }

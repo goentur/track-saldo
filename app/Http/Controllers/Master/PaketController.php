@@ -83,6 +83,7 @@ class PaketController extends Controller
                 'id' => $d->id,
                 'nama' => $d->nama,
                 'harga' => 'Rp ' . rupiah($d->harga),
+                'nominalHarga' => $d->harga,
             ];
         }
         return response()->json($datas, 200);

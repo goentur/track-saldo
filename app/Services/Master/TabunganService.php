@@ -42,9 +42,9 @@ class TabunganService
         return $this->tabungan->getWhere($select, $data);
     }
 
-    public function getTabungansByToko(array $select)
+    public function getTabungansByToko($with, $select, $where, $transaksi = false)
     {
-        return $this->tabungan->getTabungansByToko($select);
+        return $this->tabungan->getTabungansByToko($with, $select, $where, $transaksi);
     }
 
     public function updateNominal(array $data)

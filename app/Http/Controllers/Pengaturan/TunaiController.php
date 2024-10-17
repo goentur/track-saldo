@@ -18,7 +18,7 @@ class TunaiController extends Controller
     public function tambah()
     {
         return inertia('Pengaturan/Tunai/Tambah', [
-            'tabungans' => $this->tabungan->getTabungansByToko(['id', 'toko_id', 'merek_id', 'no']),
+            'tabungans' => $this->tabungan->getTabungansByToko(['merek', 'toko'], ['id', 'toko_id', 'merek_id', 'no'], ['toko_id' => auth()->user()->toko->pluck('id')->toArray()]),
         ]);
     }
     public function simpan(Request $request)
@@ -44,7 +44,7 @@ class TunaiController extends Controller
     public function edit($id)
     {
         return inertia('Pengaturan/Tunai/Ubah', [
-            'tabungans' => $this->tabungan->getTabungansByToko(['id', 'toko_id', 'merek_id', 'no']),
+            'tabungans' => $this->tabungan->getTabungansByToko(['merek', 'toko'], ['id', 'toko_id', 'merek_id', 'no'], ['toko_id' => auth()->user()->toko->pluck('id')->toArray()]),
             'pengaturan' => $this->pengaturan->getWhereOne(['id', 'toko_id', 'tabungan_id'], ['id' => $id]),
         ]);
     }

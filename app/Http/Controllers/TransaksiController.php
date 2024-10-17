@@ -1,0 +1,279 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Enums\KeteranganTransferDetail;
+use App\Enums\TipePengaturan;
+use App\Enums\TipePengaturanNominal;
+use App\Enums\TipeTransaksi;
+use App\Enums\TipeTransaksiDetail;
+use App\Http\Requests\LaporanRequest;
+use App\Services\Master\AnggotaService;
+use App\Services\Master\TabunganService;
+use App\Services\Master\TokoService;
+use App\Services\PengaturanService;
+use App\Services\TransferService;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
+class TransaksiController extends Controller
+{
+    public function __construct(
+        protected TokoService $toko,
+        protected TransferService $transfer,
+        protected PengaturanService $pengaturan,
+        protected TabunganService $tabungan,
+        protected AnggotaService $anggota,
+    ) {}
+    public function index()
+    {
+        $toko = $this->toko->getTokosByUser(['id', 'nama', 'alamat', 'logo']);
+        $pengaturanTunai = $this->pengaturan->getPengaturanByToko(['id'], TipePengaturan::TUNAI)->count();
+        $hitungToko = $toko->count();
+        if ($pengaturanTunai == $hitungToko) {
+            $startDate = Carbon::now()->subDays(3)->format('d-m-Y');
+            $endDate = Carbon::now()->format('d-m-Y');
+            if (count($toko) > 1) {
+                $kirim = [
+                    'multi' => true,
+                    'tokos' => $toko,
+                    'tanggalTransaksi' => $startDate . ' - ' . $endDate,
+                ];
+            } else {
+                $toko = $toko->first();
+                $kirim = [
+                    'multi' => false,
+                    'tokos' => [
+                        'id' => $toko->id,
+                        'nama' => $toko->nama,
+                        'alamat' => $toko->alamat,
+                        'logo' => asset('storage/logos/' . $toko->logo),
+                    ],
+                    'tanggalTransaksi' => $startDate . ' - ' . $endDate,
+                ];
+            }
+            return inertia('Transaksi/Menu', $kirim);
+        } else {
+            return inertia('Error', ['message' => 'Pengaturan Tunai belum lengkap, silahkan lengkapi pada menu pengaturan']);
+        }
+    }
+    public function tabungan(Request $request)
+    {
+        $request->validate([
+            'toko' => ['required', 'uuid'],
+        ]);
+        return response()->json($this->tabungan->getTabungansByToko(['merek'], ['id', 'merek_id', 'nominal'], ['toko_id' => $request->toko], true), 200);
+    }
+    public function data(Request $request)
+    {
+        $request->validate([
+            'toko' => ['required', 'uuid'],
+            'tanggal' => ['required', 'string'],
+            'anggota' => ['nullable', 'uuid'],
+            'nominal' => ['nullable', 'numeric'],
+        ]);
+        $tanggal = pecahTanggalRiwayat($request->tanggal, zonaWaktuPengguna());
+        $where = $this->buildWhereClause($request, $tanggal);
+        return $this->getTransaksiData($where);
+    }
+
+    public function transaksi(LaporanRequest $request)
+    {
+        $tanggal = pecahTanggalRiwayat($request->tanggal, zonaWaktuPengguna());
+        $where = $this->buildWhereClause($request, $tanggal);
+        return $this->getTransaksiData($where);
+    }
+
+    private function buildWhereClause($request, $tanggal)
+    {
+        $data = [
+            'toko' => [$request->toko],
+            'anggota' => $request->anggota,
+            'nominal' => $request->nominal,
+            'textTanggalAwal' => $tanggal['textTanggalAwal'],
+            'textTanggalAkhir' => $tanggal['textTanggalAkhir'],
+            'tanggalAwal' => $tanggal['awal'],
+            'tanggalAkhir' => $tanggal['akhir'],
+            'with' => ['user', 'toko', 'anggota'],
+        ];
+        if (auth()->user()->getRoleNames()[0] != 'pemilik') {
+            $data['tipe'] = [
+                TipeTransaksi::PENGHASILAN_LAIN,
+                TipeTransaksi::TRANSFER_VIA_ATM_NASABAH,
+                TipeTransaksi::TRANSFER_TUNIA,
+                TipeTransaksi::TARIK_TUNAI,
+                TipeTransaksi::TARIK_TUNAI_EDC,
+                TipeTransaksi::TABUNGAN,
+                TipeTransaksi::INVESTASI,
+                TipeTransaksi::TARIK_TUNAI_EDC,
+                TipeTransaksi::PENJUALAN_PULSA,
+                TipeTransaksi::PENJUALAN_PAKET_DATA,
+                TipeTransaksi::PENGAMBILAN_POIN
+            ];
+        }
+        return $data;
+    }
+    private function getAksi($keterangan)
+    {
+        $disabledTransactions = [
+            TipeTransaksi::MUTASI_SALDO->value,
+            TipeTransaksi::PRODUKTIF->value,
+            TipeTransaksi::KONSUMTIF->value,
+            TipeTransaksi::PENGHASILAN_LAIN->value,
+            TipeTransaksi::PENGAMBILAN_POIN->value,
+            TipeTransaksi::TRANSFER_VIA_ATM_NASABAH->value,
+        ];
+
+        return !in_array($keterangan, $disabledTransactions);
+    }
+
+    private function getTransaksiData($where)
+    {
+        $zonaWaktuPengguna = zonaWaktuPengguna();
+        $transaksi = $this->transfer->get($where);
+
+        $total = 0;
+        $datas = [];
+
+        // Iterasi menggunakan foreach karena tipe data object
+        foreach ($transaksi as $key => $value) {
+            $valueTotal = $value->total;
+            $total += $valueTotal;
+            $datas[] = [
+                'no' => ++$key,  // Increment key untuk nomor
+                'id' => $value->id,
+                'tanggal' => formatTanggal($value->tanggal, $zonaWaktuPengguna),
+                'pengguna' => $value->user?->name,
+                'anggota' => $value->anggota?->nama,
+                'total' => rupiah($valueTotal),
+                'keterangan' => $value->tipe,
+                'aksi' => $this->getAksi($value->tipe),
+            ];
+        }
+
+        $response = [
+            'data' => $datas,
+            'tanggalAwal' => $where['textTanggalAwal'],
+            'tanggalAkhir' => $where['textTanggalAkhir'],
+            'total' => rupiah($total),
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    public function transaksiDetail(LaporanRequest $request)
+    {
+        $zonaWaktuPengguna = zonaWaktuPengguna();
+        $tanggal = pecahTanggalRiwayat($request->tanggal, $zonaWaktuPengguna);
+        $transaksi = $this->transfer->get(
+            [
+                'toko' => [$request->toko],
+                'textTanggalAwal' => $tanggal['textTanggalAwal'],
+                'textTanggalAkhir' => $tanggal['textTanggalAkhir'],
+                'tanggalAwal' => $tanggal['awal'],
+                'tanggalAkhir' => $tanggal['akhir'],
+                'tipe' => [
+                    TipeTransaksi::PENGHASILAN_LAIN,
+                    TipeTransaksi::TRANSFER_VIA_ATM_NASABAH,
+                    TipeTransaksi::TRANSFER_TUNIA,
+                    TipeTransaksi::TARIK_TUNAI,
+                    TipeTransaksi::TARIK_TUNAI_EDC,
+                    TipeTransaksi::TABUNGAN,
+                    TipeTransaksi::INVESTASI,
+                    TipeTransaksi::TARIK_TUNAI_EDC,
+                    TipeTransaksi::PENJUALAN_PULSA,
+                    TipeTransaksi::PENJUALAN_PAKET_DATA,
+                    TipeTransaksi::PENGAMBILAN_POIN
+                ],
+                'with' => ['user', 'toko', 'anggota', 'transaksiDetail'],
+            ]
+        );
+        $total = 0;
+        $datas = [];
+        foreach ($transaksi as $key => $value) {
+            $valueTotal = $value->total;
+            $total += $valueTotal;
+            $detail = [];
+            foreach ($value->transaksiDetail as $d => $dv) {
+                $detail[] = [
+                    'id' => ++$d,
+                    'merek' => $dv->tabungan?->merek?->nama,
+                    'no' => $dv->tabungan?->no,
+                    'nominal' => rupiah($dv->nominal),
+                    'tipe' => $dv->tipe,
+                    'keterangan' => $dv->keterangan,
+                ];
+            }
+            $datas[] = [
+                'no' => ++$key,
+                'tanggal' => formatTanggal($value->tanggal, $zonaWaktuPengguna),
+                'pengguna' => $value->user?->name,
+                'anggota' => $value->anggota?->nama,
+                'total' => rupiah($valueTotal),
+                'keterangan' => $value->tipe,
+                'detail' => $detail,
+            ];
+        }
+        return response()->json([
+            'tanggalAwal' => $tanggal['textTanggalAwal'],
+            'tanggalAkhir' => $tanggal['textTanggalAkhir'],
+            'total' => rupiah($total),
+            'data' => $datas,
+        ], 200);
+    }
+    public function get(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'uuid'],
+        ]);
+        $zonaWaktuPengguna = zonaWaktuPengguna();
+        $data = $this->transfer->getOnlyOne($request->id);
+        $result = [];
+        $total = 0;
+        if ($data->tipe == TipeTransaksi::TABUNGAN->value) {
+            foreach ($data->transaksiDetail as $value) {
+                if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
+                    $total += $value->nominal;
+                    $result[] = [
+                        'keterangan' => $value->keterangan,
+                        'nominal' => rupiah($value->nominal)
+                    ];
+                } else {
+                    if ($value->keterangan == KeteranganTransferDetail::NOMINAL_TRANSFER->value) {
+                        $total += $value->nominal;
+                        $result[] = [
+                            'keterangan' => $value->keterangan,
+                            'nominal' => rupiah($value->nominal)
+                        ];
+                    }
+                }
+            }
+        } else if ($data->tipe == TipeTransaksi::PENJUALAN_PULSA->value || $data->tipe == TipeTransaksi::PENJUALAN_PAKET_DATA->value) {
+            $total = $data->total;
+            $result[] = [
+                'keterangan' => $data->tipe,
+                'nominal' => rupiah($total)
+            ];
+        } else {
+            foreach ($data->transaksiDetail as $value) {
+                if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
+                    $total += $value->nominal;
+                    $result[] = [
+                        'keterangan' => $value->keterangan,
+                        'nominal' => rupiah($value->nominal)
+                    ];
+                }
+            }
+        }
+        return response()->json([
+            'tanggal' => formatTanggal($data->tanggal, $zonaWaktuPengguna),
+            'kasir' => $data?->user?->name,
+            'anggota' => $data?->anggota?->nama,
+            'alamat' => $data?->anggota?->alamat,
+            'tipe' => $data?->tipe,
+            'total' => rupiah($total),
+            'cetak' => formatTanggal(time(), $zonaWaktuPengguna),
+            'detail' => $result,
+        ], 200);
+    }
+}

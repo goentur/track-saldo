@@ -32,4 +32,12 @@ class PengaturanRepository implements PengaturanRepositoryInterface
         $pengaturan->update($data);
         return $pengaturan;
     }
+    public function getTabungansByToko(array $select)
+    {
+        $tokoId = [];
+        foreach (auth()->user()->toko as $toko) {
+            $tokoId[] = $toko->id;
+        }
+        return Pengaturan::with('user', 'toko', 'tabungan')->select($select)->whereIn('toko_id', $tokoId)->where('tipe', $tipe)->orderBy('toko_id')->get();
+    }
 }

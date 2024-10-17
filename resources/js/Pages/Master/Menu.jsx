@@ -1,7 +1,6 @@
 import { Head, Link, usePage } from "@inertiajs/react";
 import { Card, CardBody, CardTitle } from "react-bootstrap";
 import { useRoute } from '../../../../vendor/tightenco/ziggy';
-import iconAnggota from "../../../images/menus/anggota.svg";
 import iconBrand from "../../../images/menus/brand.svg";
 import iconPaket from "../../../images/menus/paket.svg";
 import iconPegawai from "../../../images/menus/pegawai.svg";
@@ -52,16 +51,7 @@ function Menu(){
                         </div>
                     </>
                     :
-                    <>    
-                        <div className="col-6 col-md-2 mb-3">
-                            <div className="card shadow text-center border-primary">
-                                <div className="card-body">
-                                    <img src={iconAnggota} alt="Menu Icon" className="col-6 img-fluid mb-3" />
-                                    <p className="fw-bold">Anggota</p>
-                                    <Link href={route('master.anggota.index')} className="stretched-link"/>
-                                </div>
-                            </div>
-                        </div>
+                    <>   
                         <div className="col-6 col-md-2 mb-3">
                             <div className="card shadow text-center border-primary">
                                 <div className="card-body">

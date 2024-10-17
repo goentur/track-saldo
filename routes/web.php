@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('home', [HomeController::class, 'index'])->name('home');
     Route::middleware('role:pemilik')->group(function () {
-        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
     Route::get('/enable-maintenance-mode', function () {
         Artisan::call('down', ['--secret' => '3.PersatuanIndonesia']);

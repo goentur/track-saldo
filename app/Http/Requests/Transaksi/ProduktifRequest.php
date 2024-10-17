@@ -22,7 +22,10 @@ class ProduktifRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "toko" => ['required', 'uuid'],
+            "nominal" => ['required', 'numeric'],
+            "tabungan" => ['nullable', 'uuid'],
+            "biayaTransfer" => ['nullable', 'numeric'],
         ];
     }
 }

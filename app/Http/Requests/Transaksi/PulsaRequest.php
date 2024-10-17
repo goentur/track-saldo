@@ -23,7 +23,7 @@ class PulsaRequest extends FormRequest
     {
         return [
             "toko" => ['required', 'uuid'],
-            "paketPulsa" => ['required', 'uuid'],
+            "hargaJual" => ['required', 'numeric'],
             "tabungan" => ['required', 'uuid'],
             "hargaBeli" => ['required', 'numeric'],
         ];

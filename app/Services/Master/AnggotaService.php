@@ -12,9 +12,9 @@ class AnggotaService
     {
     }
 
-    public function gatAllData($search, $number)
+    public function gatAllData($request)
     {
-        return $this->anggota->gatAllData($search, $number);
+        return $this->anggota->gatAllData($request);
     }
 
     public function create(array $data)
@@ -41,12 +41,29 @@ class AnggotaService
     {
         return $this->anggota->getWhere($select, $where);
     }
+
     public function getAnggotasByUser(array $select)
     {
         return $this->anggota->getAnggotasByUser($select);
     }
+
     public function updatePoin(array $data)
     {
         return $this->anggota->updatePoin($data);
+    }
+
+    public function updateOrCreateSimpanan(array $data)
+    {
+        return $this->anggota->updateOrCreateSimpanan($data);
+    }
+
+    public function getSimpanan(array $data)
+    {
+        return $this->anggota->getSimpanan($data);
+    }
+
+    public function ambilRiwayatTabungan(array $data)
+    {
+        return $this->anggota->ambilRiwayatTabungan($data);
     }
 }

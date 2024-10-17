@@ -11,7 +11,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\PaketDataRequest;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
-use App\Services\PengaturanNominalService;
 use App\Services\PengaturanService;
 use App\Services\TransferService;
 
@@ -22,15 +21,7 @@ class PaketDataController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
-        protected PengaturanNominalService $pengaturanNominal,
-    ) {
-    }
-    public function index()
-    {
-        return inertia('Transaksi/Penjualan/PaketData/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
+    ) {}
     public function simpan(PaketDataRequest $request)
     {
         if ($request->hargaBeli > $request->hargaJual) {
@@ -77,9 +68,9 @@ class PaketDataController extends Controller
                 'tabungan' => $pengaturanTunai->tabungan_id,
                 'nominal' => $request->hargaJual,
             ]);
-            return to_route('transaksi.menu')->with('success', 'Penjualan paket data berhasil disimpan');
+            return back()->with('success', 'Penjualan paket data berhasil disimpan');
         } else {
-            return to_route('transaksi.penjualan.paket-data.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }

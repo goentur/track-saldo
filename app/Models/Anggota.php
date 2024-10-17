@@ -15,4 +15,8 @@ class Anggota extends Model
     {
         return $this->belongsTo(Toko::class);
     }
+    public function simpanan()
+    {
+        return $this->hasMany(SimpananAnggota::class);
+    }
 }

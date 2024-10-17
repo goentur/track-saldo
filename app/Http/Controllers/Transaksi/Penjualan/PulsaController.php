@@ -9,12 +9,9 @@ use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\PulsaRequest;
-use App\Models\Pengaturan;
-use App\Models\PengaturanNominal;
 use App\Services\Master\PaketService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
-use App\Services\PengaturanNominalService;
 use App\Services\PengaturanService;
 use App\Services\TransferService;
 
@@ -25,23 +22,11 @@ class PulsaController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
-        protected PengaturanNominalService $pengaturanNominal,
         protected PaketService $paket,
-    ) {
-    }
-    public function index()
-    {
-        return inertia('Transaksi/Penjualan/Pulsa/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
+    ) {}
     public function simpan(PulsaRequest $request)
     {
-        $paketPulsa = $this->paket->find($request->paketPulsa);
-        if ($request->hargaBeli > $paketPulsa->harga) {
-            return to_route('transaksi.penjualan.pulsa.index')->with('error', 'Harga beli lebih dari harga paket pulsa');
-        }
-        // transfer deatil
+        // transfer detail
         // tabungan yang dikurangi
         $transferDetail[] = [
             'tabungan' => $request->tabungan,
@@ -59,7 +44,7 @@ class PulsaController extends Controller
         ];
         $transferDetail[] = [
             'tabungan' => $pengaturanTunai->tabungan_id,
-            'nominal' => $paketPulsa->harga - $request->hargaBeli,
+            'nominal' => $request->hargaJual - $request->hargaBeli,
             'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::BIAYA_ADMIN,
         ];
@@ -67,7 +52,7 @@ class PulsaController extends Controller
         $transfer = [
             'toko' => $request->toko,
             'anggota' => null,
-            'total' => $paketPulsa->harga,
+            'total' => $request->hargaJual,
             'tipe' => TipeTransaksi::PENJUALAN_PULSA,
             'status' => StatusTransfer::MENUNGGU,
         ];
@@ -80,11 +65,11 @@ class PulsaController extends Controller
             $this->tabungan->updateNominal([
                 'tipe' => 'menambahkan',
                 'tabungan' => $pengaturanTunai->tabungan_id,
-                'nominal' => $paketPulsa->harga,
+                'nominal' => $request->hargaJual,
             ]);
-            return to_route('transaksi.menu')->with('success', 'Penjualan pulsa berhasil disimpan');
+            return back()->with('success', 'Penjualan pulsa berhasil disimpan');
         } else {
-            return to_route('transaksi.penjualan.pulsa.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }

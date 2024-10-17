@@ -16,7 +16,7 @@ interface TabunganRepositoryInterface
 
     public function getWhere(array $select, array $data);
 
-    public function getTabungansByToko(array $select);
+    public function getTabungansByToko($with, $select, $where, $transaksi);
 
     public function updateNominal(array $data);
 }

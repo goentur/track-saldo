@@ -111,7 +111,7 @@ function Index({ pegawais }){
                                 </td>
                                 <td>
                                     <ButtonGroup aria-label="button action">
-                                        <Link href={route('pegawai.edit',pegawai)} className="btn btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></Link>
+                                        <Link href={route('master.pegawai.edit',pegawai)} className="btn btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></Link>
                                         <Button size="sm" variant="danger" onClick={() => hapus(pegawai.id)}><FontAwesomeIcon icon={faTrash}/></Button>
                                     </ButtonGroup>
                                 </td>

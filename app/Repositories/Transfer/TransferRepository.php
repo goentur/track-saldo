@@ -37,13 +37,38 @@ class TransferRepository implements TransferRepositoryInterface
             return $e;
         }
     }
+    public function get(array $data)
+    {
+        $query = Transaksi::whereIn('toko_id', $data['toko'])
+        ->whereBetween('tanggal', [$data['tanggalAwal'], $data['tanggalAkhir']]);
+        if (!empty($data['with'])) {
+            $query->with($data['with']);
+        }
+        if (!empty($data['select'])) {
+            $query->select($data['select']);
+        }
+        if (!empty($data['tipe'])) {
+            $query->whereIn('tipe', $data['tipe']);
+        }
+        if (!empty($data['anggota'])) {
+            $query->where('anggota_id', $data['anggota']);
+        }
+        if (!empty($data['nominal'])) {
+            $query->where('total', '>=', $data['nominal'])->orderBy('total', 'asc');
+        } else {
+            $query->orderBy('tanggal', 'desc');
+        }
+        return $query->get();
+    }
     public function getWhere(array $select, array $where)
     {
-        if ($where['tipe'] == null) {
-            return Transaksi::select($select)->whereIn('toko_id', [$where['toko']])->whereBetween('tanggal', [$where['awal'], $where['akhir']])->get();
-        } else {
-            return Transaksi::select($select)->where('tipe', $where['tipe'])->whereIn('toko_id', [$where['toko']])->whereBetween('tanggal', [$where['awal'], $where['akhir']])->get();
+        $query = Transaksi::select($select)
+            ->whereIn('toko_id', [$where['toko']])
+            ->whereBetween('tanggal', [$where['awal'], $where['akhir']]);
+        if (!empty($where['tipe'])) {
+            $query->where('tipe', $where['tipe']);
         }
+        return $query->get();
     }
     public function getWhereDetail(array $select, array $where)
     {
@@ -53,5 +78,9 @@ class TransferRepository implements TransferRepositoryInterface
                 $query->whereIn('toko_id', [$where['toko']])->whereBetween('tanggal', [$where['awal'], $where['akhir']]);
             })
             ->get();
+    }
+    public function getOnlyOne($id)
+    {
+        return Transaksi::with('user', 'anggota', 'transaksiDetail')->where('id', $id)->first();
     }
 }

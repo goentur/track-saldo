@@ -24,6 +24,7 @@ class StoreTokoRequest extends FormRequest
         return [
             'nama' => ['required', 'string'],
             'alamat' => ['required', 'string'],
+            'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:256'],
         ];
     }
 }

@@ -24,11 +24,11 @@ class TunaiRequest extends FormRequest
         return [
             "toko" => ['required', 'uuid'],
             "anggota" => ['nullable', 'uuid'],
-            "tabunganYangDigunakan" => ['required', 'uuid'],
             "nominalBiayaYangDigunakan" => ['required', 'numeric'],
+            "tabunganYangDigunakan" => ['required', 'uuid'],
+            "biayaTransfer" => ['nullable', 'numeric'],
             "tabunganBiayaAdmin" => ['nullable', 'uuid'],
             "nominalBiayaAdmin" => ['required', 'numeric'],
-            "biayaTransfer" => ['boolean'],
         ];
     }
 }

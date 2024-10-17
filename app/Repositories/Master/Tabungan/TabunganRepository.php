@@ -51,10 +51,13 @@ class TabunganRepository implements TabunganRepositoryInterface
         return Tabungan::with('merek')->select($select)->where($data)->get();
     }
 
-    public function getTabungansByToko(array $select)
+    public function getTabungansByToko($with, $select, $where, $transaksi)
     {
-        $tokoId = auth()->user()->toko->pluck('id')->toArray();
-        return Tabungan::with('toko', 'merek')->select($select)->whereIn('toko_id', $tokoId)->orderBy('toko_id')->get();
+        $tabungan = Tabungan::with($with)->select($select)->where($where);
+        if ($transaksi) {
+            $tabungan->orderBy('updated_at', 'desc')->limit(19);
+        }
+        return $tabungan->get(); 
     }
 
     public function updateNominal(array $data)

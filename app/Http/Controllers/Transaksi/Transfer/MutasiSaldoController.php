@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Transaksi\Transfer;
 
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
-use App\Enums\TipePengaturanNominal;
 use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\MutasiSaldoRequest;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
-use App\Services\PengaturanNominalService;
 use App\Services\PengaturanService;
 use App\Services\TransferService;
 
@@ -22,40 +20,31 @@ class MutasiSaldoController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
-        protected PengaturanNominalService $pengaturanNominal,
-    ) {
-    }
-    public function index()
-    {
-        return inertia('Transaksi/Transfer/MutasiSaldo/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
+    ) {}
     public function simpan(MutasiSaldoRequest $request)
     {
         // transfer deatil
         $nominal = $request->nominal;
         if ($request->biayaTransfer) {
-            $pengaturanBiayaTransfer = $this->pengaturanNominal->getWhereOne(['id', 'nominal'], ['toko_id' => $request->toko, 'tipe' => TipePengaturanNominal::BIAYA_TRANSFER]);
             $transferDetail[] = [
                 'tabungan' => $request->tabunganDari,
-                'nominal' => $pengaturanBiayaTransfer->nominal,
+                'nominal' => $request->biayaTransfer,
                 'tipe' => TipeTransaksiDetail::MENGURANGI,
                 'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
             ];
-            $nominal = $request->nominal + $pengaturanBiayaTransfer->nominal;
+            $nominal = $request->nominal + $request->biayaTransfer;
         }
         // tabungan yang dikurangi
         $transferDetail[] = [
             'tabungan' => $request->tabunganDari,
-            'nominal' => $nominal,
+            'nominal' => $request->nominal,
             'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
         // tabungan yang ditambahkan
         $transferDetail[] = [
             'tabungan' => $request->tabunganKe,
-            'nominal' => $nominal,
+            'nominal' => $request->nominal,
             'tipe' => TipeTransaksiDetail::MENAMBAH,
             'keterangan' => KeteranganTransferDetail::NOMINAL_TRANSFER,
         ];
@@ -78,9 +67,9 @@ class MutasiSaldoController extends Controller
                 'tabungan' => $request->tabunganKe,
                 'nominal' => $request->nominal,
             ]);
-            return to_route('transaksi.menu')->with('success', 'Transfer berhasil disimpan');
+            return back()->with('success', 'Mutasi saldo berhasil disimpan');
         } else {
-            return to_route('transaksi.transfer.mutasi-saldo.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }

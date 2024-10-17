@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\KonsumtifRequest;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
-use App\Services\PengaturanNominalService;
 use App\Services\PengaturanService;
 use App\Services\TransferService;
 
@@ -23,36 +22,27 @@ class KonsumtifController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
-        protected PengaturanNominalService $pengaturanNominal,
     ) {}
-    public function index()
-    {
-        return inertia('Transaksi/Pengeluaran/Konsumtif/Index', [
-            'tokos' => $this->toko->getTokosByUser(['id', 'nama']),
-        ]);
-    }
     public function simpan(KonsumtifRequest $request)
     {
-        $nominal = $request->nominal;
-        if ($request->tabungan) {
-            $tabungan = $request->tabungan;
-            if ($request->biayaTransfer) {
-                $pengaturanBiayaTransfer = $this->pengaturanNominal->getWhereOne(['id', 'nominal'], ['toko_id' => $request->toko, 'tipe' => TipePengaturanNominal::BIAYA_TRANSFER]);
-                $transferDetail[] = [
-                    'tabungan' => $tabungan,
-                    'nominal' => $pengaturanBiayaTransfer->nominal,
-                    'tipe' => TipeTransaksiDetail::MENGURANGI,
-                    'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
-                ];
-                $nominal = $request->nominal + $pengaturanBiayaTransfer->nominal;
-            }
-        } else {
+        $tabungan = $request->tabungan;
+        if (is_null($request->tabungan)) {
             $pengaturanTunai = $this->pengaturan->getWhereOne(['id', 'tabungan_id'], ['toko_id' => $request->toko, 'tipe' => TipePengaturan::TUNAI]);
             $tabungan = $pengaturanTunai->tabungan_id;
         }
+        $nominal = $request->nominal;
+        if ($request->biayaTransfer) {
+            $transferDetail[] = [
+                'tabungan' => $tabungan,
+                'nominal' => $request->biayaTransfer,
+                'tipe' => TipeTransaksiDetail::MENGURANGI,
+                'keterangan' => KeteranganTransferDetail::BIAYA_TRANSFER,
+            ];
+            $nominal = $request->nominal + $request->biayaTransfer;
+        }
         $transferDetail[] = [
             'tabungan' => $tabungan,
-            'nominal' => $nominal,
+            'nominal' => $request->nominal,
             'tipe' => TipeTransaksiDetail::MENGURANGI,
             'keterangan' => KeteranganTransferDetail::NOMINAL_PENGELUARAN,
         ];
@@ -70,9 +60,9 @@ class KonsumtifController extends Controller
                 'tabungan' => $tabungan,
                 'nominal' => $nominal,
             ]);
-            return to_route('transaksi.menu')->with('success', 'Transfer berhasil disimpan');
+            return back()->with('success', 'Konsumtif berhasil disimpan');
         } else {
-            return to_route('transaksi.transfer.mutasi-saldo.index')->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
         }
     }
 }
