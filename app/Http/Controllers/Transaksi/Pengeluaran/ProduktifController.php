@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Transaksi\Pengeluaran;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
-use App\Enums\TipePengaturanNominal;
 use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transaksi\ProduktifRequest;
+use App\Http\Requests\Transaksi\Produktif\DataProduktifRequest;
+use App\Http\Requests\Transaksi\Produktif\SimpanProduktifRequest;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
 use App\Services\PengaturanService;
@@ -23,7 +23,7 @@ class ProduktifController extends Controller
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
     ) {}
-    public function simpan(ProduktifRequest $request)
+    public function simpan(SimpanProduktifRequest $request)
     {
         $tabungan = $request->tabungan;
         if (is_null($request->tabungan)) {
@@ -53,6 +53,7 @@ class ProduktifController extends Controller
             'total' => $nominal,
             'tipe' => TipeTransaksi::PRODUKTIF,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([
@@ -60,9 +61,44 @@ class ProduktifController extends Controller
                 'tabungan' => $tabungan,
                 'nominal' => $nominal,
             ]);
-            return back()->with('success', 'Produktif berhasil disimpan');
+            return response()->json(['message' => 'Produktif berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
+    }
+    public function data(DataProduktifRequest $request)
+    {
+        $tanggal = pecahTanggalRiwayat($request->tanggal, zonaWaktuPengguna());
+        $where = [
+            'toko' => [$request->toko],
+            'tanggalAwal' => $tanggal['awal'],
+            'tanggalAkhir' => $tanggal['akhir'],
+            'with' => ['user'],
+            'tipe' => [TipeTransaksi::PRODUKTIF],
+        ];
+        $zonaWaktuPengguna = zonaWaktuPengguna();
+        $transaksi = $this->transfer->get($where);
+        $total = 0;
+        $datas = [];
+
+        foreach ($transaksi as $key => $value) {
+            $valueTotal = $value->total;
+            $total += $valueTotal;
+            $datas[] = [
+                'no' => ++$key,
+                'tanggal' => formatTanggal($value->tanggal, $zonaWaktuPengguna),
+                'pengguna' => $value->user?->name,
+                'total' => rupiah($value->total),
+                'tipe' => $value->tipe,
+                'keterangan' => $value->keterangan,
+            ];
+        }
+        $response = [
+            'tanggalAwal' => $tanggal['textTanggalAwal'],
+            'tanggalAkhir' => $tanggal['textTanggalAkhir'],
+            'data' => $datas,
+            'total' => rupiah($total),
+        ];
+        return response()->json($response, 200);
     }
 }

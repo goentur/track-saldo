@@ -26,6 +26,7 @@ class InvestasiSetorRequest extends FormRequest
             "anggota" => ['required', 'uuid'],
             "nominalInvestasi" => ['required', 'numeric'],
             "tabunganYangDigunakan" => ['nullable', 'uuid'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

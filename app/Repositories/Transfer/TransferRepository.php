@@ -20,6 +20,7 @@ class TransferRepository implements TransferRepositoryInterface
                 'total' => $data['total'],
                 'tipe' => $data['tipe'],
                 'status' => $data['status'],
+                'keterangan' => $data['keterangan'],
             ]);
             foreach ($dataDetails as $dataDetail) {
                 TransaksiDetail::create([

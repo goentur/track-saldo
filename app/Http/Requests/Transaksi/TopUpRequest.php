@@ -4,7 +4,7 @@ namespace App\Http\Requests\Transaksi;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProduktifRequest extends FormRequest
+class TopUpRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,13 @@ class ProduktifRequest extends FormRequest
     {
         return [
             "toko" => ['required', 'uuid'],
-            "nominal" => ['required', 'numeric'],
-            "tabungan" => ['nullable', 'uuid'],
+            "anggota" => ['nullable', 'uuid'],
+            "nominalBiayaYangDigunakan" => ['required', 'numeric'],
+            "tabunganYangDigunakan" => ['required', 'uuid'],
             "biayaTransfer" => ['nullable', 'numeric'],
+            "tabunganBiayaAdmin" => ['nullable', 'uuid'],
+            "nominalBiayaAdmin" => ['required', 'numeric'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Transaksi\Transfer;
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusTransfer;
 use App\Enums\TipePengaturan;
-use App\Enums\TipePengaturanNominal;
 use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
@@ -71,6 +70,7 @@ class TunaiController extends Controller
             'total' => $nominalBiayaYangDigunakan + $request->nominalBiayaAdmin,
             'tipe' => TipeTransaksi::TRANSFER_TUNIA,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([
@@ -95,9 +95,9 @@ class TunaiController extends Controller
                     'nominal' => $request->nominalBiayaAdmin,
                 ]);
             }
-            return back()->with('success', 'Transfer Tunai berhasil disimpan');
+            return response()->json(['message' => 'Transfer Tunai berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
     }
 }

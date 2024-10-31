@@ -15,6 +15,7 @@ function Setor({ toko, anggotas, tabungans, onProcessingDone, showModalAnggota }
         anggota: null,
         nominalInvestasi: null,
         tabunganYangDigunakan: null,
+        keterangan: null,
     });
 
     function submit(e) {
@@ -35,7 +36,7 @@ function Setor({ toko, anggotas, tabungans, onProcessingDone, showModalAnggota }
     return (
         <Form onSubmit={submit}>
             <div className="row">
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormAnggota">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormAnggota">
                     <Form.Label>ANGGOTA  <span className="text-danger">*</span></Form.Label>
                     <InputGroup>
                         <Typeahead
@@ -57,7 +58,7 @@ function Setor({ toko, anggotas, tabungans, onProcessingDone, showModalAnggota }
                         {errors.anggota}
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormNominalInvestasi">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormNominalInvestasi">
                     <Form.Label>NOMINAL INVESTASI <span className="text-danger">*</span></Form.Label>
                     <CurrencyInput
                         id="nominalInvestasi"
@@ -70,7 +71,7 @@ function Setor({ toko, anggotas, tabungans, onProcessingDone, showModalAnggota }
                     />
                     {errors.nominalInvestasi && <div className="text-end invalid-feedback">{errors.nominalInvestasi}</div>}
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormTabunganYangDigunakan">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormTabunganYangDigunakan">
                     <Form.Label>TABUNGAN YANG DIGUNAKAN</Form.Label>
                     <Typeahead
                         id="tabunganYangDigunakan"
@@ -88,6 +89,22 @@ function Setor({ toko, anggotas, tabungans, onProcessingDone, showModalAnggota }
                         {errors.tabunganYangDigunakan}
                     </Form.Control.Feedback>
                     <Form.Label className="text-info f-14"><FontAwesomeIcon icon={faInfoCircle} /> Pilih apabila menggunakan selain tunai.</Form.Label>
+                </Form.Group>
+                <Form.Group className="mb-2 col-lg-12" controlId="validationFormKeterangan">
+                    <Form.Label>KETERANGAN</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Masukan keterangan"
+                        aria-describedby="inputGroupPrepend"
+                        name="keterangan"
+                        onChange={(e)=> setData("keterangan", e.target.value)}
+                        isInvalid={!!errors.keterangan}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.keterangan}
+                    </Form.Control.Feedback>
+                    <Form.Label className="text-info f-14"><FontAwesomeIcon icon={faInfoCircle} /> Masukan keterangan apabila ada catatan yang perlu disimpan.</Form.Label>
                 </Form.Group>
             </div>
             <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>

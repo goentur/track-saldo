@@ -31,6 +31,7 @@ class TabunganController extends Controller
             'total' => $request->nominalTabungan,
             'tipe' => TipeTransaksi::TABUNGAN,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         // tabungan yang ditambah
         $pengaturanTunai = $this->pengaturan->getWhereOne(['id', 'tabungan_id'], ['toko_id' => $request->toko, 'tipe' => TipePengaturan::TUNAI]);
@@ -101,6 +102,7 @@ class TabunganController extends Controller
             'total' => $nominalBiayaYangDigunakan + $request->nominalBiayaAdmin,
             'tipe' => TipeTransaksi::TABUNGAN,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([

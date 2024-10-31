@@ -57,3 +57,8 @@ function fileName()
           time();
      return $kode;
 }
+
+function persenNominal($nominal, $persen = 100)
+{
+     return ($nominal * $persen) / 100;
+}

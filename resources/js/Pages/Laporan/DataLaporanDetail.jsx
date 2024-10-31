@@ -98,6 +98,7 @@ function DataLaporanDetail({toko}) {
                     <th>TANGGAL</th>
                     <th>PENGGUNA</th>
                     <th>ANGGOTA</th>
+                    <th>TIPE</th>
                     <th>KETERANGAN</th>
                     <th className="w-1">TOTAL</th>
                     </tr>
@@ -107,23 +108,25 @@ function DataLaporanDetail({toko}) {
                     dataLaporan.map((data) => (
                         <React.Fragment key={data.no}>
                         <tr key={data.no}>
-                            <td colSpan={6} className="bg-primary"></td>
+                            <td colSpan={7} className="bg-primary"></td>
                         </tr>
                         <tr key={data.no} className="fw-bold">
-                            <td className="text-center">{data.no}.</td>
-                            <td>{data.tanggal}</td>
-                            <td>{data.pengguna}</td>
-                            <td>{data.anggota}</td>
-                            <td>{data.keterangan}</td>
-                            <td className="text-end">{data.total}</td>
+                            <td className="top text-center">{data.no}.</td>
+                            <td className="top">{data.tanggal}</td>
+                            <td className="top">{data.pengguna}</td>
+                            <td className="top">{data.anggota}</td>
+                            <td className="top">{data.tipe}</td>
+                            <td className="top">{data.keterangan}</td>
+                            <td className="top text-end">{data.total}</td>
                         </tr>
                         {data.detail.map((detail) => (
                             <tr key={data.no + '-d-' + detail.id}>
                             <td></td>
-                            <td colSpan={2}>{detail.merek} ({detail.no})</td>
-                            <td>{detail.tipe}</td>
-                            <td>{detail.keterangan}</td>
-                            <td  className="text-end">{detail.nominal}</td>
+                            <td></td>
+                            <td className="top" colSpan={2}>{detail.merek} ({detail.no})</td>
+                            <td className="top">{detail.tipe}</td>
+                            <td className="top">{detail.keterangan}</td>
+                            <td className="top text-end">{detail.nominal}</td>
                             </tr>
                         ))}
                         </React.Fragment>

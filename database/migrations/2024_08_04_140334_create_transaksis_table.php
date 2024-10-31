@@ -20,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('total')->nullable();
             $table->string('tipe')->nullable();
             $table->string('status')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

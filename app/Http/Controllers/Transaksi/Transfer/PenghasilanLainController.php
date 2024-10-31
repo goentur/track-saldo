@@ -9,6 +9,7 @@ use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transaksi\PenghasilanLainRequest;
+use App\Services\Master\AnggotaService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
 use App\Services\PengaturanService;
@@ -21,6 +22,7 @@ class PenghasilanLainController extends Controller
         protected TransferService $transfer,
         protected TabunganService $tabungan,
         protected PengaturanService $pengaturan,
+        protected AnggotaService $anggota,
     ) {}
     public function simpan(PenghasilanLainRequest $request)
     {
@@ -48,10 +50,11 @@ class PenghasilanLainController extends Controller
         // transfer
         $transfer = [
             'toko' => $request->toko,
-            'anggota' => null,
+            'anggota' => $request->anggota,
             'total' => $nominal,
             'tipe' => TipeTransaksi::PENGHASILAN_LAIN,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([
@@ -59,9 +62,16 @@ class PenghasilanLainController extends Controller
                 'tabungan' => $tabungan,
                 'nominal' => $nominal,
             ]);
-            return back()->with('success', 'Penghasilan lain berhasil disimpan');
+            if ($request->anggota) {
+                $this->anggota->updatePoin([
+                    'anggota' => $request->anggota,
+                    'aksi' => 'menambahkan',
+                    'nominal' => $request->nominal,
+                ]);
+            }
+            return response()->json(['message' => 'Penghasilan lain berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
     }
 }

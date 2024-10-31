@@ -21,6 +21,7 @@
         "@inertiajs/react": "^1.2.0",
         "bootstrap": "^5.3.3",
         "date-fns": "^3.6.0",
+        "formik": "^2.4.6",
         "lodash": "^4.17.21",
         "react": "^18.3.1",
         "react-bootstrap": "^2.10.4",
@@ -31,6 +32,7 @@
         "react-to-print": "^2.15.1",
         "react-toastify": "^10.0.5",
         "sweetalert2": "^11.12.2",
-        "sweetalert2-react-content": "^5.0.7"
+        "sweetalert2-react-content": "^5.0.7",
+        "yup": "^1.4.0"
     }
 }

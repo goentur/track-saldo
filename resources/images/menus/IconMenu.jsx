@@ -14,6 +14,8 @@ import IconTabunganAnggota from "./tabungan-anggota.svg";
 import IconInvestasi from "./investasi.svg";
 import IconEdc from "./edc.svg";
 import IconPenghasilanLain from "./profit-lain.svg";
+import IconPinjam from "./pinjam.svg";
+import IconTopUp from "./top-up.svg";
 
 const IconMenu = {
   IconDashboard,
@@ -32,6 +34,8 @@ const IconMenu = {
   IconInvestasi,
   IconEdc,
   IconPenghasilanLain,
+  IconPinjam,
+  IconTopUp,
 };
 
 export default IconMenu;

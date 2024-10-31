@@ -19,7 +19,7 @@ function NotaBesar({ id, toko, resetSelectedId }) {
 
     const handlePrintLaporan = useReactToPrint({
         content: () => componentRef.current,
-        documentTitle: 'Nota Transaksi',
+        documentTitle: 'NOTA '+toko.nama,
         pageStyle: getPageMargins,
         onAfterPrint: () => {
             resetSelectedId();
@@ -27,18 +27,17 @@ function NotaBesar({ id, toko, resetSelectedId }) {
     });
 
     useEffect(() => {
-        const getData = async () => {
+        (async () => {
+            setIsLoading(true);
             try {
-                setIsLoading(true);
                 const response = await axios.post(route('transaksi.get'), { id: id });
                 setDataTransaksi(response.data);
             } catch (error) {
-                toast.error(error.message || "Error fetching transaction data");
+                toast.error(error.message);
             } finally {
                 setIsLoading(false);
             }
-        };
-        getData();
+        })();
     }, [id]);
 
     useEffect(() => {
@@ -56,12 +55,12 @@ function NotaBesar({ id, toko, resetSelectedId }) {
             <table className='table-sm text-center' width={'100%'}>
                 <tbody>
                     <tr>
-                        <td rowSpan={2} width={'15%'} className='text-center'><img src={toko.logo} width={'35%'} className='img-fluid'/></td>
+                        <td rowSpan={2} width={'15%'} className='text-center'><img src={toko.logo} width={'75%'} className='img-fluid'/></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td>
-                            <span className='f-14 fw-bold'>{toko.nama}</span>
+                            <span className='fs-3 fw-bold'>{toko.nama}</span>
                             <br className='m-0 p-0' />
                             <span className='f-12'>{toko.alamat}</span>
                         </td>
@@ -69,43 +68,43 @@ function NotaBesar({ id, toko, resetSelectedId }) {
                 </tbody>
             </table>
             <hr className='m-0 p-0' />
-            <table className='table-sm f-14'>
+            <table className='table-sm f-12'>
                 <tbody>
                     <tr>
-                        <td className='w-1 fw-semibold'>TANGGAL</td>
-                        <td className='w-1'>:</td>
-                        <td width={'30%'}>{dataTransaksi?.tanggal}</td>
-                        <td className='w-1  fw-semibold'>ANGGOTA</td>
-                        <td className='w-1'>:</td>
-                        <td>{dataTransaksi?.anggota}</td>
+                        <td className='top w-1 fw-semibold'>TANGGAL</td>
+                        <td className='top w-1'>:</td>
+                        <td width={'30%'} className='top'>{dataTransaksi?.tanggal}</td>
+                        <td className='top w-1  fw-semibold'>ANGGOTA</td>
+                        <td className='top w-1'>:</td>
+                        <td className='top'>{dataTransaksi?.anggota}</td>
                     </tr>
                     <tr>
-                        <td className='fw-semibold'>KASIR</td>
-                        <td className='w-1'>:</td>
-                        <td>{dataTransaksi?.kasir}</td>
-                        <td className='w-1 fw-semibold'>ALAMAT</td>
-                        <td className='w-1'>:</td>
-                        <td>{dataTransaksi?.alamat}</td>
+                        <td className='top fw-semibold'>KASIR</td>
+                        <td className='top w-1'>:</td>
+                        <td className='top'>{dataTransaksi?.kasir}</td>
+                        <td className='top w-1 fw-semibold'>ALAMAT</td>
+                        <td className='top w-1'>:</td>
+                        <td className='top'>{dataTransaksi?.alamat}</td>
                     </tr>
                     <tr>
-                        <td className='fw-semibold'>TIPE</td>
-                        <td className='w-1'>:</td>
-                        <td>{dataTransaksi?.tipe}</td>
-                        <td className='fw-semibold'>CETAK</td>
-                        <td className='w-1'>:</td>
-                        <td>{dataTransaksi?.cetak}</td>
+                        <td className='top fw-semibold'>TIPE</td>
+                        <td className='top w-1'>:</td>
+                        <td className='top'>{dataTransaksi?.tipe}</td>
+                        <td className='top fw-semibold'>KETERANGAN</td>
+                        <td className='top w-1'>:</td>
+                        <td className='top'>{dataTransaksi?.keterangan}</td>
                     </tr>
                 </tbody>
             </table>
             
-            <table className='table table-bordered table-sm f-14 m-0 p-0'>
-                <thead>
+            <table className='table table-bordered table-sm m-0 p-0'>
+                <thead className='f-14'>
                     <tr>
                         <th>KETERANGAN</th>
                         <th className='w-4 text-end'>NOMINAL</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='f-12'>
                     {
                         dataTransaksi?.detail.map((value,index) => (
                             <tr key={index}>
@@ -120,10 +119,7 @@ function NotaBesar({ id, toko, resetSelectedId }) {
                     </tr>
                 </tbody>
             </table>
-            <div className='text-center f-10 m-0 p-0'>TERIMA KASIH</div>
-            <br className='m-0 p-0' />
-            <div className='text-center mt-1 f-10'>potong disini</div>
-            <hr className='m-0 p-0' />
+            <div className='f-8 m-0 p-0'>Dicetak pada : {dataTransaksi?.cetak}</div>
         </div>
     );
 }

@@ -31,6 +31,7 @@ class InvestasiController extends Controller
             'total' => $request->nominalInvestasi,
             'tipe' => TipeTransaksi::INVESTASI,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         // tabungan yang ditambah
         $tabungan = $request->tabunganYangDigunakan ?? $this->pengaturan->getWhereOne(['id', 'tabungan_id'], ['toko_id' => $request->toko, 'tipe' => TipePengaturan::TUNAI])->tabungan_id;

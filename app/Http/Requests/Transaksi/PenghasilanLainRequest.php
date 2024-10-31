@@ -24,8 +24,10 @@ class PenghasilanLainRequest extends FormRequest
         return [
             "toko" => ['required', 'uuid'],
             "nominal" => ['required', 'numeric'],
+            "anggota" => ['nullable', 'uuid'],
             "tabungan" => ['nullable', 'uuid'],
             "biayaTransfer" => ['nullable', 'numeric'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

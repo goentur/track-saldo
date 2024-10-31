@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('toko_id')->nullable()->comment('id toko');
             $table->string('merek_id')->nullable()->comment('id merek');
-            $table->bigInteger('no')->nullable();
+            $table->string('no')->nullable();
             $table->bigInteger('nominal')->nullable();
             $table->softDeletes();
             $table->timestamps();

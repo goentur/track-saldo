@@ -26,6 +26,7 @@ class TabunganSetorRequest extends FormRequest
             "anggota" => ['required', 'uuid'],
             "nominalTabungan" => ['required', 'numeric'],
             "tabunganYangDigunakan" => ['nullable', 'uuid'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

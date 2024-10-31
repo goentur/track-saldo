@@ -26,6 +26,7 @@ class ViaATMNasabahRequest extends FormRequest
             'anggota' => ['nullable', 'uuid'],
             'tabunganBiayaAdmin' => ['nullable', 'uuid'],
             'nominalBiayaAdmin' => ['required', 'numeric'],
+            'keterangan' => ['nullable', 'string'],
         ];
     }
 }

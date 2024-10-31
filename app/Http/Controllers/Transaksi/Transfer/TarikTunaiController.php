@@ -32,6 +32,7 @@ class TarikTunaiController extends Controller
             'total' => $request->nominalBiayaYangDigunakan + $request->nominalBiayaAdmin,
             'tipe' => TipeTransaksi::TARIK_TUNAI,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         // tabungan yang ditambah
         $transferDetail[] = [
@@ -81,9 +82,9 @@ class TarikTunaiController extends Controller
                     'nominal' => $request->nominalBiayaAdmin,
                 ]);
             }
-            return back()->with('success', 'Tarik Tunai berhasil disimpan');
+            return response()->json(['message' => 'Tarik Tunai berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
     }
 }

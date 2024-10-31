@@ -1,18 +1,21 @@
-import { faPrint, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faPrint, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { addDays, format } from "date-fns";
 import { id } from "date-fns/locale/id";
-import { useEffect, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { Button, ButtonGroup, Form, Spinner, Table } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import CurrencyInput from "react-currency-input-field";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { useRoute } from "../../../../vendor/tightenco/ziggy";
 import NotaBesar from "./Transfer/NotaBesar";
 registerLocale('id', id)
-function DataTransaksi({ toko, anggotas, reloadTabungan, onReloadComplete, tanggalTransaksi}){
+function DataTransaksi(props, ref){
+    const {role, toko, anggotas, tanggalTransaksi, onProcessingDone} = props;
     const route = useRoute();
     const [transaksi, setDataTransaksi] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -20,17 +23,12 @@ function DataTransaksi({ toko, anggotas, reloadTabungan, onReloadComplete, tangg
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [nominal, setDataNominal] = useState(null);
-    useEffect(() => {
-        if (toko != '' ) {
-            getData()
-        }
-        if (reloadTabungan) {
-            getData()
-            onReloadComplete()
-        }
-    }, [toko, reloadTabungan]);
-
-    const getData = async () => {
+    const [selectedId, setSelectedId] = useState(null);
+    
+    useImperativeHandle(ref, () => ({
+        dataTransaksi,
+    }));
+    const dataTransaksi = async () => {
         setIsLoading(true);
         try {
             const response = await axios.post(route('transaksi.data'), { 
@@ -40,19 +38,39 @@ function DataTransaksi({ toko, anggotas, reloadTabungan, onReloadComplete, tangg
                 nominal : nominal,
             });
             setDataTransaksi(response.data);
-            setIsLoading(false)
         } catch (error) {
+            toast.error(error.response.data.message)
+        }finally{
             setIsLoading(false)
-            toast.error(error);
         }
     }
-    const [selectedId, setSelectedId] = useState(null);
-
     const resetSelectedId = () => {
         setSelectedId(null);
     };
+    const hapus = (id) => {
+        withReactContent(Swal).fire({
+            title: "Apakah Anda serius?",
+            text: "ingin menghapus transaksi ini!",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#dc3545",
+            cancelButtonColor: "#0d6efd",
+            confirmButtonText: "Ya, hapus transaksi ini!",
+            cancelButtonText: "Tidak",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await axios.post(route('transaksi.hapus',id));
+                    toast.success(response.data.message);
+                    onProcessingDone();
+                } catch (error) {
+                    toast.error(error.response.data.message)
+                }
+            }
+        })
+    }
     return (<>
-        <Form onSubmit={(e) => {e.preventDefault(); getData()}} className="row mb-2">
+        <Form onSubmit={(e) => {e.preventDefault(); dataTransaksi()}} className="row mb-2">
             <div className="row col-lg-3">
                 <DatePicker
                     selectsRange={true}
@@ -96,13 +114,14 @@ function DataTransaksi({ toko, anggotas, reloadTabungan, onReloadComplete, tangg
                 <Button type="submit"><FontAwesomeIcon icon={faSearch}/> CARI</Button>
             </div>
         </Form>
-        <div className="table-responsive">
+        <div className="table-responsive transaksi">
             <Table bordered hover size="sm">
                 <thead>
                     <tr className="f-12">
                         <th className="w-1 text-center">NO</th>
                         <th className="w-6">PENGGUNA</th>
                         <th>ANGGOTA</th>
+                        <th>TIPE</th>
                         <th>KETERANGAN</th>
                         <th className="w-7 text-end">TOTAL</th>
                         <th className="w-1 text-center">AKSI</th>
@@ -117,25 +136,29 @@ function DataTransaksi({ toko, anggotas, reloadTabungan, onReloadComplete, tangg
                     {transaksi !== null ? transaksi.data.map((value,index) => (
                     <tr key={index} className="f-12">
                         <td className="text-center">{++index}.</td>
-                        <td>
+                        <td className="top">
                             { value.pengguna }
                             <br />
                             <span className="f-10">{ value.tanggal }</span>
                         </td>
-                        <td>{ value.anggota }</td>
-                        <td>{ value.keterangan }</td>
-                        <td className="text-end">Rp { value.total }</td>
-                        <td className="text-center">
+                        <td className="top">{ value.anggota }</td>
+                        <td className="top">{ value.tipe }</td>
+                        <td className="top">{ value.keterangan }</td>
+                        <td className="top text-end">Rp { value.total }</td>
+                        <td className="top text-center">
+                            <ButtonGroup aria-label="button action">
                             {value.aksi && (
-                                <ButtonGroup aria-label="button action">
-                                    <Button className="btn-sm-icon" variant="primary" onClick={() => setSelectedId(value.id)}><FontAwesomeIcon icon={faPrint}/></Button>
-                                </ButtonGroup>
+                                <Button className="btn-sm btn-icon" variant="primary" onClick={() => setSelectedId(value.id)}><FontAwesomeIcon icon={faPrint}/></Button>
                             )}
+                            {role == 'pemilik' && (
+                                <Button className="btn-sm btn-icon" variant="danger" onClick={() => hapus(value.id)}><FontAwesomeIcon icon={faTrash}/></Button>
+                            )}
+                            </ButtonGroup>
                         </td>
                     </tr>
                     )):
                     <tr>
-                        <td colSpan={6} className="text-center">Data Belum ada</td>
+                        <td colSpan={7} className="text-center">Data Belum ada</td>
                     </tr>
                     }
                 </tbody>
@@ -149,4 +172,4 @@ function DataTransaksi({ toko, anggotas, reloadTabungan, onReloadComplete, tangg
     </>)
 }
 
-export default DataTransaksi
+export default forwardRef(DataTransaksi)

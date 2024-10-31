@@ -1,6 +1,6 @@
 import { Head, usePage } from "@inertiajs/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { toast } from "react-toastify";
@@ -20,20 +20,23 @@ import Pulsa from "./Penjualan/Pulsa";
 import Tabungan from "./Tabungan";
 import MutasiSaldo from "./Transfer/MutasiSaldo";
 import PenghasilanLain from "./Transfer/PenghasilanLain";
+import Pinjam from "./Transfer/Pinjam";
 import TarikTunai from "./Transfer/TarikTunai";
 import TarikTunaiEDC from "./Transfer/TarikTunaiEDC";
-import Tunai from "./Transfer/Tunai";
+import TopUp from "./Transfer/TopUp";
+import TransferTunai from "./Transfer/TransferTunai";
 import ViaATMNasabah from "./Transfer/ViaATMNasabah";
 
 function Menu({multi, tokos, tanggalTransaksi}){
     const { role } = usePage().props.auth;
     const [toko, setToko] = useState([]);
-    const [reloadTabungan, setReloadTabungan] = useState(false);
     const [dataAnggota, setDataAnggota] = useState([]);
     const [modal, setModal] = useState(false);
     const [tipeForm, setTipeForm] = useState(null);
     const [fullscreen, setFullScreen] = useState(null);
     const [title, setTitle] = useState(null);
+    const componentTabungan = useRef(null);
+    const componentDataTransaksi = useRef(null);
     const handleModal = (tipeForm, fs,title) => {
         setTipeForm(tipeForm)
         setTitle(title)
@@ -41,12 +44,33 @@ function Menu({multi, tokos, tanggalTransaksi}){
         setModal(true)
     };
     
+    const menuPemiliks = [
+        { border: 'border-primary', icon: IconMenu.IconDashboard, label: 'Dashboard', key: 'dashboard' },
+        { border: 'border-danger', icon: IconMenu.IconProduktif, label: 'Produktif', key: 'produktif' },
+        { border: 'border-danger', icon: IconMenu.IconKonsumtif, label: 'Konsumtif', key: 'konsumtif' },
+        { border: 'border-warning', icon: IconMenu.IconMutasiSaldo, label: 'Mutasi Saldo', key: 'mutasi-saldo' },
+    ]
+    const menuPegawais = [
+        { border: 'border-warning', icon: IconMenu.IconPinjam, label: 'Pinjam', key: 'pinjam' },
+        { border: 'border-success', icon: IconMenu.IconPenghasilanLain, label: 'Penghasilan Lain', key: 'penghasilan-lain' },
+        { border: 'border-primary', icon: IconMenu.IconTransferViaAtmNasabah, label: 'Via ATM Na...', key: 'via-atm-nasabah' },
+        { border: 'border-primary', icon: IconMenu.IconTopUp, label: 'Top Up', key: 'top-up' },
+        { border: 'border-primary', icon: IconMenu.IconTransferTunai, label: 'Transfer Tunai', key: 'transfer-tunai' },
+        { border: 'border-primary', icon: IconMenu.IconTarikTunai, label: 'Tarik Tunai', key: 'tarik-tunai' },
+        { border: 'border-primary', icon: IconMenu.IconEdc, label: 'Tarik Tunai EDC', key: 'tarik-tunai-edc' },
+        { border: 'border-primary', icon: IconMenu.IconTabunganAnggota, label: 'Tabungan', key: 'tabungan', persist: true },
+        { border: 'border-primary', icon: IconMenu.IconInvestasi, label: 'Investasi', key: 'investasi', persist: true },
+        { border: 'border-primary', icon: IconMenu.IconPaketPulsa, label: 'Pulsa', key: 'pulsa' },
+        { border: 'border-primary', icon: IconMenu.IconPaketInternet, label: 'Paket Data', key: 'paket-data' },
+        { border: 'border-info', icon: IconMenu.IconLaporan, label: 'Laporan', key: 'laporan' },
+        { border: 'border-info', icon: IconMenu.IconLaporanDetail, label: 'Laporan Detail', key: 'laporan-detail' },
+        { border: 'border-info', icon: IconMenu.IconAnggota, label: 'Anggota', key: 'anggota' }
+    ];
     useEffect(() => {
-        if (tokos != '') {
-            handleSetDataAnggota()
-        }
+        handleSetDataAnggota()
+        handleReloadData()
     }, [tokos]);
-
+    
     const handleSetDataAnggota = async () => {
         try {
             const responseAnggota = await axios.post(route('master.anggota.data-by-toko'), { toko: multi?toko:tokos.id });
@@ -56,14 +80,13 @@ function Menu({multi, tokos, tanggalTransaksi}){
             toast.error(error);
         }
     }
-    const handleChildProcessingDone = () => {
+    const handleReloadData = () => {
         setModal(false);
-        setReloadTabungan(true)
-    };
-    const handleResetReloadTabungan = () => {
-        setReloadTabungan(false);
-    };
-  
+        if (componentTabungan.current && componentDataTransaksi.current) {
+            componentTabungan.current.dataTabungan(multi?toko:tokos);
+            componentDataTransaksi.current.dataTransaksi(multi?toko:tokos, tanggalTransaksi);
+        }
+    }
     return (
     <Layout>
         <Head title="TRANSAKSI"/>
@@ -84,95 +107,41 @@ function Menu({multi, tokos, tanggalTransaksi}){
                     />
                 </Form.Group>
                 :null}
-                <Tabungan toko={multi?toko:tokos.id} reloadTabungan={reloadTabungan} onReloadComplete={handleResetReloadTabungan}/>
+                <Tabungan ref={componentTabungan}/>
             </div>
             <div className="col-lg-9">
                 <div className="row gap-2 d-flex justify-content-center mb-3">
-                    {role == 'pemilik' ? (<>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconDashboard} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Dashboard</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('dashboard', false, 'Dashboard') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-warning p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconMutasiSaldo} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Mutasi Saldo</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('mutasi-saldo', false, 'Mutasi Saldo') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-danger p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconProduktif} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Produktif</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('produktif', false, 'Produktif') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-danger p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconKonsumtif} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Konsumtif</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('konsumtif', false, 'Konsumtif') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    </>):''}
-                    <div className="card col-md-1 border-success p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconPenghasilanLain} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Penghasilan Lain</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('penghasilan-lain', false, 'Penghasilan Lain') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconTransferViaAtmNasabah} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Via ATM Na...</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('via-atm-nasabah', false, 'Via ATM Nasabah') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconTransferTunai} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Transfer Tunai</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('transfer-tunai', false, 'Transfer Tunai') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconTarikTunai} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Tarik Tunai</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('tarik-tunai', false, 'Tarik Tunai') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconEdc} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Tarik Tunai EDC</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('tarik-tunai-edc', false, 'Tarik Tunai EDC') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconTabunganAnggota} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Tabungan</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('tabungan', true, 'Tabungan') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconInvestasi} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Investasi</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('investasi', true, 'Investasi') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconPaketPulsa} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Pulsa</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('pulsa', false, 'Pulsa') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconPaketInternet} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Paket Data</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('paket-data', false, 'Paket Data') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconLaporan} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Laporan</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('laporan', false, 'Laporan') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconLaporanDetail} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Laporan Detail</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('laporan-detail', false, 'Laporan Detail') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
-                    <div className="card col-md-1 border-primary p-1 align-items-center text-center shadow">
-                        <img src={IconMenu.IconAnggota} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
-                        <p className="br p-0 m-0 f-12">Anggota</p>
-                        <a href="#" onClick={() => multi? toko:tokos ? handleModal('anggota', false, 'Anggota') : toast.error('Pilih toko terlebih dahulu')}  className="stretched-link"></a>
-                    </div>
+                    {role == 'pemilik' && menuPemiliks
+                    .map(item => (
+                        <div key={item.key} className={`card col-md-1 ${item.border} p-1 align-items-center text-center shadow`}>
+                            <img src={item.icon} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
+                            <p className="br p-0 m-0 f-12">{item.label}</p>
+                            <a
+                                href="#"
+                                onClick={() =>
+                                    multi ? toko : tokos ? handleModal(item.key, item.persist || false, item.label) : toast.error('Pilih toko terlebih dahulu')
+                                }
+                                className="stretched-link"
+                            ></a>
+                        </div>
+                    ))}
+                    {menuPegawais
+                    .map(item => (
+                        <div key={item.key} className={`card col-md-1 ${item.border} p-1 align-items-center text-center shadow`}>
+                            <img src={item.icon} alt="Menu Icon" className="col-6 img-fluid m-0 p-0" />
+                            <p className="br p-0 m-0 f-12">{item.label}</p>
+                            <a
+                                href="#"
+                                onClick={() =>
+                                    multi ? toko : tokos ? handleModal(item.key, item.persist || false, item.label) : toast.error('Pilih toko terlebih dahulu')
+                                }
+                                className="stretched-link"
+                            ></a>
+                        </div>
+                    ))}
                 </div>
                 <hr className="p-0 mt-2 mb-2" />
-                <DataTransaksi toko={multi?toko:tokos} anggotas={dataAnggota} reloadTabungan={reloadTabungan} onReloadComplete={handleResetReloadTabungan} tanggalTransaksi={tanggalTransaksi} />
+                <DataTransaksi ref={componentDataTransaksi} role={role} toko={multi?toko:tokos} anggotas={dataAnggota} tanggalTransaksi={tanggalTransaksi} onProcessingDone={handleReloadData}/>
             </div>
         </div>
         <Modal
@@ -196,22 +165,24 @@ function Menu({multi, tokos, tanggalTransaksi}){
             </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {tipeForm == 'dashboard' ? <Dashboard toko={multi?toko:tokos.id}/>:''}
-                {tipeForm == 'mutasi-saldo' ? <MutasiSaldo toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'produktif' ? <Produktif toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'konsumtif' ? <Konsumtif toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'penghasilan-lain' ? <PenghasilanLain toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'via-atm-nasabah' ? <ViaATMNasabah toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleChildProcessingDone} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:''}
-                {tipeForm == 'transfer-tunai' ? <Tunai toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleChildProcessingDone} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:''}
-                {tipeForm == 'tarik-tunai' ? <TarikTunai toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleChildProcessingDone} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:''}
-                {tipeForm == 'tarik-tunai-edc' ? <TarikTunaiEDC toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleChildProcessingDone} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:''}
-                {tipeForm == 'tabungan' ? <TabunganAnggota toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleChildProcessingDone} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:''}
-                {tipeForm == 'investasi' ? <InvestasiAnggota toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleChildProcessingDone} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:''}
-                {tipeForm == 'pulsa' ? <Pulsa toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'paket-data' ? <PaketData toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'laporan' ? <DataLaporan toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'laporan-detail' ? <DataLaporanDetail toko={multi?toko:tokos.id} onProcessingDone={handleChildProcessingDone}/>:''}
-                {tipeForm == 'anggota' ? <FormAnggota toko={multi?toko:tokos.id}/>:''}
+                {tipeForm == 'dashboard' ? <Dashboard toko={multi?toko:tokos.id} tanggalTransaksi={tanggalTransaksi}/>:null}
+                {tipeForm == 'produktif' ? <Produktif toko={multi?toko:tokos.id} tanggalTransaksi={tanggalTransaksi} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'konsumtif' ? <Konsumtif toko={multi?toko:tokos.id} tanggalTransaksi={tanggalTransaksi} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'mutasi-saldo' ? <MutasiSaldo toko={multi?toko:tokos.id} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'pinjam' ? <Pinjam toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'penghasilan-lain' ? <PenghasilanLain toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'via-atm-nasabah' ? <ViaATMNasabah toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'top-up' ? <TopUp toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'transfer-tunai' ? <TransferTunai toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'tarik-tunai' ? <TarikTunai toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'tarik-tunai-edc' ? <TarikTunaiEDC toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'tabungan' ? <TabunganAnggota toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'investasi' ? <InvestasiAnggota toko={multi?toko:tokos.id} anggotas={dataAnggota} onProcessingDone={handleReloadData} showModalAnggota={() => handleModal('anggota', false, 'Anggota')}/>:null}
+                {tipeForm == 'pulsa' ? <Pulsa toko={multi?toko:tokos.id} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'paket-data' ? <PaketData toko={multi?toko:tokos.id} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'laporan' ? <DataLaporan toko={multi?toko:tokos.id} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'laporan-detail' ? <DataLaporanDetail toko={multi?toko:tokos.id} onProcessingDone={handleReloadData}/>:null}
+                {tipeForm == 'anggota' ? <FormAnggota toko={multi?toko:tokos.id}/>:null}
             </Modal.Body>
         </Modal>
     </Layout>

@@ -29,6 +29,7 @@ class TunaiRequest extends FormRequest
             "biayaTransfer" => ['nullable', 'numeric'],
             "tabunganBiayaAdmin" => ['nullable', 'uuid'],
             "nominalBiayaAdmin" => ['required', 'numeric'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

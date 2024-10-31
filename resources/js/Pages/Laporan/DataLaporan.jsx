@@ -66,6 +66,7 @@ function DataLaporan({toko}) {
                         onChange={(update) => {
                             setDateRange(update);
                         }}
+                        required
                         maxDate={addDays(new Date(), 0)}
                         locale="id"
                         dateFormat="dd-MM-yyyy"
@@ -82,7 +83,7 @@ function DataLaporan({toko}) {
                     <Button variant="success" disabled={!dataLaporan} onClick={handlePrintLaporan} type="button" size="sm" className="align-item-end">
                         <FontAwesomeIcon icon={faPrint}/> CETAK
                     </Button>
-                </div><style></style>
+                </div>
             </div>
             <hr />
             <div ref={componentRef}>
@@ -99,6 +100,7 @@ function DataLaporan({toko}) {
                             <th>PENGGUNA</th>  
                             <th>ANGGOTA</th>  
                             <th className="w-1">TOTAL</th>  
+                            <th>TIPE</th>  
                             <th>KETERANGAN</th>  
                         </tr>
                     </thead>
@@ -106,16 +108,17 @@ function DataLaporan({toko}) {
                         {dataLaporan?
                         dataLaporan.map((data) => (
                         <tr key={data.no}>
-                            <td className="text-center">{ data.no }.</td>
-                            <td>{ data.tanggal }</td>
-                            <td>{ data.pengguna }</td>
-                            <td>{ data.anggota }</td>
-                            <td className="text-end">{ data.total }</td>
-                            <td>{ data.keterangan }</td>
+                            <td className="top text-center">{ data.no }.</td>
+                            <td className="top">{ data.tanggal }</td>
+                            <td className="top">{ data.pengguna }</td>
+                            <td className="top">{ data.anggota }</td>
+                            <td className="top text-end">{ data.total }</td>
+                            <td className="top">{ data.tipe }</td>
+                            <td className="top">{ data.keterangan }</td>
                         </tr>))
                         :
                         <tr>
-                            <td className="text-center" colSpan={6}>DATA TIDAK DITEMUKAN</td>
+                            <td className="text-center" colSpan={7}>DATA TIDAK DITEMUKAN</td>
                         </tr>
                         }
                     </tbody>

@@ -56,6 +56,7 @@ class PaketDataController extends Controller
             'total' => $request->hargaJual,
             'tipe' => TipeTransaksi::PENJUALAN_PAKET_DATA,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([

@@ -1,27 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Spinner, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useRoute } from "../../../../vendor/tightenco/ziggy";
 import { Rupiah } from "../../Helpers/Rupiah";
-function Tabungan({ toko, reloadTabungan, onReloadComplete }){
+const Tabungan = forwardRef((props, ref) => {
     const route = useRoute();
     const [tabungans, setTabungan] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        if (toko != '' ) {
-            getData()
-        }
-        if (reloadTabungan) {
-            getData()
-            onReloadComplete()
-        }
-    }, [toko, reloadTabungan]);
-
-    const getData = async () => {
+    useImperativeHandle(ref, () => ({
+        dataTabungan
+    }));
+    const dataTabungan = async (toko) => {
         setIsLoading(true);
         try {
-            const responseTabungan = await axios.post(route('transaksi.tabungan'), { toko: toko });
+            const responseTabungan = await axios.post(route('transaksi.tabungan'), { toko: toko.id });
             setTabungan(responseTabungan.data);
             setIsLoading(false)
         } catch (error) {
@@ -30,10 +23,10 @@ function Tabungan({ toko, reloadTabungan, onReloadComplete }){
         }
     }
     return (<>
-        <div>
-            <Table bordered hover size="sm">
-                <thead>
-                    <tr className="f-14">
+        <div className="table-responsive tabungan">
+            <Table bordered hover size="sm" className="f-14">
+                <thead className="sticky-top">
+                    <tr>
                         <th className="w-1 text-center">NO</th>
                         <th>MEREK</th>
                         <th className="w-1">NO</th>
@@ -51,7 +44,7 @@ function Tabungan({ toko, reloadTabungan, onReloadComplete }){
                         <td className="text-center">{++index}.</td>
                         <td>{ tabungan.merek.nama }</td>
                         <td>{ tabungan.no }</td>
-                        <td className="text-end">{ Rupiah(tabungan.nominal) }</td>
+                        <td className={tabungan.nominal > 0 ? "text-end" : "text-danger text-end"}>{ Rupiah(tabungan.nominal) }</td>
                     </tr>
                     )):
                     <tr>
@@ -61,7 +54,8 @@ function Tabungan({ toko, reloadTabungan, onReloadComplete }){
                 </tbody>
             </Table>
         </div>
+        <div className="fs-4">TOTAL : <span className="fw-semibold float-end">{Rupiah(tabungans.reduce((acc, tabungan) => acc + tabungan.nominal, 0))}</span></div>
     </>)
-}
+})
 
 export default Tabungan

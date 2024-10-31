@@ -62,7 +62,7 @@ class AnggotaRepository implements AnggotaRepositoryInterface
     {
         $anggota = Anggota::findOrFail($data['anggota']);
         if ($data['aksi'] == 'menambahkan') {
-            $anggota->update(['poin' => $anggota->poin + $data['nominal']]);
+            $anggota->update(['poin' => $anggota->poin + persenNominal($data['nominal'], 10)]);
         }
         if ($data['aksi'] == 'mengurangi') {
             $anggota->update(['poin' => $anggota->poin - $data['nominal']]);

@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\TipePengaturan;
-use App\Enums\TipePengaturanNominal;
 use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Requests\LaporanRequest;
+use App\Models\Transaksi;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
@@ -15,6 +15,7 @@ use App\Services\PengaturanService;
 use App\Services\TransferService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
@@ -62,7 +63,7 @@ class TransaksiController extends Controller
         $request->validate([
             'toko' => ['required', 'uuid'],
         ]);
-        return response()->json($this->tabungan->getTabungansByToko(['merek'], ['id', 'merek_id', 'nominal'], ['toko_id' => $request->toko], true), 200);
+        return response()->json($this->tabungan->getTabungansByToko(['merek'], ['id', 'merek_id', 'no', 'nominal'], ['toko_id' => $request->toko], false), 200);
     }
     public function data(Request $request)
     {
@@ -116,9 +117,11 @@ class TransaksiController extends Controller
     private function getAksi($keterangan)
     {
         $disabledTransactions = [
-            TipeTransaksi::MUTASI_SALDO->value,
             TipeTransaksi::PRODUKTIF->value,
             TipeTransaksi::KONSUMTIF->value,
+            TipeTransaksi::MUTASI_SALDO->value,
+            TipeTransaksi::MEMINJAMKAN->value,
+            TipeTransaksi::PINJAM->value,
             TipeTransaksi::PENGHASILAN_LAIN->value,
             TipeTransaksi::PENGAMBILAN_POIN->value,
             TipeTransaksi::TRANSFER_VIA_ATM_NASABAH->value,
@@ -146,7 +149,8 @@ class TransaksiController extends Controller
                 'pengguna' => $value->user?->name,
                 'anggota' => $value->anggota?->nama,
                 'total' => rupiah($valueTotal),
-                'keterangan' => $value->tipe,
+                'tipe' => $value->tipe,
+                'keterangan' => $value->keterangan,
                 'aksi' => $this->getAksi($value->tipe),
             ];
         }
@@ -210,7 +214,8 @@ class TransaksiController extends Controller
                 'pengguna' => $value->user?->name,
                 'anggota' => $value->anggota?->nama,
                 'total' => rupiah($valueTotal),
-                'keterangan' => $value->tipe,
+                'tipe' => $value->tipe,
+                'keterangan' => $value->keterangan,
                 'detail' => $detail,
             ];
         }
@@ -254,6 +259,20 @@ class TransaksiController extends Controller
                 'keterangan' => $data->tipe,
                 'nominal' => rupiah($total)
             ];
+        } else if ($data->tipe == TipeTransaksi::TARIK_TUNAI->value || $data->tipe == TipeTransaksi::TARIK_TUNAI_EDC->value) {
+            foreach ($data->transaksiDetail as $value) {
+                if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
+                    if ($value->keterangan != KeteranganTransferDetail::NOMINAL_TRANSFER->value) {
+                        $total -= $value->nominal;
+                    } else {
+                        $total = $value->nominal;
+                    }
+                    $result[] = [
+                        'keterangan' => $value->keterangan,
+                        'nominal' => rupiah($value->nominal)
+                    ];
+                }
+            }
         } else {
             foreach ($data->transaksiDetail as $value) {
                 if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
@@ -271,9 +290,41 @@ class TransaksiController extends Controller
             'anggota' => $data?->anggota?->nama,
             'alamat' => $data?->anggota?->alamat,
             'tipe' => $data?->tipe,
+            'keterangan' => $data?->keterangan,
             'total' => rupiah($total),
             'cetak' => formatTanggal(time(), $zonaWaktuPengguna),
             'detail' => $result,
         ], 200);
+    }
+    public function hapus(Transaksi $transaksi)
+    {
+        try {
+            DB::beginTransaction();
+            $biayaAdmin = 0;
+            foreach ($transaksi->transaksiDetail  as $value) {
+                $this->tabungan->updateNominal([
+                    'tipe' => $value->tipe == TipeTransaksiDetail::MENGURANGI->value ? 'menambahkan' : 'mengurangi',
+                    'tabungan' => $value->tabungan_id,
+                    'nominal' => $value->nominal,
+                ]);
+                if ($value->keterangan == KeteranganTransferDetail::BIAYA_ADMIN->value) {
+                    $biayaAdmin = $value->nominal;
+                }
+                $value->delete();
+            }
+            if ($transaksi->anggota_id) {
+                $this->anggota->updatePoin([
+                    'anggota' => $transaksi->anggota_id,
+                    'aksi' => 'mengurangi',
+                    'nominal' => persenNominal($biayaAdmin, 10),
+                ]);
+            }
+            $transaksi->delete();
+            DB::commit();
+            return response()->json(['message' => 'Transaksi berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e], 422);
+        }
     }
 }

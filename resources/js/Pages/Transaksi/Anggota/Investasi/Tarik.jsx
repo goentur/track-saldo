@@ -134,7 +134,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
             </div>
             <div className="row">
                 <div className="col-lg-2">
-                    <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>
+                    <Button variant="primary" type="submit" className="align-item-end" disabled={true}>
                         {processing ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <FontAwesomeIcon icon={faSave} />} SIMPAN
                     </Button>
                 </div>

@@ -55,6 +55,7 @@ class MutasiSaldoController extends Controller
             'total' => $nominal,
             'tipe' => TipeTransaksi::MUTASI_SALDO,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         if ($this->transfer->saveTransfer($transfer, $transferDetail)) {
             $this->tabungan->updateNominal([
@@ -67,9 +68,9 @@ class MutasiSaldoController extends Controller
                 'tabungan' => $request->tabunganKe,
                 'nominal' => $request->nominal,
             ]);
-            return back()->with('success', 'Mutasi saldo berhasil disimpan');
+            return response()->json(['message' => 'Mutasi Saldo berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
     }
 }

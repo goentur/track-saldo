@@ -27,6 +27,7 @@ class MutasiSaldoRequest extends FormRequest
             "tabunganDari" => ['required', 'uuid'],
             "tabunganKe" => ['required', 'uuid'],
             "biayaTransfer" => ['nullable', 'numeric'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

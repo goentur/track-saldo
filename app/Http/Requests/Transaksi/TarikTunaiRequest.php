@@ -28,6 +28,7 @@ class TarikTunaiRequest extends FormRequest
             "nominalBiayaYangDigunakan" => ['required', 'numeric'],
             "tabunganBiayaAdmin" => ['nullable', 'uuid'],
             "nominalBiayaAdmin" => ['required', 'numeric'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

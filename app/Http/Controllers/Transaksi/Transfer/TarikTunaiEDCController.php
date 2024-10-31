@@ -8,7 +8,7 @@ use App\Enums\TipePengaturan;
 use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transaksi\TarikTunaiRequest;
+use App\Http\Requests\Transaksi\TarikTunaiEDCRequest;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
@@ -24,7 +24,7 @@ class TarikTunaiEDCController extends Controller
         protected TabunganService $tabungan,
         protected AnggotaService $anggota,
     ) {}
-    public function simpan(TarikTunaiRequest $request)
+    public function simpan(TarikTunaiEDCRequest $request)
     {
         $transfer = [
             'toko' => $request->toko,
@@ -32,6 +32,7 @@ class TarikTunaiEDCController extends Controller
             'total' => $request->nominalBiayaYangDigunakan + $request->nominalBiayaAdmin,
             'tipe' => TipeTransaksi::TARIK_TUNAI_EDC,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         // tabungan yang ditambah
         $transferDetail[] = [
@@ -81,9 +82,9 @@ class TarikTunaiEDCController extends Controller
                     'nominal' => $request->nominalBiayaAdmin,
                 ]);
             }
-            return back()->with('success', 'Tarik Tunai EDC berhasil disimpan');
+            return response()->json(['message' => 'Tarik tunai EDC berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
     }
 }

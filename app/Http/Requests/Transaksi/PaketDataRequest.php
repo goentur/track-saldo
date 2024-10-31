@@ -26,6 +26,7 @@ class PaketDataRequest extends FormRequest
             "hargaJual" => ['required', 'numeric'],
             "tabungan" => ['required', 'uuid'],
             "hargaBeli" => ['required', 'numeric'],
+            "keterangan" => ['nullable', 'string'],
         ];
     }
 }

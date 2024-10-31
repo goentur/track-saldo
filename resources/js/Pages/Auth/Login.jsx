@@ -72,7 +72,7 @@ export default function Login(){
                                         </InputGroup>
                                     </Form.Group>
                                     <Form.Group className="mb-5" controlId="formBasicCheckbox">
-                                        <Form.Check type="checkbox" name="remember" onChange={(e) => setData("remember", data.remember?false:true)} label="Ingian Saya Terus" />
+                                        <Form.Check type="checkbox" name="remember" onChange={(e) => setData("remember", data.remember?false:true)} label="Ingat Saya" />
                                     </Form.Group>
                                     <div className="d-grid gap-2">
                                         <Button variant="primary" type="submit">{processing?<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>:<FontAwesomeIcon icon={faRightToBracket}/> } Login</Button>

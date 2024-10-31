@@ -20,6 +20,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
         biayaTransfer: null,
         tabunganBiayaAdmin: null,
         nominalBiayaAdmin: null,
+        keterangan: null,
     });
     const [tabunganAnggota, setTabunganAnggota] = useState([]);
     function submit(e) {
@@ -41,6 +42,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
         setData('anggota', id)
         try {
             const responseTabunganAnggota = await axios.post(route('master.anggota.tabungan'), { anggota: id });
+            setTabunganAnggota([]);
             if(responseTabunganAnggota.data == 404){
                 toast.error("Pelanggan belum mempunyai tabungan");
             }else{
@@ -53,7 +55,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
     return (
         <Form onSubmit={submit}>
             <div className="row">
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormAnggota">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormAnggota">
                     <Form.Label>ANGGOTA  <span className="text-danger">*</span></Form.Label>
                     <Typeahead
                         id="anggota"
@@ -72,7 +74,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                         {errors.anggota}
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormNominalPengambilan">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormNominalPengambilan">
                     <Form.Label>NOMINAL PENGAMBILAN <span className="text-danger">*</span></Form.Label>
                     <CurrencyInput
                         id="nominalPengambilan"
@@ -85,7 +87,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                     />
                     {errors.nominalPengambilan && <div className="text-end invalid-feedback">{errors.nominalPengambilan}</div>}
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormTabunganYangDigunakan">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormTabunganYangDigunakan">
                     <Form.Label>TABUNGAN YANG DIGUNAKAN</Form.Label>
                     <Typeahead
                         id="tabunganYangDigunakan"
@@ -104,7 +106,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                     </Form.Control.Feedback>
                     <Form.Label className="text-info f-14"><FontAwesomeIcon icon={faInfoCircle} /> Pilih apabila menggunakan selain tunai.</Form.Label>
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormBiayaTranfer">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormBiayaTranfer">
                     <Form.Label>BIAYA TRANSFER</Form.Label>
                     <CurrencyInput
                         id="biayaTransfer"
@@ -120,7 +122,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                     </Form.Control.Feedback>
                     <Form.Label className="text-info f-14"><FontAwesomeIcon icon={faInfoCircle} /> Masukan nominal apabila ada biaya transfer.</Form.Label>
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormTabunganBiayaAdmin">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormTabunganBiayaAdmin">
                     <Form.Label>TABUNGAN BIAYA ADMIN</Form.Label>
                     <Typeahead
                         id="tabunganBiayaAdmin"
@@ -140,7 +142,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                     </Form.Control.Feedback>
                     <Form.Label className="text-info f-14"><FontAwesomeIcon icon={faInfoCircle} /> Pilih apabila menggunakan selain tunai.</Form.Label>
                 </Form.Group>
-                <Form.Group className="mb-3 col-lg-4" controlId="validationFormBiayaAdmin">
+                <Form.Group className="mb-2 col-lg-4" controlId="validationFormBiayaAdmin">
                     <Form.Label>BIAYA ADMIN <span className="text-danger">*</span></Form.Label>
                     <CurrencyInput
                         id="nominalBiayaAdmin"
@@ -152,6 +154,22 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                         onValueChange={(values) => setData("nominalBiayaAdmin", values)}
                     />
                     {errors.nominalBiayaAdmin && <div className="text-end invalid-feedback">{errors.nominalBiayaAdmin}</div>}
+                </Form.Group>
+                <Form.Group className="mb-2 col-lg-12" controlId="validationFormKeterangan">
+                    <Form.Label>KETERANGAN</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Masukan keterangan"
+                        aria-describedby="inputGroupPrepend"
+                        name="keterangan"
+                        onChange={(e)=> setData("keterangan", e.target.value)}
+                        isInvalid={!!errors.keterangan}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        {errors.keterangan}
+                    </Form.Control.Feedback>
+                    <Form.Label className="text-info f-14"><FontAwesomeIcon icon={faInfoCircle} /> Masukan keterangan apabila ada catatan yang perlu disimpan.</Form.Label>
                 </Form.Group>
                 <div className="col-lg-1">
                     <Button variant="primary" type="submit" className="align-item-end" disabled={processing}>
@@ -204,7 +222,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                             </tr>
                             )):
                             <tr>
-                                <td colSpan={4} className="text-center">Data Belum ada</td>
+                                <td colSpan={5} className="text-center">Data Belum ada</td>
                             </tr>
                             }
                         </tbody>

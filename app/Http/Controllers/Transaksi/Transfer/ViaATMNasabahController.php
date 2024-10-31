@@ -38,6 +38,7 @@ class ViaATMNasabahController extends Controller
             'total' => $request->nominalBiayaAdmin,
             'tipe' => TipeTransaksi::TRANSFER_VIA_ATM_NASABAH,
             'status' => StatusTransfer::MENUNGGU,
+            'keterangan' => $request->keterangan,
         ];
         $transferDetail[] = [
             'tabungan' => $tabungan,
@@ -58,9 +59,9 @@ class ViaATMNasabahController extends Controller
                     'nominal' => $request->nominalBiayaAdmin,
                 ]);
             }
-            return back()->with('success', 'Transfer via ATM nasabah berhasil disimpan');
+            return response()->json(['message' => 'Via ATM Nasabah berhasil disimpan'], 200);
         } else {
-            return back()->with('error', 'Terjadi kesalahan pada saat penyimpanan data');
+            return response()->json(['message' => 'Terjadi kesalahan pada saat penyimpanan data'], 422);
         }
     }
 }

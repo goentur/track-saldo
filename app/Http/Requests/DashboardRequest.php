@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Transaksi;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class KonsumtifRequest extends FormRequest
+class DashboardRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,8 @@ class KonsumtifRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "toko" => ['required', 'uuid'],
-            "nominal" => ['required', 'numeric'],
-            "tabungan" => ['nullable', 'uuid'],
-            "biayaTransfer" => ['nullable', 'numeric'],
+            'toko' => ['required', 'uuid'],
+            'tanggal' => ['required', 'string'],
         ];
     }
 }

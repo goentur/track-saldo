@@ -81,6 +81,10 @@ input:read-only {
     width: 10%;
 }
 
+.f-16 {
+    font-size: 16px;
+}
+
 .f-14 {
     font-size: 14px;
 }
@@ -91,6 +95,10 @@ input:read-only {
 
 .f-10 {
     font-size: 10px;
+}
+
+.f-8 {
+    font-size: 8px;
 }
 
 .modal-90w {
@@ -116,6 +124,23 @@ input:read-only {
 .table-responsive {
     max-height: 50vh;
 }
+
+.table-responsive.tabungan {
+    max-height: 75vh;
+}
+
+.transaksi::-webkit-scrollbar {
+    width: 5px
+}
+
+.transaksi::-webkit-scrollbar-thumb {
+    background-color: #0d6efd
+}
+
+.tabungan::-webkit-scrollbar {
+    width: 0px
+}
+
 
 .btn-sm-icon {
     --bs-btn-padding-y: .20rem;

@@ -60,8 +60,10 @@ function Ubah({ mereks, tabungan }) {
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNo">
                             <Form.Label>NO <span className="text-danger">*</span></Form.Label>
-                            <CurrencyInput id="no" name="no" placeholder="Masukan no" className={`form-control form-control-lg ${errors.no && 'is-invalid'}`} disableGroupSeparators={true} value={data.no} onValueChange={(values) => setData("no", values)} required />
-                            {errors.no && <div className="invalid-feedback">{errors.no}</div>}
+                            <Form.Control size="lg" type="text" placeholder="Masukan no" aria-describedby="inputGroupPrepend" name="no" value={data.no} onChange={(e) => {if(/^\d*$/.test(e.target.value)){setData("no", e.target.value)}}} isInvalid={!!errors.no} required/>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.no}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group className="mb-3 col-lg-6" controlId="validationFormNominal">
                             <Form.Label>NOMINAL <span className="text-danger">*</span></Form.Label>
