@@ -12,9 +12,9 @@ class AnggotaService
     {
     }
 
-    public function gatAllData($request)
+    public function gatAllData($request, $rule)
     {
-        return $this->anggota->gatAllData($request);
+        return $this->anggota->gatAllData($request, $rule);
     }
 
     public function create(array $data)

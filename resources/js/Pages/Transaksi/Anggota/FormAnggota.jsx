@@ -1,20 +1,27 @@
 import { faEdit, faSave } from "@fortawesome/free-regular-svg-icons";
-import { faInfoCircle, faRefresh, faSearch, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesLeft, faAnglesRight, faRefresh, faSearch, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, ButtonGroup, Form, Modal, Spinner } from "react-bootstrap";
+import { Button, ButtonGroup, Form, InputGroup, Modal, Spinner } from "react-bootstrap";
 import CurrencyInput from "react-currency-input-field";
 import { toast } from "react-toastify";
 import { useRoute } from "../../../../../vendor/tightenco/ziggy";
+import { Rupiah } from "../../../Helpers/Rupiah";
 function FormAnggota({toko}) {
     const route = useRoute();
     const [loadingData, setLoadingData] = useState(false);
     const [loadingFormAnggota, setLoadingFormAnggota] = useState(false);
     const [loadingPengambilanPoin, setLoadingPengambilanPoin] = useState(false);
-    const [search, setSearch] = useState("");
-    const [dataAnggota, setDataAnggota] = useState(null);
+    const [dataAnggota, setDataAnggota] = useState([]);
     const [modalAnggota, setModalAnggota] = useState(false);
+    const [pagination, setPagination] = useState({
+        currentPage: 1,
+        lastPage: 1,
+        totalRecords: 0,
+        perPage: 25,
+        search: null
+    })
     const [dataForm, setDataForm] = useState({
         id: "",
         toko_id: toko,
@@ -23,8 +30,9 @@ function FormAnggota({toko}) {
         alamat: "",
     });
     useEffect(() => {
-        getData()
-    }, [toko]);
+        getDataAnggota();
+    }, [pagination.currentPage, pagination.search, pagination.perPage]);
+
     const simpanAtauUpdate = async (e) => {
         e.preventDefault()
         setLoadingFormAnggota(true);
@@ -33,7 +41,7 @@ function FormAnggota({toko}) {
             toast.success(response.data.pesan);
             setLoadingFormAnggota(false)
             muatUlangForm()
-            getData();
+            getDataAnggota();
         } catch (error) {
             toast.error(error);
             setLoadingFormAnggota(false)
@@ -51,7 +59,7 @@ function FormAnggota({toko}) {
     })
     const simpanPengambilanPoin = async (e) => {
         e.preventDefault()
-        if(nominalPengambilanPoin > dataFormPenambilanPoin.nominalPoin){
+        if(nominalPengambilanPoin > dataFormPenambilanPoin.poin){
             toast.error("Nominal pengambilan poin melebihi poin yang didapat");
         }else{
             setLoadingPengambilanPoin(true);
@@ -61,13 +69,13 @@ function FormAnggota({toko}) {
                     anggota : dataFormPenambilanPoin.id,
                     nominalPengambilanPoin : nominalPengambilanPoin,
                 });
-                setModalAnggota(false)
                 toast.success(response.data.pesan);
                 muatUlangForm()
-                getData();
-                setLoadingPengambilanPoin(false)
+                getDataAnggota();
             } catch (error) {
                 toast.error(error);
+            } finally{
+                setModalAnggota(false)
                 setLoadingPengambilanPoin(false)
             }
         }
@@ -83,20 +91,35 @@ function FormAnggota({toko}) {
             nominalPoin: "",
         })
     }
-    const getData = async () => {
-        setLoadingData(true);
+    const getDataAnggota = async () => {
+        setLoadingData(true)
         try {
             const response = await axios.post(route('master.anggota.data'), {
-                toko : toko,
-                search : search,
+                page: pagination.currentPage,
+                search: pagination.search,
+                perPage: pagination.perPage,
+                toko
             });
-            setDataAnggota(response.data);
-            setLoadingData(false)
+            setDataAnggota(response.data.data);
+            setPagination((prev) => ({
+                ...prev,
+                currentPage: response.data.current_page,
+                lastPage: response.data.last_page,
+                totalRecords: response.data.total,
+                perPage: response.data.per_page
+            }));
         } catch (error) {
+            toast.error(error.message || "Error fetching data");
+        } finally {
             setLoadingData(false)
-            toast.error(error);
         }
     }
+
+    const updatePage = (page) => setPagination((prev) => ({ ...prev, currentPage: page }));
+
+    const startEntry = (pagination.currentPage - 1) * pagination.perPage + 1;
+    const endEntry = Math.min(startEntry + pagination.perPage - 1, pagination.totalRecords);
+
     function ambilSatu(id) {
         const anggota = dataAnggota.find(anggota => anggota.id === id);
         setDataForm(anggota)
@@ -126,16 +149,28 @@ function FormAnggota({toko}) {
             </div>
         </Form>
         <hr />
-        <Form onSubmit={(e) => {e.preventDefault(); getData()}} className="row mb-2">
-            <div className="col-lg-6 text-info fw-14">
-                <FontAwesomeIcon icon={faInfoCircle} /> Data yang ditampilkan hanya 5, silahkan cari data pada form
+        <div className="mb-3 row">
+            <div className="col-lg-1">
+                <select className="form-control" onChange={(e) => setPagination((prev) => ({ ...prev, perPage: Number(e.target.value), currentPage: 1 }))}>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="75">75</option>
+                    <option value="100">100</option>
+                </select>
             </div>
-            <div className="col-lg-4">
-                <Form.Control type="text" placeholder="Cari anggota" name="cari" value={search} onChange={(e) => setSearch(e.target.value)}
-                />
+            <div className="col-lg-8">
             </div>
-            <Button type="submit" className="col-lg-1"><FontAwesomeIcon icon={faSearch}/> CARI</Button>
-        </Form>
+            <div className="col-lg-3 text-end">
+                <InputGroup>
+                    <Form.Control
+                        value={pagination.search}
+                        onChange={(e) => setPagination((prev) => ({ ...prev, search: e.target.value, currentPage: 1 }))}
+                        placeholder="Cari anggota"
+                    />
+                    <InputGroup.Text className="bg-primary"><FontAwesomeIcon icon={faSearch}/></InputGroup.Text>
+                </InputGroup>
+            </div>
+        </div>
         <table className="table table-bordered table-hovered">
             <thead>
                 <tr>
@@ -150,16 +185,16 @@ function FormAnggota({toko}) {
             <tbody className="">
                 {loadingData?(
                     <tr>
-                        <td colSpan={7} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
+                        <td colSpan={6} className="text-center"><Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/> Mohon Tunggu...</td>
                     </tr>
-                ): null}
-                {dataAnggota !== null ? dataAnggota.map((value,index) => (
+                ):
+                dataAnggota.length > 0 ? dataAnggota.map((value,index) => (
                 <tr key={index}>
                     <td className="text-center">{++index}.</td>
                     <td>{ value.nama }</td>
                     <td>{ value.telp }</td>
                     <td>{ value.alamat }</td>
-                    <td className="text-end">{ value.poin }</td>
+                    <td className="text-end">{ Rupiah(value.poin) }</td>
                     <td className="text-center">
                         <ButtonGroup aria-label="button action">
                             <Button size="sm" variant="success" onClick={() => ambilSatu(value.id)}><FontAwesomeIcon icon={faEdit}/></Button>
@@ -169,11 +204,33 @@ function FormAnggota({toko}) {
                 </tr>
                 )):
                 <tr>
-                    <td colSpan={7} className="text-center">Data Belum ada</td>
+                    <td colSpan={6} className="text-center">Data tidak ditemukan</td>
                 </tr>
                 }
             </tbody>
         </table>
+        <div className="mt-3 row">
+            <div className="col-lg-6">
+                Menampilkan {startEntry} hingga {endEntry} dari {pagination.totalRecords} entri
+            </div>
+            <div className="col-lg-6 text-end">
+                <button
+                    className="btn btn-sm btn-primary"
+                    onClick={() => updatePage(pagination.currentPage - 1)}
+                    disabled={pagination.currentPage === 1 || loadingData}
+                >
+                    <FontAwesomeIcon icon={faAnglesLeft} />
+                </button>
+                <span> Halaman {pagination.currentPage} dari {pagination.lastPage} </span>
+                <button
+                    className="btn btn-sm btn-primary"
+                    onClick={() => updatePage(pagination.currentPage + 1)}
+                    disabled={pagination.currentPage === pagination.lastPage || loadingData}
+                >
+                    <FontAwesomeIcon icon={faAnglesRight} />
+                </button>
+            </div>
+        </div>
         <Modal
             show={modalAnggota}
             onHide={() => {
@@ -213,7 +270,7 @@ function FormAnggota({toko}) {
                                 <tr>
                                     <td className="w-1 top">POIN</td>
                                     <td className="w-1 top">:</td>
-                                    <td>{dataFormPenambilanPoin.poin}</td>
+                                    <td>{Rupiah(dataFormPenambilanPoin.poin)}</td>
                                 </tr>
                             </tbody>
                         </table>

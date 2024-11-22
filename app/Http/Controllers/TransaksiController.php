@@ -133,25 +133,48 @@ class TransaksiController extends Controller
     private function getTransaksiData($where)
     {
         $zonaWaktuPengguna = zonaWaktuPengguna();
-        $transaksi = $this->transfer->get($where);
+        $transaksis = $this->transfer->get($where);
 
         $total = 0;
         $datas = [];
 
-        // Iterasi menggunakan foreach karena tipe data object
-        foreach ($transaksi as $key => $value) {
-            $valueTotal = $value->total;
-            $total += $valueTotal;
+        foreach ($transaksis as $key => $transaksi) {
+            $subTotal = 0;
+            if ($transaksi->tipe == TipeTransaksi::TABUNGAN->value) {
+                foreach ($transaksi->transaksiDetail as $transaksiDetail) {
+                    if ($transaksiDetail->tipe == TipeTransaksiDetail::MENAMBAH->value) {
+                        $subTotal += $transaksiDetail->nominal;
+                    } else {
+                        if ($transaksiDetail->keterangan == KeteranganTransferDetail::NOMINAL_PENARIKAN->value) {
+                            $subTotal += $transaksiDetail->nominal;
+                        }
+                    }
+                }
+            } else if ($transaksi->tipe == TipeTransaksi::TARIK_TUNAI->value || $transaksi->tipe == TipeTransaksi::TARIK_TUNAI_EDC->value) {
+                foreach ($transaksi->transaksiDetail as $transaksiDetail) {
+                    if ($transaksiDetail->tipe == TipeTransaksiDetail::MENAMBAH->value) {
+                        if ($transaksiDetail->keterangan != KeteranganTransferDetail::NOMINAL_TRANSFER->value) {
+                            $subTotal -= $transaksiDetail->nominal;
+                        } else {
+                            $subTotal = $transaksiDetail->nominal;
+                        }
+                    }
+                }
+            } else {
+                $subTotal = $transaksi->total;
+            }
+
+            $total += $subTotal;
             $datas[] = [
-                'no' => ++$key,  // Increment key untuk nomor
-                'id' => $value->id,
-                'tanggal' => formatTanggal($value->tanggal, $zonaWaktuPengguna),
-                'pengguna' => $value->user?->name,
-                'anggota' => $value->anggota?->nama,
-                'total' => rupiah($valueTotal),
-                'tipe' => $value->tipe,
-                'keterangan' => $value->keterangan,
-                'aksi' => $this->getAksi($value->tipe),
+                'no' => ++$key,
+                'id' => $transaksi->id,
+                'tanggal' => formatTanggal($transaksi->tanggal, $zonaWaktuPengguna),
+                'pengguna' => $transaksi->user?->name,
+                'anggota' => $transaksi->anggota?->nama,
+                'total' => rupiah($subTotal),
+                'tipe' => $transaksi->tipe,
+                'keterangan' => $transaksi->keterangan,
+                'aksi' => $this->getAksi($transaksi->tipe),
             ];
         }
 
@@ -232,11 +255,11 @@ class TransaksiController extends Controller
             'id' => ['required', 'uuid'],
         ]);
         $zonaWaktuPengguna = zonaWaktuPengguna();
-        $data = $this->transfer->getOnlyOne($request->id);
+        $transaksi = $this->transfer->getOnlyOne($request->id);
         $result = [];
         $total = 0;
-        if ($data->tipe == TipeTransaksi::TABUNGAN->value) {
-            foreach ($data->transaksiDetail as $value) {
+        if ($transaksi->tipe == TipeTransaksi::TABUNGAN->value) {
+            foreach ($transaksi->transaksiDetail as $value) {
                 if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
                     $total += $value->nominal;
                     $result[] = [
@@ -244,7 +267,7 @@ class TransaksiController extends Controller
                         'nominal' => rupiah($value->nominal)
                     ];
                 } else {
-                    if ($value->keterangan == KeteranganTransferDetail::NOMINAL_TRANSFER->value) {
+                    if ($value->keterangan == KeteranganTransferDetail::NOMINAL_PENARIKAN->value) {
                         $total += $value->nominal;
                         $result[] = [
                             'keterangan' => $value->keterangan,
@@ -253,14 +276,14 @@ class TransaksiController extends Controller
                     }
                 }
             }
-        } else if ($data->tipe == TipeTransaksi::PENJUALAN_PULSA->value || $data->tipe == TipeTransaksi::PENJUALAN_PAKET_DATA->value) {
-            $total = $data->total;
+        } else if ($transaksi->tipe == TipeTransaksi::PENJUALAN_PULSA->value || $transaksi->tipe == TipeTransaksi::PENJUALAN_PAKET_DATA->value) {
+            $total = $transaksi->total;
             $result[] = [
-                'keterangan' => $data->tipe,
+                'keterangan' => $transaksi->tipe,
                 'nominal' => rupiah($total)
             ];
-        } else if ($data->tipe == TipeTransaksi::TARIK_TUNAI->value || $data->tipe == TipeTransaksi::TARIK_TUNAI_EDC->value) {
-            foreach ($data->transaksiDetail as $value) {
+        } else if ($transaksi->tipe == TipeTransaksi::TARIK_TUNAI->value || $transaksi->tipe == TipeTransaksi::TARIK_TUNAI_EDC->value) {
+            foreach ($transaksi->transaksiDetail as $value) {
                 if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
                     if ($value->keterangan != KeteranganTransferDetail::NOMINAL_TRANSFER->value) {
                         $total -= $value->nominal;
@@ -274,7 +297,7 @@ class TransaksiController extends Controller
                 }
             }
         } else {
-            foreach ($data->transaksiDetail as $value) {
+            foreach ($transaksi->transaksiDetail as $value) {
                 if ($value->tipe == TipeTransaksiDetail::MENAMBAH->value) {
                     $total += $value->nominal;
                     $result[] = [
@@ -284,13 +307,12 @@ class TransaksiController extends Controller
                 }
             }
         }
-        return response()->json([
-            'tanggal' => formatTanggal($data->tanggal, $zonaWaktuPengguna),
-            'kasir' => $data?->user?->name,
-            'anggota' => $data?->anggota?->nama,
-            'alamat' => $data?->anggota?->alamat,
-            'tipe' => $data?->tipe,
-            'keterangan' => $data?->keterangan,
+        return response()->json(['tanggal' => formatTanggal($transaksi->tanggal, $zonaWaktuPengguna),
+            'kasir' => $transaksi?->user?->name,
+            'anggota' => $transaksi?->anggota?->nama,
+            'alamat' => $transaksi?->anggota?->alamat,
+            'tipe' => $transaksi?->tipe,
+            'keterangan' => $transaksi?->keterangan,
             'total' => rupiah($total),
             'cetak' => formatTanggal(time(), $zonaWaktuPengguna),
             'detail' => $result,

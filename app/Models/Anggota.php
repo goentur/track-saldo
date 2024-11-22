@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TipeSimpananAnggota;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,5 +19,9 @@ class Anggota extends Model
     public function simpanan()
     {
         return $this->hasMany(SimpananAnggota::class);
+    }
+    public function tabungan()
+    {
+        return $this->hasOne(SimpananAnggota::class)->where('tipe', TipeSimpananAnggota::TABUNGAN);
     }
 }

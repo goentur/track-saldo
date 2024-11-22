@@ -4,7 +4,7 @@ namespace App\Repositories\Master\Anggota;
 
 interface AnggotaRepositoryInterface
 {
-    public function gatAllData($request);
+    public function gatAllData($request, $rule);
 
     public function create(array $data);
 

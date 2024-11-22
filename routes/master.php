@@ -18,6 +18,7 @@ Route::middleware('auth')->prefix('master')->name('master.')->group(function () 
         Route::post('data-by-toko', [AnggotaController::class, 'dataByToko'])->name('data-by-toko');
         Route::post('tabungan', [AnggotaController::class, 'tabungan'])->name('tabungan');
         Route::post('pengambilan-poin', [AnggotaController::class, 'pengambilanPoin'])->name('pengambilan-poin');
+        Route::post('daftar-tabungan-anggota', [AnggotaController::class, 'daftarTabunganAnggota'])->name('daftar-tabungan-anggota');
     });
     Route::post('tabungan/data-by-toko', [TabunganController::class, 'dataByToko'])->name('tabungan.data-by-toko');
     Route::post('paket/pulsa/by-toko', [PaketController::class, 'pulsaByToko'])->name('paket.pulsa.by-toko');

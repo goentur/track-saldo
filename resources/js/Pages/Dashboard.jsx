@@ -62,49 +62,49 @@ function Dashboard({ toko, tanggalTransaksi }) {
                 <div className="card col-lg-3 widget-card border-primary shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PERPUTARAN UANG</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.perputaran ?? '0'}</h4>
+                        <h4 className="card-subtitle text-primary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.perputaran ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-success shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PENAMBAHAN UANG</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.penambahan ?? '0'}</h4>
+                        <h4 className="card-subtitle text-success m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.penambahan ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-danger shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PENGURANGAN UANG</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.pengurangan ?? '0'}</h4>
+                        <h4 className="card-subtitle text-danger m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.pengurangan ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-success shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL BIAYA ADMIN</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.biayaAdmin ?? '0'}</h4>
+                        <h4 className="card-subtitle text-success m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.biayaAdmin ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-danger shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL BIAYA TRANSFER</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.biayaTransfer ?? '0'}</h4>
+                        <h4 className="card-subtitle text-danger m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.biayaTransfer ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-success shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PENDAPATAN</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.pendapatan ?? '0'}</h4>
+                        <h4 className="card-subtitle text-success m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.pendapatan ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-danger shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PENGELUARAN PRODUKTIF</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.produktif ?? '0'}</h4>
+                        <h4 className="card-subtitle text-danger m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.produktif ?? '0'}</h4>
                     </div>
                 </div>
                 <div className="card col-lg-3 widget-card border-danger shadow-sm">
                     <div className="card-body py-4">
                         <span className="card-title widget-card-title mb-3">TOTAL PENGELUARAN KONSUMTIF</span>
-                        <h4 className="card-subtitle text-body-secondary m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.konsumtif ?? '0'}</h4>
+                        <h4 className="card-subtitle text-danger m-0">Rp {loading?<Spinner size="sm"/>:dataDashboard?.data.konsumtif ?? '0'}</h4>
                     </div>
                 </div>
             </div>

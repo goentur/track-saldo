@@ -24,6 +24,7 @@ function DataTransaksi(props, ref){
     const [startDate, endDate] = dateRange;
     const [nominal, setDataNominal] = useState(null);
     const [selectedId, setSelectedId] = useState(null);
+    const [selectedRow, setSelectedRow] = useState(null);
     
     useImperativeHandle(ref, () => ({
         dataTransaksi,
@@ -134,17 +135,21 @@ function DataTransaksi(props, ref){
                         </tr>
                     ): null}
                     {transaksi !== null ? transaksi.data.map((value,index) => (
-                    <tr key={index} className="f-12">
-                        <td className="text-center">{++index}.</td>
-                        <td className="top">
+                    <tr 
+                        key={index} 
+                        onClick={() => setSelectedRow(value.id)}
+                        className="f-12"
+                    >
+                        <td className={selectedRow === value.id ? "bg-primary text-white text-center":"text-center"}>{++index}.</td>
+                        <td className={selectedRow === value.id ? "bg-primary text-white top":"top"}>
                             { value.pengguna }
                             <br />
                             <span className="f-10">{ value.tanggal }</span>
                         </td>
-                        <td className="top">{ value.anggota }</td>
-                        <td className="top">{ value.tipe }</td>
-                        <td className="top">{ value.keterangan }</td>
-                        <td className="top text-end">Rp { value.total }</td>
+                        <td className={selectedRow === value.id ? "bg-primary text-white top":"top"}>{ value.anggota }</td>
+                        <td className={selectedRow === value.id ? "bg-primary text-white top":"top"}>{ value.tipe }</td>
+                        <td className={selectedRow === value.id ? "bg-primary text-white top":"top"}>{ value.keterangan }</td>
+                        <td className={selectedRow === value.id ? "bg-primary text-white top text-end":"top text-end"}>Rp { value.total }</td>
                         <td className="top text-center">
                             <ButtonGroup aria-label="button action">
                             {value.aksi && (

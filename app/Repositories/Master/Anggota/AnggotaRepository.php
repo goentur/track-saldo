@@ -4,6 +4,7 @@ namespace App\Repositories\Master\Anggota;
 
 use App\Enums\KeteranganTransferDetail;
 use App\Enums\StatusSimpananAnggota;
+use App\Enums\TipeSimpananAnggota;
 use App\Enums\TipeTransaksi;
 use App\Models\Anggota;
 use App\Models\SimpananAnggota;
@@ -11,15 +12,24 @@ use App\Models\TransaksiDetail;
 
 class AnggotaRepository implements AnggotaRepositoryInterface
 {
-    public function gatAllData($request)
+    public function gatAllData($request, $rule)
     {
-        $query = Anggota::whereIn('toko_id', [$request->toko]);
+        if ($rule) {
+            if ($rule['simpanan'] == TipeSimpananAnggota::TABUNGAN) {
+                $query = Anggota::with('tabungan')->whereIn('toko_id', [$request->toko]);
+            }
+            if ($rule['simpanan'] == TipeSimpananAnggota::INVESTASI) {
+                $query = Anggota::with('investasi')->whereIn('toko_id', [$request->toko]);
+            }
+        } else {
+            $query = Anggota::whereIn('toko_id', [$request->toko]);
+        }
         if ($request->search) {
             $query->where('nama', 'like', '%' . $request->search . '%')
                 ->orWhere('telp', 'like', '%' . $request->search . '%')
                 ->orWhere('alamat', 'like', '%' . $request->search . '%');
         }
-        return $query->latest()->limit(5)->get();
+        return $query->latest()->paginate($request->perPage ?? 25);
     }
 
     public function create(array $data)

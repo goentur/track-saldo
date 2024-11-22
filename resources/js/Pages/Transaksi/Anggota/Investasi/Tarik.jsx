@@ -131,14 +131,14 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                     />
                     {errors.nominalBiayaAdmin && <div className="text-end invalid-feedback">{errors.nominalBiayaAdmin}</div>}
                 </Form.Group>
-            </div>
-            <div className="row">
-                <div className="col-lg-2">
+                <div className="mb-3 col-lg-2">
                     <Button variant="primary" type="submit" className="align-item-end" disabled={true}>
                         {processing ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <FontAwesomeIcon icon={faSave} />} SIMPAN
                     </Button>
                 </div>
-                <div className="col-lg-5">
+            </div>
+            <div className="row">
+                <div className="col-lg-6">
                     <FontAwesomeIcon icon={faMoneyBill1Wave}/> INVESTASI YANG TERSEDIA
                     <table className="table table-sm table-bordered table-hover">
                         <thead>
@@ -152,7 +152,7 @@ function Tarik({ toko, anggotas, tabungans, onProcessingDone,nominalBiayaTransfe
                         </thead>
                     </table>
                 </div>
-                <div className="col-lg-5">
+                <div className="col-lg-6">
                     <FontAwesomeIcon icon={faHistory}/> RIWAYAT INVESTASI
                     <table className="table table-sm table-bordered table-hover">
                         <thead>

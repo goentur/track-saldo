@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useRoute } from "../../../../../vendor/tightenco/ziggy";
 import Setor from "./Tabungan/Setor";
 import Tarik from "./Tabungan/Tarik";
+import DaftarTabungan from './Tabungan/DaftarTabungan';
 
 function TabunganAnggota({ toko, anggotas, onProcessingDone, showModalAnggota }) {
     const route = useRoute();
@@ -39,6 +40,12 @@ function TabunganAnggota({ toko, anggotas, onProcessingDone, showModalAnggota })
                 <Accordion.Header>TARIK</Accordion.Header>
                 <Accordion.Body>
                     <Tarik toko={toko} anggotas={anggotas} tabungans={tabungans} onProcessingDone={onProcessingDone} nominalBiayaTransfer={nominalBiayaTransfer}/>
+                </Accordion.Body>
+            </Accordion.Item>
+            <Accordion.Item eventKey="2">
+                <Accordion.Header>DAFTAR TABUNGAN ANGGOTA</Accordion.Header>
+                <Accordion.Body>
+                    <DaftarTabungan toko={toko}/>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

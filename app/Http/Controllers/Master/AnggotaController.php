@@ -10,6 +10,7 @@ use App\Enums\TipeTransaksi;
 use App\Enums\TipeTransaksiDetail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\AnggotaRequest;
+use App\Http\Requests\Master\DataAnggotaRequest;
 use App\Services\Master\AnggotaService;
 use App\Services\Master\TabunganService;
 use App\Services\Master\TokoService;
@@ -27,25 +28,9 @@ class AnggotaController extends Controller
         protected TabunganService $tabungan,
     ) {
     }
-    public function data(Request $request)
+    public function data(DataAnggotaRequest $request)
     {
-        $request->validate([
-            'toko' => ['required', 'uuid'],
-            'search' => ['nullable', 'string'],
-        ]);
-        $data = [];
-        foreach ($this->anggota->gatAllData($request) as $value) {
-            $data[] = [
-                'id' => $value->id,
-                'toko_id' => $value->toko_id,
-                'nama' => $value->nama,
-                'telp' => $value->telp,
-                'alamat' => $value->alamat,
-                'poin' => "Rp. " . rupiah($value->poin),
-                'nominalPoin' => $value->poin,
-            ];
-        }
-        return response()->json($data, 200);
+        return response()->json($this->anggota->gatAllData($request, null), 200);
     }
 
     public function simpanAtauUbah(AnggotaRequest $request)
@@ -146,5 +131,9 @@ class AnggotaController extends Controller
         } else {
             return response()->json(404);
         }
+    }
+    public function daftarTabunganAnggota(DataAnggotaRequest $request)
+    {
+        return response()->json($this->anggota->gatAllData($request, ['simpanan' => TipeSimpananAnggota::TABUNGAN]), 200);
     }
 }
